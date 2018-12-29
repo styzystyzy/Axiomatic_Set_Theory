@@ -84,7 +84,7 @@ Proof.
   assert (Function1_1 f).
   { unfold Function1_1; split; auto.
     unfold Function; split; intros.
-    - unfold Relation; intros; PP H7; Ens.
+    - unfold Relation; intros; PP H7 a b; Ens.
     - unfold Inverse in H7; destruct H7.
       apply AxiomII_P in H7; apply AxiomII_P in H8; destruct H7, H8.
       clear H7 H8; double H9; apply Property_dom in H8.
@@ -161,7 +161,7 @@ Proof.
   { unfold Restriction; apply AxiomI; split; intros.
     - apply AxiomII in H11; apply H11.
     - apply AxiomII; repeat split; Ens.
-      PP' H12; apply AxiomII_P; repeat split; Ens.
+      PP' H12 a b; apply AxiomII_P; repeat split; Ens.
       + apply Property_dom in H11; auto.
       + apply Property_ran in H11; apply Theorem19; Ens. }
   rewrite H11 in *; clear H11.
@@ -320,7 +320,7 @@ Proof.
     apply Theorem69 in H12.
     assert (Function f⁻¹).
     { unfold Function; split; intros.
-      - unfold Relation; intros; PP H13; Ens.
+      - unfold Relation; intros; PP H13 a b; Ens.
       - destruct H13; unfold Inverse in H13, H14.
         apply AxiomII_P in H13; apply AxiomII_P in H14.
         destruct H13, H14; double H15; double H16.
@@ -351,7 +351,7 @@ Proof.
     { unfold Restriction; apply AxiomI; split; intros.
       - apply AxiomII in H16; apply H16.
       - apply AxiomII; repeat split; Ens.
-        PP' H17; apply AxiomII_P; repeat split; Ens.
+        PP' H17 a b; apply AxiomII_P; repeat split; Ens.
         + apply Property_dom in H16; auto.
         + apply Property_ran in H16; apply Theorem19; Ens. }
     rewrite H16 in *; rewrite H15 in H12; clear H15 H16.
