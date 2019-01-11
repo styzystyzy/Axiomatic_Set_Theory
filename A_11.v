@@ -2897,7 +2897,7 @@ Proof.
         double H8; rewrite <- H6 in H9; apply Property_Value in H9; auto.
         apply Property_ran in H9; split; Ens; unfold Integer.
     
-    assert (P[dom(f)] = P[ran(f)]).
+(*     assert (P[dom(f)] = P[ran(f)]).
     { apply Theorem154; unfold Equivalent. 
       - destruct H7; assert (Ensemble x0 /\ Ensemble x0); auto.
         apply Theorem74 in H9; rewrite <- H6 in H9; split; auto.
@@ -2906,7 +2906,7 @@ Proof.
     assert ( P[x0 × x0] ≼ x0 ).
     { rewrite <- H6, H8.
     = -> FirstMember contradiction
-    < -> Property P(x * x) => P(x) (find P(x) = P([a]*x) <= P(x*x))
+    < -> Property P(x * x) => P(x) (find P(x) = P([a]*x) <= P(x*x)) *)
       
 
 Admitted.
@@ -2939,7 +2939,7 @@ Theorem Theorem181 : exists f, Order_Pr f E E /\ dom(f) = R /\ ran(f) = C ~ W.
 Proof.
   intros.
   
-  ~ Ensemble R
+(*   ~ Ensemble R
   
   x <> R -> Section x E R -> Ensemble x
   
@@ -2947,7 +2947,7 @@ Proof.
   { Section (c1 U W ) E R Theorem33}
   
   ~ Ensemble (C ~ W)
-  { C ~ W U W = C }
+  { C ~ W U W = C } *)
 
 Admitted.
 
