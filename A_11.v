@@ -1075,7 +1075,7 @@ Hint Resolve Theorem164 : set.
 
 (* 定理165 w∈C *)
 
-Theorem Theorem165 : W∈C.
+Theorem Theorem165 : W ∈ C.
 Proof.
   generalize Theorem138; intros; AssE W.
   unfold C; apply AxiomII; split; auto.
@@ -2475,6 +2475,12 @@ Hint Unfold LessLess : set.
 
 (* 定理177 《 良序 R×R *)
 
+Definition En_y y : Class := \{ λ z, exists u v, [u,v] ∈ y /\ z = Max u v \}.
+
+Definition En_v v y : Class := \{ λ z, [z,v] ∈ y /\ z ∈ v \}.
+
+Definition En_u u y : Class := \{ λ z, [u,z] ∈ y /\ z ∈ u \}.
+
 Lemma Lemma177_bd : forall a b c d,
   [a, b] ∈ R × R -> [c, d] ∈ R × R -> Ensemble a -> Ensemble b ->
   Ensemble c -> Ensemble d -> Ordinal a -> Ordinal b -> Ordinal c ->
@@ -2573,6 +2579,40 @@ Proof.
     { right; right; rewrite H11, H12; auto. }
 Qed.
 
+Lemma Lemma177_v : forall x y u v,
+  x ∈ y -> y ⊂ (R × R) -> Max u v = v -> Rrelation x ≪ ([u,v]) ->
+  (exists a b, [a, b] ∈ y /\ Ensemble a /\ Ordinal a /\ Ensemble b /\ Ordinal b
+  /\ ((Max a b) ∈ v \/ Max a b = v /\ a ∈ u \/ Max a b = v /\ a = u /\ b ∈ v)).
+Proof.
+  intros.
+  double H; apply H0 in H3; unfold Cartesian in H3; clear H0.
+  PP H3 a b; apply AxiomII_P in H0; clear H3; exists a, b; split; auto.
+  destruct H0, H3; apply AxiomII in H3; apply AxiomII in H4; clear H0.
+  destruct H3, H4; unfold Rrelation, LessLess in H2; apply AxiomII in H2.
+  destruct H2, H6, H6, H6, H6, H6, H7, H8; clear H6 H7; apply Theorem49 in H2.
+  destruct H2; clear H2; apply Theorem49 in H6; destruct H6; unfold Less in H9.
+  apply Theorem55 in H8; try (split; Ens; apply Theorem49; Ens).
+  destruct H8; apply Theorem55 in H7; apply Theorem55 in H8; auto.
+  destruct H7, H8; rewrite <- H7, <- H8, <- H10, <- H11, H1 in H9; Ens.
+Qed.
+
+Lemma Lemma177_u : forall x y u v,
+  x ∈ y -> y ⊂ (R × R) -> Max u v = u -> Rrelation x ≪ ([u,v]) ->
+  (exists a b, [a, b] ∈ y /\ Ensemble a /\ Ordinal a /\ Ensemble b /\ Ordinal b
+  /\ ((Max a b) ∈ u \/ Max a b = u /\ a ∈ u \/ Max a b = u /\ a = u /\ b ∈ v)).
+Proof.
+  intros.
+  double H; apply H0 in H3; unfold Cartesian in H3; clear H0.
+  PP H3 a b; apply AxiomII_P in H0; clear H3; exists a, b; split; auto.
+  destruct H0, H3; apply AxiomII in H3; apply AxiomII in H4; clear H0.
+  destruct H3, H4; unfold Rrelation, LessLess in H2; apply AxiomII in H2.
+  destruct H2, H6, H6, H6, H6, H6, H7, H8; clear H6 H7; apply Theorem49 in H2.
+  destruct H2; clear H2; apply Theorem49 in H6; destruct H6; unfold Less in H9.
+  apply Theorem55 in H8; try (split; Ens; apply Theorem49; Ens).
+  destruct H8; apply Theorem55 in H7; apply Theorem55 in H8; auto.
+  destruct H7, H8; rewrite <- H7, <- H8, <- H10, <- H11, H1 in H9; Ens.
+Qed.
+
 Theorem Theorem177 : WellOrdered ≪ (R × R).
 Proof.
   unfold WellOrdered; split; intros.
@@ -2597,8 +2637,165 @@ Proof.
     + rewrite Equal_Max in H10; apply Lemma177_bc; auto.
     + apply Lemma177_bd; auto.
   - destruct H.
-
-Admitted.
+    assert ((En_y y) ⊂ R /\ (En_y y) ≠ Φ).
+    { split.
+      - unfold Included; intros; apply AxiomII in H1; destruct H1, H2, H2, H2.
+        apply H in H2; apply AxiomII_P in H2; destruct H2, H4; clear H2.
+        apply AxiomII in H4; apply AxiomII in H5; destruct H4, H5.
+        assert (Ordinal x /\ Ordinal x0); auto; apply Theorem110 in H7.
+        rewrite H3; destruct H7 as [H7|[H7|H7]]; apply Property_Max in H7; auto;
+        try (rewrite H7; unfold R; apply AxiomII; Ens).
+        rewrite Equal_Max in H7; rewrite H7; apply AxiomII; Ens.
+      - apply Lemma35 in H0; destruct H0; double H0; apply H in H1; PP H1 a b.
+        apply AxiomII_P in H2; clear H1; destruct H2, H2; clear H1.
+        apply AxiomII in H2; apply AxiomII in H3; destruct H2, H3; apply Lemma35.
+        assert (Ordinal a /\ Ordinal b); auto; apply Theorem110 in H5.
+        destruct H5 as [H5|[H5|H5]]; apply Property_Max in H5; auto.
+        + exists b; apply AxiomII; split; auto; exists a, b; auto.
+        + exists a; apply AxiomII; split; auto; exists a, b; split; auto.
+          rewrite Equal_Max; symmetry; auto.
+        + exists b; apply AxiomII; split; auto; exists a, b; auto. }
+    clear H0; apply Lemma121 in H1; unfold FirstMember in H1; destruct H1.
+    apply AxiomII in H0; destruct H0, H2 as [u [v H2]], H2.
+    generalize (classic ((En_v (∩ En_y y) y) = Φ)); intros; destruct H4.
+    + generalize (classic ((En_u (∩ En_y y) y) = Φ)); intros; destruct H5.
+      * double H2; apply H in H6; unfold Cartesian in H6; apply AxiomII_P in H6.
+        destruct H6, H7; apply AxiomII in H7; apply AxiomII in H8; clear H6.
+        destruct H7, H8; assert (Ordinal u /\ Ordinal v); auto.
+        apply Theorem110 in H10; destruct H10 as [H10 | [H10 | H10]].
+        { double H10; apply Property_Max in H11; auto.
+          rewrite H11 in H3; rewrite H3 in *; clear H3 H11.
+          assert (u ∈ (En_v v y)); try (apply AxiomII; Ens); rewrite H4 in H3.
+          generalize (Theorem16 u); intros; contradiction. }
+        { double H10; apply Property_Max in H11; auto; rewrite Equal_Max in H11.
+          rewrite H11 in H3; rewrite H3 in *; clear H3 H11.
+          assert (v ∈ (En_u u y)); try (apply AxiomII; Ens); rewrite H5 in H3.
+          generalize (Theorem16 v); intros; contradiction. }
+        { double H10; apply Property_Max in H11; rewrite H11 in H3.
+          rewrite H3, H10 in *; clear H3 H6 H8 H9 H10; exists [v,v].
+          unfold FirstMember; split; auto; intros; intro.
+          apply Lemma177_v with (y:= y) in H6; auto; clear H3 H11.
+          destruct H6 as [a [b H6]], H6, H6, H8, H9, H10.
+          assert (Ordinal a /\ Ordinal b); auto; apply Theorem110 in H12.
+          destruct H12 as [H12 | [H12 | H12]].
+          - apply Property_Max in H12; auto; rewrite H12 in H11.
+            destruct H11 as [H11 | [H11 | H11]].
+            + assert (b ∈ (En_y y)); try apply AxiomII; Ens.
+              apply H1 in H13; elim H13; clear H12 H13; unfold Rrelation, E.
+              apply AxiomII_P; split; try apply Theorem49; auto.
+            + destruct H11; rewrite H11 in *; clear H9 H10 H11.
+              assert (a ∈ (En_v v y)); try apply AxiomII; Ens.
+              rewrite H4 in H9; generalize (Theorem16 a); contradiction.
+            + destruct H11, H13; rewrite H11 in H14.
+              generalize (Theorem101 v); intros; contradiction.
+          - apply Property_Max in H12; auto; rewrite Equal_Max in H12.
+            rewrite H12 in H11; destruct H11 as [H11 | [H11 | H11]].
+            + assert (a ∈ (En_y y)); try apply AxiomII; Ens.
+              apply H1 in H13; elim H13; clear H12 H13; unfold Rrelation, E.
+              apply AxiomII_P; split; try apply Theorem49; auto.
+            + destruct H11; rewrite H11 in H13.
+              generalize (Theorem101 v); intros; contradiction.
+            + destruct H11; clear H11; destruct H13; rewrite H11 in *.
+              clear H11 H12; assert (b ∈ (En_u v y)); try apply AxiomII; Ens.
+              rewrite H5 in H11; generalize (Theorem16 b); contradiction.
+          - double H12; apply Property_Max in H13; auto; rewrite H13 in H11.
+            rewrite H12 in *; clear H9 H10 H12; destruct H11 as [H9|[H9|H9]].
+            + assert (b ∈ (En_y y)); try apply AxiomII; Ens.
+              apply H1 in H10; elim H10; clear H13 H10; unfold Rrelation, E.
+              apply AxiomII_P; split; try apply Theorem49; auto.
+            + destruct H9; rewrite H9 in H10.
+              generalize (Theorem101 v); intros; contradiction.
+            + destruct H9, H10; rewrite H9 in H11.
+              generalize (Theorem101 v); intros; contradiction. }
+      * assert ((En_u (∩ En_y y) y) ⊂ R /\ (En_u (∩ En_y y) y) ≠ Φ).
+        { split; auto; unfold Included; intros; apply AxiomII in H6.
+          destruct H6, H7; apply H in H7; apply AxiomII_P in H7; apply H7. }
+        apply Lemma121 in H6; clear H5; destruct H6; apply AxiomII in H5.
+        destruct H5, H7; exists [∩ (En_y y), ∩ (En_u (∩(En_y y)) y)].
+        clear H5; double H7; apply H in H7; apply AxiomII_P in H7.
+        destruct H7; clear H7; destruct H9; apply AxiomII in H7.
+        apply AxiomII in H9; clear H0; destruct H7, H9.
+        double H8; apply Property_Max in H11; auto.
+        unfold FirstMember; split; auto; intros; intro.
+        apply Lemma177_u with (y:= y) in H13; try rewrite Equal_Max; auto.
+        clear H12; destruct H13 as [a [b H13]], H13, H13, H14, H15, H16.
+        assert (Ordinal a /\ Ordinal b); auto; apply Theorem110 in H18.
+        destruct H18 as [H18 | [H18 | H18]].
+        { double H18; apply Property_Max in H19; auto; rewrite H19 in H17.
+          destruct H17 as [H17 | [H17 | H17]].
+          - assert (b ∈ (En_y y)); try apply AxiomII; Ens.
+            apply H1 in H20; elim H20; clear H19 H20; unfold Rrelation, E.
+            apply AxiomII_P; split; try apply Theorem49; auto.
+          - destruct H17; rewrite H17 in *; clear H15 H16 H17.
+            assert (a ∈ (En_v (∩ En_y y) y)); try apply AxiomII; Ens.
+            rewrite H4 in H15; generalize (Theorem16 a); contradiction.
+          - destruct H17, H20; rewrite <- H17 in H20; rewrite H20 in H18.
+            generalize (Theorem101 b); intros; contradiction. }
+        { double H18; apply Property_Max in H19; auto; rewrite Equal_Max in H19.
+          rewrite H19 in H17; destruct H17 as [H17 | [H17 | H17]].
+          - assert (a ∈ (En_y y)); try apply AxiomII; Ens.
+            apply H1 in H20; elim H20; clear H19 H20; unfold Rrelation, E.
+            apply AxiomII_P; split; try apply Theorem49; auto.
+          - destruct H17; rewrite <- H17 in H20.
+            generalize (Theorem101 a); intros; contradiction.
+          - destruct H17; clear H17; destruct H20; rewrite H17 in *.
+            assert (b∈(En_u (∩ En_y y) y)); try apply AxiomII; Ens.
+            apply H6 in H21. elim H21; unfold Rrelation, E.
+            apply AxiomII_P; split; try apply Theorem49; auto. }
+        { double H18; apply Property_Max in H19; rewrite H19 in H17.
+          rewrite H18 in *; clear H15 H16 H18; destruct H17 as [H15|[H15|H15]].
+          - assert (b ∈ (En_y y)); try apply AxiomII; Ens.
+            apply H1 in H16; elim H16; clear H19 H16; unfold Rrelation, E.
+            apply AxiomII_P; split; try apply Theorem49; auto.
+          - destruct H15; rewrite <- H15 in H16.
+            generalize (Theorem101 b); intros; contradiction.
+          - destruct H15; clear H15; destruct H16; rewrite H15 in H16.
+            generalize (Theorem102 (∩ En_y y) (∩ En_u (∩ En_y y) y)); intros.
+            destruct H17; split; auto. }
+    + assert ((En_v (∩ En_y y) y) ⊂ R /\ (En_v (∩ En_y y) y) ≠ Φ).
+      { split; auto; unfold Included; intros; apply AxiomII in H5.
+        destruct H5, H6; apply H in H6; apply AxiomII_P in H6; apply H6. }
+      apply Lemma121 in H5; clear H4; destruct H5; apply AxiomII in H4.
+      destruct H4, H6; exists [∩ (En_v (∩ En_y y) y), ∩ (En_y y)].
+      clear H4; double H6; apply H in H6; apply AxiomII_P in H6; destruct H6.
+      clear H6; destruct H8; apply AxiomII in H6; apply AxiomII in H8.
+      clear H0; destruct H6, H8; double H7; apply Property_Max in H10; auto.
+      unfold FirstMember; split; auto; intros; intro.
+      apply Lemma177_v with (y:= y) in H12; auto; clear H11.
+      destruct H12 as [a [b H12]], H12, H12, H13, H14, H15.
+      assert (Ordinal a /\ Ordinal b); auto; apply Theorem110 in H17.
+      destruct H17 as [H17 | [H17 | H17]].
+      { double H17; apply Property_Max in H18; auto; rewrite H18 in H16.
+        destruct H16 as [H16 | [H16 | H16]].
+        - assert (b ∈ (En_y y)); try apply AxiomII; Ens.
+          apply H1 in H19; elim H19; clear H18 H19; unfold Rrelation, E.
+          apply AxiomII_P; split; try apply Theorem49; auto.
+        - destruct H16; rewrite H16 in *; clear H14 H15 H16.
+          assert (a ∈ (En_v (∩ En_y y) y)); try apply AxiomII; Ens.
+          apply H5 in H14; destruct H14; unfold Rrelation, E.
+          apply AxiomII_P; split; try apply Theorem49; auto.
+        - destruct H16, H19; rewrite <- H16 in H20.
+          generalize (Theorem101 b); intros; contradiction. }
+      { double H17; apply Property_Max in H18; auto; rewrite Equal_Max in H18.
+        rewrite H18 in H16; destruct H16 as [H16 | [H16 | H16]].
+        - assert (a ∈ (En_y y)); try apply AxiomII; Ens.
+          apply H1 in H19; destruct H19; unfold Rrelation, E.
+          apply AxiomII_P; split; try apply Theorem49; auto.
+        - destruct H16; rewrite H16 in H19.
+          generalize (Theorem102 (∩ En_y y) (∩ En_v (∩ En_y y) y)); intros.
+          destruct H20; split; auto.
+        - destruct H16, H19; rewrite <- H19, <- H16 in H7.
+          generalize (Theorem101 a); intros; contradiction. }
+      { double H17; apply Property_Max in H18; rewrite H18 in H16.
+        rewrite H17 in *; clear H14 H15 H17; destruct H16 as [H14|[H14|H14]].
+        - assert (b ∈ (En_y y)); try apply AxiomII; Ens.
+          apply H1 in H15; destruct H15; unfold Rrelation, E.
+          apply AxiomII_P; split; try apply Theorem49; auto.
+        - destruct H14; rewrite <- H14 in *.
+          generalize (Theorem102 b (∩ En_v b y)); intros; destruct H16; auto.
+        - destruct H14, H15; rewrite <- H15, <- H14 in H7.
+          generalize (Theorem101 b); intros; contradiction. }
+Qed.
 
 Hint Resolve Theorem177 : set.
 
@@ -2667,6 +2864,50 @@ Hint Resolve Theorem178 : set.
 Theorem Theorem179 : forall x, x ∈ (C ~ W) -> P[x × x] = x.
 Proof.
   intros.
+  generalize Theorem150; intros.
+  unfold WellOrdered in H0; destruct H0; clear H0.
+  generalize (classic (\{ λ z, z ∈ (C ~ W) /\ P[z × z] <> z \} = Φ)); intros.
+  destruct H0.
+  - generalize (classic (P[x × x] = x)); intros; destruct H2; auto.
+    assert (x ∈ Φ). { rewrite <- H0; apply AxiomII; Ens. }
+    generalize (Theorem16 x); intros; contradiction.
+  - assert (\{ λ z, z ∈ (C ~ W) /\ P[z × z] <> z \} ⊂ C /\
+            \{ λ z, z ∈ (C ~ W) /\ P[z × z] <> z \} ≠ Φ).
+    { split; auto; unfold Included; intros; apply AxiomII in H2.
+      destruct H2, H3; apply Theorem4' in H3; apply H3. }
+    apply H1 in H2; clear H0 H1; destruct H2; unfold FirstMember in H0.
+    destruct H0; apply AxiomII in H0; destruct H0, H2.
+    generalize Theorem177, Theorem113; intros; destruct H5.
+    assert (Ensemble x0 /\ Ensemble x0); Ens; apply Theorem74 in H7.
+    assert (x0 × x0 ⊂ R × R).
+    { unfold Setminus in H2; apply Theorem4' in H2; destruct H2 as [H2 _].
+      unfold C in H2; apply AxiomII in H2; destruct H2 as [_ H2].
+      destruct H2 as [H2 _]; unfold Ordinal_Number in H2; unfold Ordinal in H5.
+      destruct H5 as [_ H5]; apply H5 in H2; clear H5.
+      unfold Cartesian, Included; intros; PP H5 a b; apply AxiomII_P in H8.
+      destruct H8, H9; apply H2 in H9; apply H2 in H10; apply AxiomII_P; Ens. }
+    apply Lemma97 with (y:= x0 × x0) in H4; auto; clear H8.
+    apply Theorem107 in H5; add (WellOrdered E R) H4; auto; clear H5.
+    apply Theorem100 in H4; auto; clear H6 H7; destruct H4 as [f H4], H4, H5.
+    unfold Order_PXY in H5; destruct H5, H7, H8; clear H4 H5 H7; destruct H9.
+    apply Theorem96 in H8; destruct H8 as [H7 _].
+    assert (forall u v, [u,v] ∈ (x0 × x0) -> f[[u,v]] ∈ x0).
+    { intros; generalize (classic (x0 = W)); intros; destruct H9.
+      - rewrite H9 in *; clear H9; apply AxiomII; destruct H7; clear H9.
+        double H8; rewrite <- H6 in H9; apply Property_Value in H9; auto.
+        apply Property_ran in H9; split; Ens; unfold Integer.
+    
+    assert (P[dom(f)] = P[ran(f)]).
+    { apply Theorem154; unfold Equivalent. 
+      - destruct H7; assert (Ensemble x0 /\ Ensemble x0); auto.
+        apply Theorem74 in H9; rewrite <- H6 in H9; split; auto.
+        apply AxiomV; auto.
+      - exists f; repeat split; try apply H7. }
+    assert ( P[x0 × x0] ≼ x0 ).
+    { rewrite <- H6, H8.
+    = -> FirstMember contradiction
+    < -> Property P(x * x) => P(x) (find P(x) = P([a]*x) <= P(x*x))
+      
 
 Admitted.
 
@@ -2676,9 +2917,16 @@ Hint Resolve Theorem179 : set.
 (* 定理180 如果x和y都是C的元，而其中的不属于w，则P[x×y]=max[P[x],P[y]] *)
 
 Theorem Theorem180 : forall x y,
-  x ∈ C /\ y ∈ C -> x ∉ W \/ y ∉ W -> P[x × y] = Max P[x] P[y].
+  x ∈ C -> y ∈ C -> x ∉ W \/ y ∉ W -> P[x × y] = Max P[x] P[y].
 Proof.
-  intros.
+  intros; destruct H1.
+  - assert (x ∈ (C ~ W)).
+    { unfold Setminus; apply Theorem4'; split; auto.
+      unfold Complement; apply AxiomII; split; Ens. }
+    apply Theorem179 in H2.
+    assert ((x × x) ≈ (x × y)).
+    { unfold Equivalent.
+  
 
 Admitted.
 
@@ -2690,6 +2938,16 @@ Hint Resolve Theorem180 : set.
 Theorem Theorem181 : exists f, Order_Pr f E E /\ dom(f) = R /\ ran(f) = C ~ W.
 Proof.
   intros.
+  
+  ~ Ensemble R
+  
+  x <> R -> Section x E R -> Ensemble x
+  
+  c1 <> C ~ W ->  Section c1 E (C~W) -> Ensemble c1
+  { Section (c1 U W ) E R Theorem33}
+  
+  ~ Ensemble (C ~ W)
+  { C ~ W U W = C }
 
 Admitted.
 

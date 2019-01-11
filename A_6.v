@@ -19,7 +19,7 @@ Theorem Theorem64 : forall f g,
 Proof.
   intros; destruct H.
   unfold Function; split; intros.
-  - unfold Relation; intros; PP H1; eauto.
+  - unfold Relation; intros; PP H1 a b; eauto.
   - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
     destruct H1, H2, H3, H4, H3, H4.
     unfold Function in H, H0; destruct H; destruct H0.
@@ -170,7 +170,7 @@ Theorem Theorem70 : forall f,
   Function f -> f = \{\ λ x y, y = f[x] \}\.
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H1; apply AxiomII_P; split; try Ens.
+  - PP' H1 a b; apply AxiomII_P; split; try Ens.
     apply AxiomI; split; intros.
     + apply AxiomII; split; intros; try Ens.
       apply AxiomII in H3; destruct H3.
@@ -180,7 +180,7 @@ Proof.
     + unfold Element_I in H1; apply AxiomII in H2; destruct H2.
       apply H3; apply AxiomII; split; auto; AssE [a,b].
       apply Theorem49 in H4; try apply H4.
-  - PP H0; apply AxiomII_P in H1; destruct H1.
+  - PP H0 a b; apply AxiomII_P in H1; destruct H1.
     generalize (classic (a ∈ dom( f ))); intros; destruct H3.
     + apply Property_Value in H3; auto; rewrite H2; auto.
     + apply Theorem69 in H3; auto.
@@ -198,9 +198,9 @@ Theorem Theorem71 : forall f g,
   Function f /\ Function g -> (f = g <-> forall x, f[x] = g[x]).
 Proof.
   intros; split; intros; try rewrite H0; trivial.
-  destruct H; intros.
-  apply (Theorem70 f) in H; apply (Theorem70 g) in H1; rewrite H; rewrite H1.
-  apply AxiomI; split; intros; PP' H3; AssE [a,b]; apply AxiomII_P; apply AxiomII_P in H2.
+  destruct H; intros; apply (Theorem70 f) in H; apply (Theorem70 g) in H1.
+  rewrite H; rewrite H1; apply AxiomI; split; intros;
+  PP' H3 a b; AssE [a,b]; apply AxiomII_P; apply AxiomII_P in H2.
   - rewrite <- H0; split; tauto.
   - rewrite -> H0; split; tauto.
 Qed.
@@ -227,7 +227,7 @@ Hint Resolve AxiomVI : set.
 
 Definition Cartesian x y : Class := \{\ λ u v, u∈x /\ v∈y \}\.
 
-Notation "x × y" := (Cartesian x y)(at level 0, right associativity).
+Notation "x × y" := (Cartesian x y)(at level 2, right associativity).
 
 Hint Unfold Cartesian : set.
 
@@ -240,8 +240,7 @@ Proof.
   intros; destruct H.
   exists (\{\ λ w z, (w∈y /\ z = [u,w]) \}\).
   repeat split; intros.
-  - red; intros; PP H1.
-    exists a; exists b; auto.
+  - red; intros; PP H1 a b; Ens.
   - destruct H1.
     apply AxiomII_P in H1; apply AxiomII_P in H2.
     destruct H1 as [_ [_ H1]]; destruct H2 as [_ [_ H2]].
@@ -259,7 +258,7 @@ Proof.
       rewrite H4; apply AxiomII_P; repeat split; auto.
       * apply Theorem49; split; auto; AssE x0.
       * apply AxiomII; split; auto.
-    + PP H1; apply AxiomII_P in H2; destruct H2, H3.
+    + PP H1 a b; apply AxiomII_P in H2; destruct H2, H3.
       apply AxiomII; split; auto; exists b.
       apply AxiomII_P; repeat split; auto.
       * apply Theorem49; split; auto; AssE b.
@@ -287,7 +286,7 @@ Proof.
   intros; destruct H.
   exists (\{\ λ u z, (u∈x /\ z = [u] × y) \}\).
   repeat split; intros.
-  - red; intros; PP H1; exists a; exists b; auto.
+  - red; intros; PP H1 a b; Ens.
   - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
     destruct H1, H2, H3, H4; subst z; auto.
   - apply AxiomI; split; intros.
@@ -306,20 +305,21 @@ Proof.
       exists x0; apply AxiomII_P; repeat split; auto.
       apply Theorem49; split; auto; AssE x0.
 Qed.
- 
+
 Lemma Lemma74 : forall x y,
-  Ensemble x /\ Ensemble y -> ∪ \{ λ z, (exists u, u∈x /\ z = [u] × y) \} = x × y.
+  Ensemble x /\ Ensemble y ->
+  ∪ \{ λ z, (exists u, u∈x /\ z = [u] × y) \} = x × y.
 Proof.
   intros; apply AxiomI; split; intros.
   - apply AxiomII in H0; destruct H0, H1, H1.
     apply AxiomII in H2; destruct H2, H3, H3.
-    rewrite H4 in H1; PP H1.
+    rewrite H4 in H1; PP H1 a b.
     apply AxiomII_P in H5; destruct H5, H6.
     apply AxiomII_P; repeat split; auto.
     apply AxiomII in H6; destruct H6 as [_ H6].
     AssE x1; apply Theorem19 in H8.
     rewrite <- H6 in H3; auto.
-  - PP H0; apply AxiomII_P in H1; destruct H1, H2.
+  - PP H0 a b; apply AxiomII_P in H1; destruct H1, H2.
     apply AxiomII; split; auto.
     exists (([a]) × y); split; AssE a.
     + apply AxiomII_P; repeat split; auto.
@@ -353,7 +353,7 @@ Proof.
   { apply Theorem74; split; auto. }
   apply Theorem33 with (x:=(dom( f ) × ran( f ))); auto.
   unfold Included; intros; rewrite Theorem70 in H3; auto.
-  PP H3; rewrite <- Theorem70 in H4; auto; AssE [a,b].
+  PP H3 a b; rewrite <- Theorem70 in H4; auto; AssE [a,b].
   repeat split; auto; apply AxiomII_P; split; auto.
   generalize (Property_dom a b f H4); intro.
   generalize (Property_ran a b f H4); intro; tauto.
@@ -379,7 +379,7 @@ Proof.
     + apply Theorem74; auto.
     + apply AxiomII in H0; destruct H0, H1, H2.
     unfold Included; intros; rewrite Theorem70 in H4; auto.
-    PP H4; rewrite <- Theorem70 in H5; auto.
+    PP H4 a b; rewrite <- Theorem70 in H5; auto.
     AssE [a,b]; apply AxiomII_P; split; auto.
     generalize (Property_dom a b z H5); intro; rewrite H2 in H7.
     generalize (Property_ran a b z H5); intro.
@@ -391,21 +391,21 @@ Hint Resolve Theorem77 : set.
 
 (* 定义78 f在x上，当且仅当f为一函数同时x=f的定义域 *)
 
-Definition On f x : Prop := Function f /\ dom( f ) = x.
+Definition On f x : Prop :=  (Function f /\ dom( f ) = x).
 
 Hint Unfold On : set.
 
 
 (* 定义79 f到y，当且仅当f是一个函数同时f的值域⊂y *)
 
-Definition To f y : Prop := Function f /\ (ran(f)) ⊂ y.
+Definition To f y : Prop := (Function f /\ (ran(f)) ⊂ y). 
 
 Hint Unfold To : set.
 
 
 (* 定义80 f到y上，当且仅当f是一个函数同时f的值域=y *)
 
-Definition Onto f y : Prop := Function f /\ ran(f) = y.
+Definition Onto f y : Prop := (Function f /\ ran(f) = y).
 
 Hint Unfold Onto : set.
 

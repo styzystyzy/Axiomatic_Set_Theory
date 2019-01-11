@@ -285,9 +285,10 @@ Axiom Property_P : forall (z: Class) (P: Class -> Class -> Prop),
 Axiom Property_P' : forall (z: Class) (P: Class -> Class -> Prop),
   (forall a b, z = [a,b] -> z ∈ \{\ P \}\) -> z ∈ \{\ P \}\.
 
-Ltac PP H := apply Property_P in H; destruct H as [[a [b H]]  ]; rewrite H in *.
+Ltac PP H a b := apply Property_P in H; destruct H as [[a [b H]]];
+  rewrite H in *.
 
-Ltac PP' H := apply Property_P'; intros a b H; rewrite H in *.
+Ltac PP' H a b:= apply Property_P'; intros a b H; rewrite H in *.
 
 Hint Resolve AxiomII_P Property_P Property_P': set.
 
@@ -316,7 +317,7 @@ Theorem Theorem58 : forall (r s t: Class),
   (r ∘ s) ∘ t = r ∘ (s ∘ t).
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H0; apply AxiomII_P in H; destruct H.
+  - PP' H0 a b; apply AxiomII_P in H; destruct H.
     apply AxiomII_P; split; auto.
     destruct H1 as [y H1]; destruct H1.
     apply AxiomII_P in H2; destruct H2, H3, H2. 
@@ -330,7 +331,7 @@ Proof.
       destruct H; destruct H4; auto.
     + exists y; split; auto.
       destruct H3; auto.
-  - PP' H0; apply AxiomII_P in H; apply AxiomII_P.
+  - PP' H0 a b; apply AxiomII_P in H; apply AxiomII_P.
     destruct H; split; auto.
     destruct H1 as [y H1]; destruct H0.
     destruct H1; apply AxiomII_P in H0.
@@ -357,7 +358,7 @@ Theorem Theorem59 : forall (r s t: Class),
 Proof.  
   intros; split.
   - apply AxiomI; split; intros.
-    + PP H0; apply AxiomII_P in H1; destruct H1.
+    + PP H0 a b; apply AxiomII_P in H1; destruct H1.
       apply Theorem4.
       destruct H2 as [y H2]; destruct H2.
       apply Theorem4 in H2; destruct H2.
@@ -365,7 +366,7 @@ Proof.
         exists y; split; auto.
       * right; apply AxiomII_P; split; auto.
         exists y; split; auto.
-    + PP' H1; apply Theorem4 in H0.
+    + PP' H1 a b; apply Theorem4 in H0.
       apply AxiomII_P; destruct H0.
       * apply AxiomII_P in H0; destruct H0.
         destruct H2 as [y H2]; destruct H2; split; auto.
@@ -373,7 +374,7 @@ Proof.
       * apply AxiomII_P in H0; destruct H0.
         destruct H2 as [y H2]; destruct H2; split; auto.
         exists y; split; auto; apply Theorem4; try tauto.
-  - unfold Included; intros; PP H0.
+  - unfold Included; intros; PP H0 a b.
     apply AxiomII_P in H1; destruct H1.
     destruct H2 as [y H2]; destruct H2.
     apply Theorem4' in H2; apply Theorem4'; split.
@@ -411,9 +412,9 @@ Theorem Theorem61 : forall (r: Class),
   (r ⁻¹)⁻¹ = r.
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP H; apply AxiomII_P in H0; destruct H0.
+  - PP H a b; apply AxiomII_P in H0; destruct H0.
     apply AxiomII_P in H1; apply H1.
-  - PP' H0; apply AxiomII_P; split; Ens.
+  - PP' H0 a b; apply AxiomII_P; split; Ens.
     apply AxiomII_P; split; auto.
     apply Lemma61; auto; Ens.
 Qed.
@@ -427,7 +428,7 @@ Theorem Theorem62 : forall (r s: Class),
   (r ∘ s)⁻¹ = (s⁻¹) ∘ (r⁻¹).
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H0; apply AxiomII_P in H; destruct H as [H H1].
+  - PP' H0 a b; apply AxiomII_P in H; destruct H as [H H1].
     apply AxiomII_P; split; auto.
     apply AxiomII_P in H1; destruct H1, H2, H2.
     exists x; split.
@@ -435,7 +436,7 @@ Proof.
       apply Lemma61; Ens; exists r; auto.
     + apply AxiomII_P; split; auto.
       apply Lemma61; Ens.    
-  - PP' H0; apply AxiomII_P in H; destruct H, H1, H1.
+  - PP' H0 a b; apply AxiomII_P in H; destruct H, H1, H1.
     apply AxiomII_P; split; auto.
     apply AxiomII_P in H1; apply AxiomII_P in H2.
     apply AxiomII_P; split.
