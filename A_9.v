@@ -1,6 +1,5 @@
 Require Export A_8.
 
-
 (* A.9 整数 *)
 
 Module A9.
@@ -339,6 +338,7 @@ Proof.
         apply H0 in H12; unfold PlusOne in H12.
         rewrite <- H9 in H12; contradiction.
 Qed.
+
 
 End A9.
 

@@ -1,6 +1,5 @@
 Require Export A_9.
 
-
 (* A.10 选择公理 *)
 
 Module A10.
@@ -43,24 +42,12 @@ Proof.
     rewrite H6; auto.
 Qed.
 
-(** definition95 **)
+(** Lemma96 **)
 
 Lemma Property_F11 : forall f,
   dom(f⁻¹) = ran(f) /\ ran(f⁻¹) = dom(f).
 Proof.
-  intros; unfold Domain, Range; split.
-  - apply AxiomI; split; intros.
-    + apply AxiomII in H; destruct H, H0; apply AxiomII_P in H0.
-      destruct H0; apply AxiomII; split; Ens.
-    + apply AxiomII in H; destruct H, H0; apply AxiomII; split; auto.
-      exists x; apply AxiomII_P; split; auto; apply Theorem49.
-      AssE [x,z]; apply Theorem49 in H1; destruct H1; auto.
-  - apply AxiomI; split; intros.
-    + apply AxiomII in H; destruct H, H0; apply AxiomII_P in H0.
-      destruct H0; apply AxiomII; split; Ens.
-    + apply AxiomII in H; destruct H, H0; apply AxiomII; split; auto.
-      exists x; apply AxiomII_P; split; auto; apply Theorem49.
-      AssE [z,x]; apply Theorem49 in H1; destruct H1; auto.
+  intros; rewrite <- Lemma96, <- Lemma96'; auto.
 Qed.
 
 Lemma Lemma140 : forall f g y,

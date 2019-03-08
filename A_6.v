@@ -4,7 +4,8 @@ Require Export A_5.
 
 Module A6.
 
-(* 定义63 f是一个函数当且仅当f是一个关系同时对每个x，每个y，每个z，如果[x,y]∈f且[x，z]∈f,则y=z*)
+(* 定义63 f是一个函数当且仅当f是一个关系同时对每个x，每个y，每个z，如果 [x,y]∈f 且
+   [x，z]∈f，则 y=z。*)
 
 Definition Function f : Prop :=
   Relation f /\ (forall x y z, [x,y] ∈ f /\ [x,z] ∈ f -> y=z).
@@ -12,7 +13,7 @@ Definition Function f : Prop :=
 Hint Unfold Function : set.
 
 
-(* 定理64 如果f是一个函数同时g是一个函数，则 f。g 也是一个函数 *)
+(* 定理64 如果f是一个函数同时g是一个函数，则 f∘g 也是一个函数 *)
 
 Theorem Theorem64 : forall f g,
   Function f /\ Function g -> Function (f ∘ g).
@@ -102,14 +103,17 @@ Proof.
   assert (x0=f[x]).
   - apply AxiomI; split; intros.
     + apply AxiomII; split; intros; try Ens.
-       apply AxiomII in H3; destruct H3.
-       assert (x0=y). { apply H with x; split; auto. }
-       rewrite <- H5; auto.
+      apply AxiomII in H3; destruct H3.
+      assert (x0=y). { apply H with x; split; auto. }
+      rewrite <- H5; auto.
     + apply AxiomII in H2; destruct H2 as [_ H2].
-       apply H2; apply AxiomII; split; auto.
-       AssE [x, x0]; apply Theorem49 in H3; apply H3.
+      apply H2; apply AxiomII; split; auto.
+      AssE [x, x0]; apply Theorem49 in H3; apply H3.
   - rewrite <- H2; auto.
 Qed.
+
+Hint Resolve Property_Value : set.
+
 
 (* 定理69 如果x∉f的定义域，则f[x]=μ;如果x∈f的定义域，则f[x]∈μ*)
 
@@ -118,12 +122,12 @@ Lemma Lemma69 : forall x f,
   ( x ∈ dom( f ) -> \{ λ y, [x,y] ∈ f \} <> Φ ).
 Proof.
   intros; split; intros.
-  - generalize (classic (\{ λ y0, [x, y0] ∈ f \} = Φ)); intro. 
+  - generalize (classic (\{ λ y0, [x, y0] ∈ f \} = Φ)); intro.
     destruct H1; auto; apply Lemma35 in H1; auto.
     elim H1; intro z; intros; apply AxiomII in H2.
     destruct H2 as [H2 H3]; apply Property_dom in H3; contradiction.
   - apply Lemma35; auto; exists f[x].
-    apply AxiomII;eapply Property_Value in H0; auto.
+    apply AxiomII; eapply Property_Value in H0; auto.
     split; auto; apply Property_ran in H0; Ens.
 Qed.
 
@@ -133,20 +137,19 @@ Proof.
   intros; split; intros.
   - assert (\{ λ y, [x,y] ∈ f \} = Φ).
     { apply AxiomI; split; intros.
-       apply AxiomII in H0; destruct H0.
-       apply Property_dom in H1; contradiction.
-       generalize (Theorem16 z); intro; contradiction. }
+      apply AxiomII in H0; destruct H0.
+      apply Property_dom in H1; contradiction.
+      generalize (Theorem16 z); intro; contradiction. }
     unfold Value; rewrite H0; apply Theorem24.
   - assert (\{ λ y, [x,y] ∈ f \} <> Φ).
-    { intro.
-       apply AxiomII in H; destruct H, H1.
-       generalize (AxiomI \{ λ y : Class,[x, y] ∈ f \} Φ); intro; destruct H2.
-       apply H2 with x0 in H0; destruct H0.
-       assert (x0 ∈ Φ).
-       { apply H0; apply AxiomII; split; auto.
-          AssE [x, x0];  apply Theorem49 in H5; tauto. }
-       eapply Theorem16; eauto. }
-     apply Theorem35 in H0; apply Theorem19; auto.
+    { intro; apply AxiomII in H; destruct H, H1.
+      generalize (AxiomI \{ λ y : Class,[x, y] ∈ f \} Φ); intro.
+      destruct H2; apply H2 with x0 in H0; destruct H0.
+      assert (x0 ∈ Φ).
+      { apply H0; apply AxiomII; split; auto.
+        AssE [x, x0];  apply Theorem49 in H5; tauto. }
+      eapply Theorem16; eauto. }
+    apply Theorem35 in H0; apply Theorem19; auto.
 Qed.
 
 Hint Resolve Theorem69 : set.
@@ -163,6 +166,9 @@ Proof.
   destruct H2; auto; apply Theorem69 in H2; auto.
   rewrite H2 in H0; generalize (Theorem39); intro; contradiction.
 Qed.
+
+Hint Resolve Property_Value' : set.
+
 
 (* 定理70 如果f是一个函数，则f={[x,y]:y=f[x]} *)
 
@@ -234,15 +240,15 @@ Hint Unfold Cartesian : set.
 
 (* 定理73 如果u与y均为集，则[u]×y也是集*)
 
-Lemma Ex_Lemma73 : forall u y, 
-  Ensemble u /\ Ensemble y -> exists f, Function f /\ dom(f) = y /\ ran(f) = [u] × y.
+Lemma Ex_Lemma73 : forall u y,
+  Ensemble u /\ Ensemble y ->
+  exists f, Function f /\ dom(f) = y /\ ran(f) = [u] × y.
 Proof.
   intros; destruct H.
   exists (\{\ λ w z, (w∈y /\ z = [u,w]) \}\).
   repeat split; intros.
   - red; intros; PP H1 a b; Ens.
-  - destruct H1.
-    apply AxiomII_P in H1; apply AxiomII_P in H2.
+  - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
     destruct H1 as [_ [_ H1]]; destruct H2 as [_ [_ H2]].
     rewrite H2; auto.
   - apply AxiomI; split; intros.
@@ -269,8 +275,9 @@ Qed.
 Theorem Theorem73 : forall u y,
   Ensemble u /\ Ensemble y -> Ensemble ([u] × y).
 Proof.
-  intros; elim H; intros; apply Ex_Lemma73 in H; auto.
-  destruct H,H,H2; rewrite <- H3; apply AxiomV; auto.
+  intros.
+  elim H; intros; apply Ex_Lemma73 in H; auto.
+  destruct H, H, H2; rewrite <- H3; apply AxiomV; auto.
   rewrite H2; auto.
 Qed.
 
@@ -280,8 +287,8 @@ Hint Resolve Theorem73 : set.
 (* 定理74 如果x与y均为集，则 x×y 也是集 *)
 
 Lemma Ex_Lemma74 : forall x y,
-  Ensemble x /\ Ensemble y -> exists f, Function f /\ dom( f ) = x 
-  /\ ran( f ) = \{ λ z, (exists u, u∈x /\ z = [u] × y) \}.
+  Ensemble x /\ Ensemble y -> exists f, Function f /\ dom( f ) = x /\
+  ran( f ) = \{ λ z, (exists u, u∈x /\ z = [u] × y) \}.
 Proof.
   intros; destruct H.
   exists (\{\ λ u z, (u∈x /\ z = [u] × y) \}\).
@@ -329,7 +336,7 @@ Proof.
       * exists a; split; auto.
 Qed.
 
-Theorem Theorem74 : forall x y, 
+Theorem Theorem74 : forall x y,
   Ensemble x /\ Ensemble y -> Ensemble x × y.
 Proof.
   intros; double H; double H0; destruct H0.
@@ -344,12 +351,12 @@ Hint Resolve Theorem74 : set.
 
 (* 定理75 如果f是一个函数同时f的定义域是一个集，则f是一个集 *)
 
-Theorem Theorem75 : forall f, 
+Theorem Theorem75 : forall f,
   Function f /\ Ensemble dom( f ) -> Ensemble f.
 Proof.
   intros; destruct H.
   assert (Ensemble ran(f)); try apply AxiomV; auto.
-  assert (Ensemble (dom( f)) × (ran( f))).
+  assert (Ensemble (dom(f) × ran(f))).
   { apply Theorem74; split; auto. }
   apply Theorem33 with (x:=(dom( f ) × ran( f ))); auto.
   unfold Included; intros; rewrite Theorem70 in H3; auto.
@@ -361,12 +368,14 @@ Qed.
 
 Hint Resolve Theorem75 : set.
 
+
 (* 定义76 Exponent y x = {f:f是一个函数，f的定义域=x同时f的值域⊂ y} *)
 
 Definition Exponent y x : Class :=
   \{ λ f, (Function f /\ dom( f ) = x /\ (ran( f )) ⊂ y) \}.
 
 Hint Unfold Exponent : set.
+
 
 (* 定理77 如果x与y均为集，则 Exponent y x 也是集*)
 
@@ -398,7 +407,7 @@ Hint Unfold On : set.
 
 (* 定义79 f到y，当且仅当f是一个函数同时f的值域⊂y *)
 
-Definition To f y : Prop := (Function f /\ (ran(f)) ⊂ y). 
+Definition To f y : Prop := (Function f /\ ran(f) ⊂ y). 
 
 Hint Unfold To : set.
 
@@ -413,5 +422,4 @@ Hint Unfold Onto : set.
 End A6.
 
 Export A6.
-
 

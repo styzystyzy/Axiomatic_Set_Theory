@@ -20,14 +20,11 @@ Theorem Theorem49 : forall (x y: Class),
 Proof.
   intros; split; intro.
   - unfold Ordered in H; unfold Unordered in H.
-    apply AxiomIV' in H; destruct H. 
-    apply Theorem42' in H; auto.
-    apply Theorem42' in H; auto.
-    apply Theorem42' in H0; auto; split; auto.
+    apply AxiomIV' in H; destruct H; apply Theorem42' in H.
+    apply Theorem42' in H; apply Theorem42' in H0; split; auto.
     unfold Unordered in H0; apply AxiomIV' in H0.
     destruct H0; apply Theorem42' in H1; auto.
-  - destruct H; unfold Ordered; unfold Unordered.
-    apply AxiomIV; split.
+  - destruct H; unfold Ordered, Unordered; apply AxiomIV; split.
     + apply Theorem42; auto; apply Theorem42; auto.
     + apply Theorem42; auto; apply Theorem46; auto.
 Qed.
@@ -59,16 +56,13 @@ Qed.
 
 Theorem Theorem50 : forall (x y: Class),
   Ensemble x /\ Ensemble y -> (∪[x,y] = [x|y]) /\ (∩[x,y] = [x]) /\
-  (∪(∩[x,y]) = x) /\ (∩(∩[x,y]) = x) /\ (∪(∪[x,y]) = x∪y) /\
-  (∩(∪[x,y]) = x∩y).
+  (∪(∩[x,y]) = x) /\ (∩(∩[x,y]) = x) /\ (∪(∪[x,y]) = x∪y) /\ (∩(∪[x,y]) = x∩y).
 Proof.
   intros; elim H; intros.
   repeat unfold Ordered; apply Lemma50 in H.
   apply Theorem47 in H; auto; elim H; intros; repeat split.
-  - rewrite H3; apply AxiomI; split; intros.
-    + apply Theorem4 in H4; elim H4; intros; try tauto.
-      apply Theorem4; tauto.
-    + apply Theorem4; tauto.
+  - rewrite H3; apply AxiomI; split; intros; try (apply Theorem4; tauto).
+    apply Theorem4 in H4; destruct H4; auto; apply Theorem4; tauto.
   - rewrite H2; apply AxiomI; split; intros.
     + apply Theorem4' in H4; apply H4.
     + apply Theorem4'; split; auto; apply Theorem4; tauto.
@@ -102,9 +96,7 @@ Proof.
         -- apply AxiomII in H6; destruct H6.
            right; rewrite <- H7; auto; apply Theorem19; auto.
     + apply AxiomII; apply Theorem4 in H4; split.
-      * unfold Ensemble; destruct H4.
-        -- exists x; auto.
-        -- exists y; auto.   
+      * unfold Ensemble; destruct H4; Ens.
       * destruct H4.
         -- exists x; split; auto; apply Theorem4; left.
            apply AxiomII; split; auto.
@@ -245,16 +237,11 @@ Hint Resolve Theorem54 Theorem54' : set.
 Theorem Theorem55 : forall (x y u v: Class),
   Ensemble x /\ Ensemble y -> ([x,y] = [u,v] <-> x = u /\ y = v).
 Proof.
-  intros.
-  apply Lemma_x in H; destruct H. 
-  apply Theorem49 in H; auto; apply Theorem54 in H0; auto.
-  destruct H0; split; intros.
-  - rewrite H2 in H.
-    apply Theorem49 in H; auto; apply Theorem54 in H; auto.
-    destruct H; split.
-    + rewrite <- H2 in H; rewrite <- H0; rewrite H; auto.
-    + rewrite <- H2 in H3; rewrite H1 in H3; apply H3.
-  - destruct H2; rewrite H2; rewrite H3; trivial.
+  intros; split; intros.
+  - double H; apply Theorem49 in H; apply Theorem54 in H1; destruct H1.
+    rewrite H0 in H, H1, H2; apply Theorem49 in H; apply Theorem54 in H.
+    destruct H; rewrite H1 in H; rewrite H2 in H3; split; auto.
+  - destruct H0; rewrite H0, H1; auto.
 Qed.
 
 Hint Resolve Theorem55 : set.
@@ -307,46 +294,22 @@ Hint Resolve AxiomII_P : set.
 
 (* 定理58  (r∘s)∘t=r∘(s∘t) *)
 
-Lemma Lemma1 : forall (x y: Class), x∈y -> Ensemble x.
-Proof.
- intros; unfold Ensemble.
- exists y; apply H.
-Qed.
-
 Theorem Theorem58 : forall (r s t: Class),
   (r ∘ s) ∘ t = r ∘ (s ∘ t).
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H0 a b; apply AxiomII_P in H; destruct H.
-    apply AxiomII_P; split; auto.
-    destruct H1 as [y H1]; destruct H1.
-    apply AxiomII_P in H2; destruct H2, H3, H2. 
-    exists x; split; try tauto.
-    apply AxiomII_P; split.
-    + destruct H3.
-      apply Lemma1 in H4. 
-      apply Theorem49 in H; auto.
-      apply Theorem49 in H4; auto.
-      apply Theorem49; auto.
-      destruct H; destruct H4; auto.
-    + exists y; split; auto.
-      destruct H3; auto.
-  - PP' H0 a b; apply AxiomII_P in H; apply AxiomII_P.
-    destruct H; split; auto.
-    destruct H1 as [y H1]; destruct H0.
-    destruct H1; apply AxiomII_P in H0.
-    destruct H0, H2, H2. 
-    exists x; split; auto.
-    apply AxiomII_P; split.
-    + apply Lemma1 in H2.
-      apply Theorem49 in H2; auto.
-      apply Theorem49; auto.
-      split; try apply H2; try apply H.
-      apply Lemma1 in H1.
-      apply Theorem49 in H1; destruct H1; auto.
-    + exists y; split; auto.
+  - PP' H0 a b; apply AxiomII_P in H; destruct H, H1 as [y H1], H1.
+    apply AxiomII_P in H2; destruct H2, H3, H3; apply AxiomII_P; split; auto.
+    exists x; split; try tauto; apply AxiomII_P; split; Ens.
+    AssE [a,y]; AssE [y,x]; apply Theorem49 in H5; apply Theorem49 in H6.
+    destruct H5, H6; apply Theorem49; auto.
+  - PP' H0 a b; apply AxiomII_P in H; destruct H, H1 as [y H1], H1.
+    apply AxiomII_P in H1; destruct H1, H3, H3; apply AxiomII_P; split; auto.
+    exists x; split; auto; apply AxiomII_P; split; Ens.
+    AssE [a,x]; AssE [y,b]; apply Theorem49 in H5; apply Theorem49 in H6.
+    destruct H5, H6; apply Theorem49; Ens.
 Qed.
-   
+
 Hint Rewrite Theorem58 : set.
 
 
@@ -355,7 +318,7 @@ Hint Rewrite Theorem58 : set.
 Theorem Theorem59 : forall (r s t: Class),
   Relation r /\ Relation s -> r ∘ (s ∪ t) = (r ∘ s) ∪ (r ∘ t) /\ 
   r ∘ (s ∩ t) ⊂ (r ∘ s) ∩ (r ∘ t).
-Proof.  
+Proof.
   intros; split.
   - apply AxiomI; split; intros.
     + PP H0 a b; apply AxiomII_P in H1; destruct H1.
