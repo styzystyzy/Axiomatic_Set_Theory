@@ -49,7 +49,7 @@ Hint Unfold Domain : set.
 
 (* 定义66 f的值域={y：对于某个x，[x，y]∈f} *)
 
-Definition Range f : Class := \{ λ y, exists x:Class, [x,y] ∈ f \}.
+Definition Range f : Class := \{ λ y, exists x, [x,y] ∈ f \}.
 
 Notation "ran( f )" := (Range f)(at level 5).
 
@@ -118,8 +118,8 @@ Hint Resolve Property_Value : set.
 (* 定理69 如果x∉f的定义域，则f[x]=μ;如果x∈f的定义域，则f[x]∈μ*)
 
 Lemma Lemma69 : forall x f,
-  Function f -> ( x ∉ dom( f ) -> \{ λ y, [x,y] ∈ f \} = Φ ) /\
-  ( x ∈ dom( f ) -> \{ λ y, [x,y] ∈ f \} <> Φ ).
+  Function f -> (x ∉ dom(f) -> \{ λ y, [x,y] ∈ f \} = Φ) /\
+  (x ∈ dom(f) -> \{ λ y, [x,y] ∈ f \} <> Φ).
 Proof.
   intros; split; intros.
   - generalize (classic (\{ λ y0, [x, y0] ∈ f \} = Φ)); intro.
@@ -132,7 +132,7 @@ Proof.
 Qed.
 
 Theorem Theorem69 : forall x f,
-  ( x ∉ (dom( f )) -> f[x] = μ ) /\ ( x ∈ dom( f ) -> (f[x]) ∈  μ ).
+  ( x ∉ dom( f ) -> f[x] = μ ) /\ ( x ∈ dom( f ) -> f[x] ∈  μ ).
 Proof.
   intros; split; intros.
   - assert (\{ λ y, [x,y] ∈ f \} = Φ).
@@ -143,7 +143,7 @@ Proof.
     unfold Value; rewrite H0; apply Theorem24.
   - assert (\{ λ y, [x,y] ∈ f \} <> Φ).
     { intro; apply AxiomII in H; destruct H, H1.
-      generalize (AxiomI \{ λ y : Class,[x, y] ∈ f \} Φ); intro.
+      generalize (AxiomI \{ λ y, [x, y] ∈ f \} Φ); intro.
       destruct H2; apply H2 with x0 in H0; destruct H0.
       assert (x0 ∈ Φ).
       { apply H0; apply AxiomII; split; auto.
@@ -245,7 +245,7 @@ Lemma Ex_Lemma73 : forall u y,
   exists f, Function f /\ dom(f) = y /\ ran(f) = [u] × y.
 Proof.
   intros; destruct H.
-  exists (\{\ λ w z, (w∈y /\ z = [u,w]) \}\).
+  exists (\{\ λ w z, w∈y /\ z = [u,w] \}\).
   repeat split; intros.
   - red; intros; PP H1 a b; Ens.
   - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
@@ -288,10 +288,10 @@ Hint Resolve Theorem73 : set.
 
 Lemma Ex_Lemma74 : forall x y,
   Ensemble x /\ Ensemble y -> exists f, Function f /\ dom( f ) = x /\
-  ran( f ) = \{ λ z, (exists u, u∈x /\ z = [u] × y) \}.
+  ran( f ) = \{ λ z, exists u, u∈x /\ z = [u] × y \}.
 Proof.
   intros; destruct H.
-  exists (\{\ λ u z, (u∈x /\ z = [u] × y) \}\).
+  exists (\{\ λ u z, u∈x /\ z = [u] × y \}\).
   repeat split; intros.
   - red; intros; PP H1 a b; Ens.
   - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
@@ -315,7 +315,7 @@ Qed.
 
 Lemma Lemma74 : forall x y,
   Ensemble x /\ Ensemble y ->
-  ∪ \{ λ z, (exists u, u∈x /\ z = [u] × y) \} = x × y.
+  ∪ \{ λ z, exists u, u∈x /\ z = [u] × y \} = x × y.
 Proof.
   intros; apply AxiomI; split; intros.
   - apply AxiomII in H0; destruct H0, H1, H1.
@@ -372,7 +372,7 @@ Hint Resolve Theorem75 : set.
 (* 定义76 Exponent y x = {f:f是一个函数，f的定义域=x同时f的值域⊂ y} *)
 
 Definition Exponent y x : Class :=
-  \{ λ f, (Function f /\ dom( f ) = x /\ (ran( f )) ⊂ y) \}.
+  \{ λ f, Function f /\ dom( f ) = x /\ ran( f ) ⊂ y \}.
 
 Hint Unfold Exponent : set.
 
@@ -400,21 +400,21 @@ Hint Resolve Theorem77 : set.
 
 (* 定义78 f在x上，当且仅当f为一函数同时x=f的定义域 *)
 
-Definition On f x : Prop :=  (Function f /\ dom( f ) = x).
+Definition On f x : Prop := Function f /\ dom( f ) = x.
 
 Hint Unfold On : set.
 
 
 (* 定义79 f到y，当且仅当f是一个函数同时f的值域⊂y *)
 
-Definition To f y : Prop := (Function f /\ ran(f) ⊂ y). 
+Definition To f y : Prop := Function f /\ ran(f) ⊂ y.
 
 Hint Unfold To : set.
 
 
 (* 定义80 f到y上，当且仅当f是一个函数同时f的值域=y *)
 
-Definition Onto f y : Prop := (Function f /\ ran(f) = y).
+Definition Onto f y : Prop := Function f /\ ran(f) = y.
 
 Hint Unfold Onto : set.
 

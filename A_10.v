@@ -51,10 +51,10 @@ Proof.
 Qed.
 
 Lemma Lemma140 : forall f g y,
-  y ∈ dom(f) -> f [y] = g [f | y] -> Ensemble (f | y).
+  y ∈ dom(f) -> f [y] = g [f | (y)] -> Ensemble (f | (y)).
 Proof.
   intros.
-  generalize (classic ((f|y) ∈ dom(g))); intros; destruct H1; Ens.
+  generalize (classic ((f|(y)) ∈ dom(g))); intros; destruct H1; Ens.
   apply Theorem69 in H1; rewrite H1 in H0; clear H1.
   apply Theorem69 in H; rewrite H0 in *.
   generalize (Theorem101 μ); intros; contradiction.
@@ -91,13 +91,13 @@ Proof.
       apply H3 in H7; apply H3 in H9; rewrite H9 in H7; clear H9.
       double H8; double H10; apply Property_ran in H8.
       apply Property_ran in H10; destruct H12.
-      + assert (f[z] ∈ ran(f|z)).
+      + assert (f[z] ∈ ran(f|(z))).
         { rewrite H7; unfold Range; apply AxiomII; split; Ens.
           exists y; unfold Restriction; apply Theorem4'; split; auto.
           unfold Cartesian; apply AxiomII_P; split; Ens.
           split; auto; apply Theorem19; Ens. }
-        assert ((x ~ ran(f|z)) ∈ dom(c)).
-        { generalize (classic ((x ~ ran(f|z)) ∈ dom(c))); intros.
+        assert ((x ~ ran(f|(z))) ∈ dom(c)).
+        { generalize (classic ((x ~ ran(f|(z))) ∈ dom(c))); intros.
           destruct H16; auto; apply Theorem69 in H16; auto.
           rewrite H16 in H14; rewrite H14 in H10; AssE μ.
           generalize Theorem39; intros; contradiction. }
@@ -106,13 +106,13 @@ Proof.
         unfold Complement in H17; apply AxiomII in H17; destruct H17.
         unfold NotIn in H18; contradiction.
       + destruct H12; try contradiction.
-        assert (f[y] ∈ ran(f|y)).
+        assert (f[y] ∈ ran(f|(y))).
         { rewrite <- H7; unfold Range; apply AxiomII; split; Ens.
           exists z; unfold Restriction; apply Theorem4'; split; auto.
           unfold Cartesian; apply AxiomII_P; split; Ens.
           split; auto; apply Theorem19; Ens. }
-        assert ((x ~ ran(f|y)) ∈ dom(c)).
-        { generalize (classic ((x ~ ran(f|y)) ∈ dom(c))); intros.
+        assert ((x ~ ran(f|(y))) ∈ dom(c)).
+        { generalize (classic ((x ~ ran(f|(y))) ∈ dom(c))); intros.
           destruct H16; auto; apply Theorem69 in H16; auto.
           rewrite H16 in H13; rewrite H13 in H8; AssE μ.
           generalize Theorem39; intros; contradiction. }
@@ -129,8 +129,8 @@ Proof.
     apply H5 in H11; rewrite H2 in H11; try apply (Lemma140 _ g _); auto.
     apply Property_Value in H10; auto; destruct H3.
     add ([x0,f[x0]]∈f) H9; apply H12 in H9; rewrite <- H9 in H11.
-    assert ((x ~ ran(f|x0)) ∈ dom(c)).
-    { generalize (classic ((x ~ ran(f|x0)) ∈ dom(c))); intros.
+    assert ((x ~ ran(f|(x0))) ∈ dom(c)).
+    { generalize (classic ((x ~ ran(f|(x0))) ∈ dom(c))); intros.
       destruct H13; auto; apply Theorem69 in H13; auto.
       rewrite H13 in H11; rewrite H11 in H9; rewrite <- H9 in H10.
       clear H9 H11 H13; apply Property_ran in H10; AssE μ.
@@ -144,7 +144,7 @@ Proof.
   assert (Ordinal_Number dom(f)).
   { unfold Ordinal_Number; apply AxiomII; split; auto. }
   split; auto; apply H5 in H10.
-  assert (f|dom(f) = f).
+  assert (f|(dom(f)) = f).
   { unfold Restriction; apply AxiomI; split; intros.
     - apply AxiomII in H11; apply H11.
     - apply AxiomII; repeat split; Ens.
@@ -261,13 +261,13 @@ Proof.
   unfold ChoiceFunction in H0; destruct H0.
   (* 如果 u ∈ dom(f)，则 f[u] 是 x 中的一个套。 *)
   assert (forall u, u ∈ dom(f) -> Nest f[u] /\ f[u] ⊂ x /\
-         (forall p, p ∈ ran(f|u) -> p ⊊ f[u])).
+         (forall p, p ∈ ran(f|(u)) -> p ⊊ f[u])).
   { intros; assert (Ordinal_Number u).
     { unfold Ordinal_Number, R; apply AxiomII.
       split; try apply (Theorem111 dom(f) _); Ens. }
     apply H5 in H8; rewrite H2 in H8; try apply (Lemma140 _ g _); auto.
-    assert (En_c x (f|u) ∈ dom(c)).
-    { generalize (classic (En_c x (f|u) ∈ dom(c))); intros.
+    assert (En_c x (f|(u)) ∈ dom(c)).
+    { generalize (classic (En_c x (f|(u)) ∈ dom(c))); intros.
       destruct H9; auto; apply Theorem69 in H9; auto.
       rewrite H9 in H8; clear H9; apply Property_Value in H7; auto.
       apply Property_ran in H7; rewrite H8 in H7; AssE μ.
@@ -334,7 +334,7 @@ Proof.
       unfold PowerSet; apply AxiomII; split; auto. }
     assert (Ordinal_Number dom(f)).
     { unfold Ordinal_Number, R; apply AxiomII; split; auto. }
-    apply H5 in H15; assert (f|dom(f) = f).
+    apply H5 in H15; assert (f|(dom(f)) = f).
     { unfold Restriction; apply AxiomI; split; intros.
       - apply AxiomII in H16; apply H16.
       - apply AxiomII; repeat split; Ens.

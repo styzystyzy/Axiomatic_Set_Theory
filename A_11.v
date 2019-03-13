@@ -481,15 +481,15 @@ Proof.
   apply Property_PClass in H5; unfold C in H5.
   apply AxiomII in H5; destruct H5; unfold Cardinal_Number in H6.
   destruct H6; clear H7; unfold Ordinal_Number in H6.
-  assert (ran(f|x) ⊂ P[y]).
+  assert (ran(f|(x)) ⊂ P[y]).
   { rewrite <- H4; unfold Included; intros.
     unfold Range in H7; apply AxiomII in H7; destruct H7, H8.
     unfold Restriction in H8; apply Theorem4' in H8; destruct H8.
     apply Property_ran in H8; auto. }
-  add (ran(f|x) ⊂ P [y]) H6; apply Theorem157 in H6.
-  assert (x ≈ ran(f|x)).
+  add (ran(f|(x)) ⊂ P [y]) H6; apply Theorem157 in H6.
+  assert (x ≈ ran(f|(x))).
   { unfold Function1_1 in H2; destruct H2.
-    unfold Equivalent; exists (f|x); split.
+    unfold Equivalent; exists (f|(x)); split.
     - unfold Function1_1; split.
       + unfold Function; split; intros.
         * unfold Relation; intros; unfold Restriction in H9.
@@ -519,7 +519,7 @@ Proof.
         unfold Cartesian; apply AxiomII_P; repeat split; Ens.
         AssE [z,f[z]]; apply Theorem49 in H11; destruct H11.
         apply Theorem19; auto. }
-  assert (Ensemble ran(f|x)). { apply Theorem33 in H7; auto. }
+  assert (Ensemble ran(f|(x))). { apply Theorem33 in H7; auto. }
   apply Theorem154 in H8; auto; rewrite <- H8 in H6; auto.
 Qed.
 
@@ -762,7 +762,7 @@ Proof.
   intros.
   unfold Equivalent in H1; destruct H1 as [f H1], H1, H2.
   unfold Function1_1 in H1; destruct H1; unfold Equivalent.
-  exists ((En_g' f x y) | x); repeat split; intros.
+  exists ((En_g' f x y) | (x)); repeat split; intros.
   - unfold Relation; intros; unfold Restriction in H5.
     apply Theorem4' in H5; destruct H5; PP H6 a b; Ens.
   - destruct H5; unfold Restriction in H5, H6.
@@ -1152,7 +1152,7 @@ Proof.
         - apply Theorem49; split; apply Property_ran in H4; Ens.
         - apply Theorem49; split; apply Property_ran in H5; Ens. }
       unfold Function in H3; apply H3 in H; auto.
-  - assert (ran(f|y) ⊂ P [x] /\ ran(f|y) ≠ Φ).
+  - assert (ran(f|(y)) ⊂ P [x] /\ ran(f|(y)) ≠ Φ).
     { destruct H4; split.
       - unfold Included; intros; unfold Range in H6; apply AxiomII in H6.
         destruct H6, H7; unfold Restriction in H7; apply Theorem4' in H7.
@@ -1171,7 +1171,7 @@ Proof.
     + unfold Cartesian in H8; apply AxiomII_P in H8; apply H8.
     + clear H8; double H9; apply H4 in H9; rewrite <- H1 in H9.
       apply Property_Value in H9; auto.
-      assert (f[y0] ∈ ran(f|y)).
+      assert (f[y0] ∈ ran(f|(y))).
       { AssE [y0,f[y0]]; apply Theorem49 in H10; destruct H10.
         unfold Range; apply AxiomII; split; auto.
         exists y0; unfold Restriction; apply Theorem4'; split; auto.
@@ -1252,7 +1252,7 @@ Proof.
       apply Lemma97 with (r:= r⁻¹) in H10; auto; clear H6; double H4.
       apply Theorem96 in H6; destruct H6; clear H11; destruct H6 as [H11 H6].
       clear H11; elim H9; clear H9; unfold WellOrdered in H10; destruct H10.
-      assert (ran(f⁻¹|W) ⊂ dom(f) /\ ran(f⁻¹|W) ≠ Φ).
+      assert (ran(f⁻¹|(W)) ⊂ dom(f) /\ ran(f⁻¹|(W)) ≠ Φ).
       { split; unfold Included; intros.
         - unfold Range in H11; apply AxiomII in H11; destruct H11, H12.
           unfold Restriction in H12; apply Theorem4' in H12; destruct H12.
@@ -1278,7 +1278,7 @@ Proof.
         apply H in H13; rewrite H13 in H12; auto.
       * double H12; apply H8 in H13; apply AxiomII in H13; destruct H13, H14.
         AssE [x1,y]; apply Theorem49 in H15; destruct H15; clear H16.
-        assert (x1 ∈ ran(f⁻¹|W)).
+        assert (x1 ∈ ran(f⁻¹|(W))).
         { unfold Range; apply AxiomII; split; auto; exists y.
           unfold Restriction; apply Theorem4'; split.
           - unfold Inverse; apply AxiomII_P; split; try apply Theorem49; auto.

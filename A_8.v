@@ -6,8 +6,7 @@ Module A8.
 
 (* 正则公理 VII *)
 
-Axiom AxiomVII : forall x,
-  x ≠ Φ -> exists y:Class, y ∈ x /\ x ∩ y = Φ.
+Axiom AxiomVII : forall x, x ≠ Φ -> exists y, y ∈ x /\ x ∩ y = Φ.
 
 Hint Resolve AxiomVII : set.
 
@@ -51,7 +50,7 @@ Hint Resolve Theorem102 : set.
 
 (* 定义103 *)
 
-Definition E : Class := \{\ ( λ x y, x ∈ y) \}\.
+Definition E : Class := \{\ λ x y, x ∈ y \}\.
 
 Hint Unfold E : set.
 
@@ -514,9 +513,9 @@ Hint Resolve Theorem124 : set.
 
 (* 定义125 *)
 
-Definition Restriction f x : Class := f ∩ (x) × μ.
+Definition Restriction f x : Class := f ∩ (x × μ).
 
-Notation "f | x" := (Restriction f x)(at level 30).
+Notation "f | ( x )" := (Restriction f x)(at level 30).
 
 Hint Unfold Restriction: set.
 
@@ -524,8 +523,8 @@ Hint Unfold Restriction: set.
 (* 定理126 *)
 
 Theorem Theorem126 : forall f x,
-  Function f -> Function (f | x) /\ dom( f | x) = x ∩ dom( f) /\
-  (forall y, y ∈ dom( f | x) -> (f | x) [y] = f [y]).
+  Function f -> Function (f|(x)) /\ dom(f|(x)) = x ∩ dom( f) /\
+  (forall y, y ∈ dom(f|(x)) -> (f|(x)) [y] = f [y]).
 Proof.
   intros; repeat split; intros.
   - unfold Relation; intros; apply AxiomII in H0; destruct H0, H1.
@@ -581,9 +580,9 @@ Qed.
 
 Theorem Theorem127 : forall f h g,
   Function f -> Ordinal dom(f) ->
-  (forall u0, u0 ∈ dom(f) -> f[u0] = g[f|u0]) ->
+  (forall u0, u0 ∈ dom(f) -> f[u0] = g[f|(u0)]) ->
   Function h -> Ordinal dom(h) ->
-  (forall u1, u1 ∈ dom(h) -> h[u1] = g [h|u1]) -> h ⊂ f \/ f ⊂ h.
+  (forall u1, u1 ∈ dom(h) -> h[u1] = g [h|(u1)]) -> h ⊂ f \/ f ⊂ h.
 Proof.
   intros.
   generalize (Lemma_xy _ _ H0 H3); intro; apply Theorem109 in H5.
@@ -600,7 +599,7 @@ Proof.
     apply AxiomII in H7; destruct H7, H9.
     apply AxiomII in H9; destruct H9 as [_[H9 H11]].
     generalize (H1 _ H9); generalize (H4 _ H11); intros.
-    assert ((h | u) = (f | u)).
+    assert ((h | (u)) = (f | (u))).
     { apply AxiomI; intros; split; intros.
       - apply AxiomII in H14; destruct H14, H15.
         apply AxiomII; repeat split; auto; PP H16 a b.
@@ -637,7 +636,7 @@ Hint Resolve Theorem127 : set.
 (* 定理128 *)
 
 Definition En_f' g := \{\ λ u v, u ∈ R /\ (exists h, Function h /\
-  Ordinal dom(h) /\ (forall z, z ∈ dom(h) -> h[z] = g [h | z] ) /\
+  Ordinal dom(h) /\ (forall z, z ∈ dom(h) -> h[z] = g [h | (z)] ) /\
   [u,v] ∈ h ) \}\.
 
 Lemma Lemma128 : forall u v w,
@@ -648,7 +647,7 @@ Proof.
 Qed.
 
 Lemma Lemma128' : forall f x, 
-  Ordinal dom(f) -> Ordinal_Number x -> ~ x ∈ dom(f) -> f | x = f .
+  Ordinal dom(f) -> Ordinal_Number x -> ~ x ∈ dom(f) -> f | (x) = f .
 Proof.
   intros; apply AxiomI; split; intros.
   - apply AxiomII in H2; tauto.
@@ -664,8 +663,8 @@ Proof.
 Qed.
 
 Theorem Theorem128 :  forall g,
-  exists f, Function f /\ Ordinal dom(f) /\ (
-  forall x, Ordinal_Number x -> f [x] = g [f | x]).
+  exists f, Function f /\ Ordinal dom(f) /\
+  (forall x, Ordinal_Number x -> f [x] = g [f | (x)]).
 Proof.
   intros; exists (En_f' g).
   assert (Function (En_f' g)).
@@ -710,7 +709,7 @@ Proof.
       apply Property_Value in H10; auto; apply H9 in H8.
       assert (h [x] = (En_f' g) [x]). { eapply H; eauto. }
       rewrite <- H13; clear H13.
-      assert (h | x = En_f' g | x).
+      assert (h | (x) = En_f' g | (x)).
       { apply AxiomI; split; intros; apply AxiomII in H13; destruct H13, H14.
        - apply AxiomII; repeat split; auto.
        - apply AxiomII; repeat split; auto; rewrite Theorem70; auto.
@@ -816,7 +815,7 @@ Proof.
                      split; try Ens; double H22; apply Property_dom in H22.
                      split; try apply AxiomII; Ens.
                      split; try Ens; eapply Theorem111; eauto. }
-                   assert ((En_f' g ∪ [[y, g[En_f' g]]]) | z0 = En_f' g | z0).
+                   assert ((En_f' g ∪ [[y, g[En_f' g]]])|(z0) = En_f' g|(z0)).
                    { unfold Restriction; rewrite Theorem6'; rewrite Theorem8.
                      assert ((z0) × μ ∩ [[y, g [En_f' g]]] = Φ).
                      { apply AxiomI; split; intros.
@@ -835,7 +834,7 @@ Proof.
                        - generalize (Theorem16 z1); contradiction. }
                      rewrite H23, Theorem6, Theorem17; apply Theorem6'. }
                    rewrite H21, H23.
-                   assert (h | z0 = En_f' g | z0).
+                   assert (h | (z0) = En_f' g | (z0)).
                    { apply AxiomI; split; intros.
                      - apply AxiomII in H24; destruct H24, H25.
                        apply AxiomII; repeat split; auto.
@@ -851,7 +850,7 @@ Proof.
                    double H10; apply Theorem19 in H10; apply H15 in H10.
                    apply Theorem55 in H10; apply Theorem49 in H13; auto.
                    destruct H10; subst z0; rewrite H17.
-                   assert ((En_f' g ∪ [[y, g [En_f' g]]]) | y = En_f' g | y).
+                   assert ((En_f' g ∪ [[y, g [En_f' g]]])|(y) = En_f' g|(y)).
                    { apply AxiomI; split; intros.
                      - apply AxiomII in H10; destruct H10, H18.
                        apply AxiomII in H18; destruct H18, H20.
@@ -882,7 +881,7 @@ Proof.
 Qed.
 
 Lemma Lemma128'' : forall f h,
-  Function f -> Function h -> h ⊂ f -> f | dom(h) = h.
+  Function f -> Function h -> h ⊂ f -> f | (dom(h)) = h.
 Proof.
   intros; apply AxiomI; split; intros.
   - apply AxiomII in H2; destruct H2, H3.
@@ -901,7 +900,7 @@ Proof.
       apply Theorem19; tauto.
 Qed.
 
-Lemma Lemma128''' : forall h, Function h -> h | dom( h) = h.
+Lemma Lemma128''' : forall h, Function h -> h | (dom(h)) = h.
 Proof.
   intros; apply AxiomI; split; intros.
   - apply AxiomII in H0; tauto.
@@ -916,8 +915,8 @@ Qed.
 
 Lemma Lemma128'''' : forall f g h,
   Function f -> Function h -> Ordinal dom(f) ->
-  Ordinal dom( h)-> (forall x, Ordinal_Number x -> f [x] = g [f | x]) ->
-  (forall x, Ordinal_Number x -> h [x] = g [h | x]) -> h ⊂ f -> h = f.
+  Ordinal dom( h)-> (forall x, Ordinal_Number x -> f [x] = g [f | (x)]) ->
+  (forall x, Ordinal_Number x -> h [x] = g [h | (x)]) -> h ⊂ f -> h = f.
 Proof.
   intros.
   generalize (Theorem110 _ _ (Lemma_xy _ _ H1 H2)); intro.
@@ -947,15 +946,15 @@ Qed.
 
 Theorem Theorem128' :  forall g,
   forall f, Function f /\ Ordinal dom(f) /\
-  (forall x, Ordinal_Number x -> f [x] = g [f | x]) ->
+  (forall x, Ordinal_Number x -> f [x] = g [f | (x)]) ->
   forall h, Function h /\ Ordinal dom(h) /\
-  (forall x, Ordinal_Number x -> h [x] = g [h | x]) -> f = h.
+  (forall x, Ordinal_Number x -> h [x] = g [h | (x)]) -> f = h.
 Proof.
   intros; destruct H, H0, H1, H2.
-  assert (forall u, u ∈ dom(f) -> f [u] = g [f | u]); intros.
+  assert (forall u, u ∈ dom(f) -> f [u] = g [f | (u)]); intros.
   { apply H3; unfold Ordinal_Number; apply AxiomII; split; Ens.
     apply Theorem111 with (x:= dom(f)); auto. }
-  assert (forall u, u ∈ dom(h) -> h [u] = g [h | u]); intros.
+  assert (forall u, u ∈ dom(h) -> h [u] = g [h | (u)]); intros.
   { apply H4; unfold Ordinal_Number; apply AxiomII; split; Ens.
     apply Theorem111 with (x:= dom(h)); auto. }
   generalize (Theorem127 f h g H H1 H5 H0 H2 H6); intro; destruct H7.

@@ -184,7 +184,7 @@ Theorem Theorem91 : forall x y r,
   (exists v, v ∈ x /\ y = \{ λ u, u ∈ x /\ Rrelation u r v \}).
 Proof.
   intros; destruct H.
-  assert (exists v0:Class, FirstMember v0 r (x ~ y)).
+  assert (exists v0, FirstMember v0 r (x ~ y)).
   { unfold Section in H; destruct H, H1; unfold WellOrdered in H1; destruct H1.
     assert ((x ~ y) ⊂ x).
     { unfold Included; intros; apply AxiomII in H4; tauto. }
@@ -222,8 +222,8 @@ Proof.
   - right; red in H0; subst z; tauto.
   - generalize (classic (y = z)); intro; destruct H2.
     + left; red in H; subst z; tauto.
-    + apply Lemma_xy with (x:=(Section x r z)) in H1; auto.
-      apply Lemma_xy with (x:=(Section y r z)) in H2; auto.
+    + apply Lemma_xy with (x:= (Section x r z)) in H1; auto.
+      apply Lemma_xy with (x:= (Section y r z)) in H2; auto.
       apply Theorem91 in H1; destruct H1, H1.
       apply Theorem91 in H2; destruct H2, H2.
       unfold Section in H; destruct H as [_ [H _]].
@@ -271,17 +271,17 @@ Proof.
     assert (u ∈ Φ). { rewrite <- H8; apply AxiomII; repeat split; Ens. }
     generalize (Theorem16 u); intro; contradiction.
   - unfold Section in H; destruct H, H9.
-    assert (\{ λ u : Class,u ∈ x /\ Rrelation f [u] r u \} ⊂ y).
+    assert (\{ λ u, u ∈ x /\ Rrelation f [u] r u \} ⊂ y).
     { unfold Included; intros; apply AxiomII in H11; destruct H11, H12; auto. }
     unfold WellOrdered in H9; destruct H9.
-    add (\{ λ u : Class,u ∈ x /\ Rrelation f [u] r u \} ≠ Φ) H11.
+    add (\{ λ u, u ∈ x /\ Rrelation f [u] r u \} ≠ Φ) H11.
     apply H12 in H11; destruct H11; unfold FirstMember in H11; destruct H11.
     apply AxiomII in H11; destruct H11, H14.
     assert (f[x0] ∈ ran( f)).
     { rewrite <- H7 in H14; apply Property_Value in H14; auto.
       apply Property_ran in H14; auto. }
     assert (f [x0] ∈ y); auto; subst x.
-    assert (f [x0] ∈ \{ λ u : Class,u ∈ dom( f) /\ Rrelation f [u] r u \}).
+    assert (f [x0] ∈ \{ λ u, u ∈ dom( f) /\ Rrelation f [u] r u \}).
     { apply AxiomII; repeat split; try Ens.
       apply H6; repeat split; auto; apply H10 with x0; split; auto. }
     apply H13 in H7; contradiction.
@@ -470,7 +470,7 @@ Proof.
   intros; destruct H, H0, H1.
   assert (Order_Pr (g ⁻¹) s r).
   { apply Theorem96 in H2; tauto. }
-  generalize (classic (\{ λ a ,a ∈ (dom(f) ∩ dom(g)) /\ f[a] ≠ g[a] \} = Φ)).
+  generalize (classic (\{ λ a, a ∈ (dom(f) ∩ dom(g)) /\ f[a] ≠ g[a] \} = Φ)).
   intro; destruct H6.
   - generalize (Lemma_xy _ _ H0 H3); intro.
     unfold Order_Pr in H; destruct H; unfold Order_Pr in H2; destruct H2.
@@ -481,7 +481,7 @@ Proof.
       apply AxiomII_P in H13; destruct H13.
       rewrite Theorem70; auto; apply AxiomII_P; split; auto; rewrite H14.
       generalize (classic (f[a] = g[a])); intro; destruct H15; auto.
-      assert (a ∈ \{ λ a,a ∈ (dom( f) ∩ dom( g)) /\ f [a] ≠ g [a] \}).
+      assert (a ∈ \{ λ a, a ∈ (dom( f) ∩ dom( g)) /\ f [a] ≠ g [a] \}).
       { apply AxiomII; split; Ens; split; auto.
         apply Theorem30 in H10; rewrite H10; auto. }
       eapply AxiomI in H6; apply H6 in H16.
@@ -492,12 +492,12 @@ Proof.
       apply AxiomII_P in H13; destruct H13.
       rewrite Theorem70; auto; apply AxiomII_P; split; auto; rewrite H14.
       generalize (classic (f[a] = g[a])); intro; destruct H15; auto.
-      assert (a ∈ \{ λ a,a ∈ (dom( f) ∩ dom( g)) /\ f [a] ≠ g [a] \}).
+      assert (a ∈ \{ λ a, a ∈ (dom( f) ∩ dom( g)) /\ f [a] ≠ g [a] \}).
       { apply AxiomII; split; Ens; split; auto. apply Theorem30 in H10.
         rewrite Theorem6' in H10; rewrite H10; auto. }
       eapply AxiomI in H6; apply H6 in H16.
       generalize (Theorem16 a); contradiction.
-  - assert (\{ λ a,a ∈ (dom( f) ∩ dom( g)) /\ f [a] ≠ g [a] \} ⊂ dom(f)).
+  - assert (\{ λ a, a ∈ (dom( f) ∩ dom( g)) /\ f [a] ≠ g [a] \} ⊂ dom(f)).
     { unfold Included; intros; apply AxiomII in H7; destruct H7, H8.
       apply Theorem4' in H8; tauto. }
     double H2; double H; unfold Order_Pr in H9; destruct H9, H10, H11.
