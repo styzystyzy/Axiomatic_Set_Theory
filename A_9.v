@@ -21,7 +21,7 @@ Hint Unfold Integer : set.
 
 (* 定义130 *)
 
-Definition LastMember x E y : Prop := FirstMember x (E ⁻¹) y.
+Definition LastMember x r y : Prop := FirstMember x (r ⁻¹) y.
 
 Hint Unfold LastMember : set.
 
