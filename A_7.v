@@ -423,9 +423,9 @@ Proof.
     apply Property_Value' in H10; auto; apply Property_dom in H10.
     rewrite Lemma96 in H10; apply Property_Value' in H1; auto.
     apply Property_dom in H1; rewrite Lemma96 in H1.
-    rewrite Lemma96''' with (f:=(g⁻¹)); try rewrite Theorem61; auto.
+    rewrite Lemma96''' with (f:=g⁻¹); try (rewrite Theorem61; apply H12); auto.
     pattern v; rewrite Lemma96''' with (f:=(g⁻¹));
-    try rewrite Theorem61; auto. }
+    try rewrite Theorem61; try apply H11; try apply H12; auto. }
   assert (v ∈ \{ λ a, a ∈ (dom(f) ∩ dom(g)) /\ f [a] ≠ g [a] \}).
   { apply Property_Value' in H1; try tauto; apply Property_dom in H1.
     apply Property_Value' in H8; try tauto; apply Property_dom in H8.

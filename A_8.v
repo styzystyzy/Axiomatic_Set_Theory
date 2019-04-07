@@ -225,7 +225,7 @@ Proof.
   unfold full; intros; unfold Included; intros.
   apply Theorem107 in H1; unfold Ordinal in H1.
   assert (y ⊂ x); auto; assert (m ∈ x); auto.
-  assert (m⊂ x); auto; assert (z ∈ x); auto.
+  assert (m ⊂ x); auto; assert (z ∈ x); auto.
   apply Theorem88 in H1; destruct H1.
   unfold Transitive in H1; specialize H1 with z m y.
   assert (Rrelation z E y).
@@ -646,20 +646,23 @@ Proof.
   unfold full in H2; eapply H2; eauto.
 Qed.
 
-Lemma Lemma128' : forall f x, 
-  Ordinal dom(f) -> Ordinal_Number x -> ~ x ∈ dom(f) -> f | (x) = f .
+Lemma Lemma128' : forall f x,
+  Function f -> Ordinal dom(f) -> Ordinal_Number x ->
+  ~ x ∈ dom(f) -> f | (x) = f .
 Proof.
   intros; apply AxiomI; split; intros.
-  - apply AxiomII in H2; tauto.
+  - apply AxiomII in H3; tauto.
   - apply AxiomII; split; Ens; split; auto.
-    PP' H3 a b; apply AxiomII_P; split; Ens; split.
-    + unfold Ordinal in H0; apply AxiomII in H0; destruct H0.
-      generalize (Theorem110 _ _ (Lemma_xy _ _ H H4)); intro.
-      apply Property_dom in H2; auto.
-      destruct H5 as [H5 | [H5 | H5]]; try contradiction.
+    unfold Function, Relation in H; destruct H as [H _].
+    double H3; apply H in H4; destruct H4 as [a [b H4]]; rewrite H4 in *.
+    clear H H4; apply AxiomII_P; split; Ens; split.
+    + unfold Ordinal in H1; apply AxiomII in H1; destruct H1.
+      assert (Ordinal dom(f) /\ Ordinal x); auto.
+      apply Theorem110 in H4; apply Property_dom in H3; auto.
+      destruct H4 as [H4 | [H4 | H4]]; try contradiction.
       * eapply Lemma128; eauto.
-      * rewrite H5 in H2; auto.
-    + apply Property_ran in H2; apply Theorem19; Ens.
+      * rewrite H4 in H3; auto.
+    + apply Property_ran in H3; apply Theorem19; Ens.
 Qed.
 
 Theorem Theorem128 :  forall g,
@@ -698,8 +701,10 @@ Proof.
     + apply AxiomII in H2; destruct H2, H3; apply AxiomII_P in H3.
       destruct H2, H3, H4, H5 as [h [H5 [H6 [H7 H8]]]].
       assert (h ⊂ En_f' g).
-      { unfold Included; intros; PP' H10 a b; apply AxiomII_P.
-        split; try Ens; double H9; apply Property_dom in H9.
+      { double H5; unfold Included; intros; unfold Function, Relation in H9.
+        destruct H9 as [H9 _]; double H10; apply H9 in H11.
+        destruct H11 as [a [b H11]]; rewrite H11 in *; clear H9 H11 z.
+        apply AxiomII_P; split; try Ens; double H10; apply Property_dom in H9.
         split; try apply AxiomII; Ens; split; Ens.
         eapply Theorem111; eauto. }
       double H8; apply H9 in H10; double H8.
@@ -718,7 +723,7 @@ Proof.
          apply Property_Value in H19; auto; apply H9 in H19; eapply H; eauto. }
       rewrite <- H13; auto.
     + generalize H2; intro; apply Theorem69 in H2; auto.
-      rewrite (Lemma128' _ _ H0 H1 H3).
+      rewrite (Lemma128' _ _ H H0 H1 H3).
       generalize (classic (En_f' g ∈ dom(g))); intro; destruct H4.
       * generalize Theorem113; intro; destruct H5 as [H5 _].
         apply Theorem107 in H5; unfold WellOrdered in H5; destruct H5.
@@ -811,8 +816,11 @@ Proof.
                    rewrite Theorem70 in H19; auto.
                    apply AxiomII_P in H19; destruct H19.
                    assert (h ⊂ En_f' g).
-                   { unfold Included; intros; PP' H23 a b; apply AxiomII_P.
-                     split; try Ens; double H22; apply Property_dom in H22.
+                   { unfold Included; intros; double H16.
+                     unfold Function, Relation in H23; destruct H23 as [H23 _].
+                     double H22; apply H23 in H24; destruct H24 as [a [b H24]].
+                     rewrite H24 in *; clear H23 H24; apply AxiomII_P.
+                     split; try Ens; double H22; apply Property_dom in H23.
                      split; try apply AxiomII; Ens.
                      split; try Ens; eapply Theorem111; eauto. }
                    assert ((En_f' g ∪ [[y, g[En_f' g]]])|(z0) = En_f' g|(z0)).

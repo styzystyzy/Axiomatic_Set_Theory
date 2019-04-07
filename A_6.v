@@ -176,14 +176,14 @@ Theorem Theorem70 : forall f,
   Function f -> f = \{\ λ x y, y = f[x] \}\.
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H1 a b; apply AxiomII_P; split; try Ens.
-    apply AxiomI; split; intros.
+  - double H0; unfold Function, Relation in H; destruct H.
+    apply H in H1; destruct H1 as [a [b H1]]; rewrite H1 in *; clear H1.
+    apply AxiomII_P; split; try Ens; apply AxiomI; split; intros.
     + apply AxiomII; split; intros; try Ens.
       apply AxiomII in H3; destruct H3.
       apply Lemma_xy with (y:=[a, y] ∈ f) in H0; auto.
-      unfold Function in H; apply H in H0.
-      rewrite <- H0; auto.
-    + unfold Element_I in H1; apply AxiomII in H2; destruct H2.
+      apply H2 in H0; rewrite <- H0; auto.
+    + unfold Value, Element_I in H1; apply AxiomII in H1; destruct H1.
       apply H3; apply AxiomII; split; auto; AssE [a,b].
       apply Theorem49 in H4; try apply H4.
   - PP H0 a b; apply AxiomII_P in H1; destruct H1.
@@ -198,17 +198,18 @@ Qed.
 Hint Resolve Theorem70 : set.
 
 
-(* 定理71 如果f和g都是函数，则f=g的充要条件是对于每个x，f[x]=g[x] *)
+(* 定理71 如果f和g都是函数，则f=g的充要条件是对于每个x，f[x]=g[x] *) (** C **)
 
 Theorem Theorem71 : forall f g,
   Function f /\ Function g -> (f = g <-> forall x, f[x] = g[x]).
 Proof.
   intros; split; intros; try rewrite H0; trivial.
   destruct H; intros; apply (Theorem70 f) in H; apply (Theorem70 g) in H1.
-  rewrite H; rewrite H1; apply AxiomI; split; intros;
-  PP' H3 a b; AssE [a,b]; apply AxiomII_P; apply AxiomII_P in H2.
-  - rewrite <- H0; split; tauto.
-  - rewrite -> H0; split; tauto.
+  rewrite H; rewrite H1; apply AxiomI; split; intros.
+  - PP H2 a b; apply AxiomII_P in H3; apply AxiomII_P.
+    destruct H3; split; auto; rewrite <- H0; auto.
+  - PP H2 a b; apply AxiomII_P in H3; apply AxiomII_P.
+    destruct H3; split; auto; rewrite -> H0; auto.
 Qed.
 
 Hint Resolve Theorem71 : set.

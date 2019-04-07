@@ -255,9 +255,7 @@ Definition Relation r : Prop :=
 Hint Unfold Relation: set.
 
 
-(* 定义57 r∘s={u:对于某个x，某个y及某个z,u=[x,z],[x,y]∈s同时[y,z]∈r},类r∘s是r与s的合成 *)
-
-(* { (x,y) : ... } *)
+(* { (x,y) : ... } *) (** C **)
 
 Parameter Classifier_P : (Class -> Class -> Prop) -> Class.
 
@@ -269,16 +267,13 @@ Axiom AxiomII_P : forall (a b: Class) (P: Class -> Class -> Prop),
 Axiom Property_P : forall (z: Class) (P: Class -> Class -> Prop),
   z ∈ \{\ P \}\ -> (exists a b, z = [a,b]) /\ z ∈ \{\ P \}\.
 
-Axiom Property_P' : forall (z: Class) (P: Class -> Class -> Prop),
-  (forall a b, z = [a,b] -> z ∈ \{\ P \}\) -> z ∈ \{\ P \}\.
-
 Ltac PP H a b := apply Property_P in H; destruct H as [[a [b H]]];
   rewrite H in *.
 
-Ltac PP' H a b:= apply Property_P'; intros a b H; rewrite H in *.
+Hint Resolve AxiomII_P Property_P : set.
 
-Hint Resolve AxiomII_P Property_P Property_P': set.
 
+(* 定义57 r∘s={u:对于某个x，某个y及某个z,u=[x,z],[x,y]∈s同时[y,z]∈r},类r∘s是r与s的合成 *)
 
 Definition Composition r s : Class :=
  \{\ λ x z, exists y, [x,y]∈s /\ [y,z]∈r \}\.
@@ -298,12 +293,12 @@ Theorem Theorem58 : forall (r s t: Class),
   (r ∘ s) ∘ t = r ∘ (s ∘ t).
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H0 a b; apply AxiomII_P in H; destruct H, H1 as [y H1], H1.
+  - PP H a b. apply AxiomII_P in H0; destruct H0, H1 as [y H1], H1.
     apply AxiomII_P in H2; destruct H2, H3, H3; apply AxiomII_P; split; auto.
     exists x; split; try tauto; apply AxiomII_P; split; Ens.
     AssE [a,y]; AssE [y,x]; apply Theorem49 in H5; apply Theorem49 in H6.
     destruct H5, H6; apply Theorem49; auto.
-  - PP' H0 a b; apply AxiomII_P in H; destruct H, H1 as [y H1], H1.
+  - PP H a b; apply AxiomII_P in H0; destruct H0, H1 as [y H1], H1.
     apply AxiomII_P in H1; destruct H1, H3, H3; apply AxiomII_P; split; auto.
     exists x; split; auto; apply AxiomII_P; split; Ens.
     AssE [a,x]; AssE [y,b]; apply Theorem49 in H5; apply Theorem49 in H6.
@@ -329,12 +324,11 @@ Proof.
         exists y; split; auto.
       * right; apply AxiomII_P; split; auto.
         exists y; split; auto.
-    + PP' H1 a b; apply Theorem4 in H0.
-      apply AxiomII_P; destruct H0.
-      * apply AxiomII_P in H0; destruct H0.
+    + apply Theorem4 in H0; destruct H0; PP H0 a b; apply AxiomII_P.
+      * apply AxiomII_P in H1; destruct H1.
         destruct H2 as [y H2]; destruct H2; split; auto.
         exists y; split; auto; apply Theorem4; try tauto.
-      * apply AxiomII_P in H0; destruct H0.
+      * apply AxiomII_P in H1; destruct H1.
         destruct H2 as [y H2]; destruct H2; split; auto.
         exists y; split; auto; apply Theorem4; try tauto.
   - unfold Included; intros; PP H0 a b.
@@ -372,13 +366,14 @@ Proof.
 Qed.
 
 Theorem Theorem61 : forall (r: Class),
-  (r ⁻¹)⁻¹ = r.
+  Relation r -> (r ⁻¹)⁻¹ = r.
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP H a b; apply AxiomII_P in H0; destruct H0.
-    apply AxiomII_P in H1; apply H1.
-  - PP' H0 a b; apply AxiomII_P; split; Ens.
-    apply AxiomII_P; split; auto.
+  - PP H0 a b; apply AxiomII_P in H1; destruct H1.
+    apply AxiomII_P in H2; apply H2.
+  - unfold Relation in H; double H0; apply H in H1.
+    destruct H1 as [a [b H1]]; rewrite H1 in *; clear H1.
+    apply AxiomII_P; split; Ens; apply AxiomII_P; split; auto.
     apply Lemma61; auto; Ens.
 Qed.
 
@@ -391,15 +386,15 @@ Theorem Theorem62 : forall (r s: Class),
   (r ∘ s)⁻¹ = (s⁻¹) ∘ (r⁻¹).
 Proof.
   intros; apply AxiomI; split; intros.
-  - PP' H0 a b; apply AxiomII_P in H; destruct H as [H H1].
+  - PP H a b; apply AxiomII_P in H0; destruct H0 as [H0 H1].
     apply AxiomII_P; split; auto.
     apply AxiomII_P in H1; destruct H1, H2, H2.
     exists x; split.
     + apply AxiomII_P; split; auto. 
       apply Lemma61; Ens; exists r; auto.
     + apply AxiomII_P; split; auto.
-      apply Lemma61; Ens.    
-  - PP' H0 a b; apply AxiomII_P in H; destruct H, H1, H1.
+      apply Lemma61; Ens.
+  - PP H a b; apply AxiomII_P in H0; destruct H0, H1, H1.
     apply AxiomII_P; split; auto.
     apply AxiomII_P in H1; apply AxiomII_P in H2.
     apply AxiomII_P; split.

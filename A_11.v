@@ -60,7 +60,7 @@ Proof.
   unfold Equivalent in H; destruct H as [f H], H, H0.
   unfold Equivalent; exists f⁻¹; split.
   - unfold Function1_1 in H; destruct H.
-    unfold Function1_1; split; try rewrite Theorem61; auto.
+    unfold Function1_1; split; try rewrite Theorem61; try apply H; auto.
   - unfold Inverse; split.
     + unfold Domain; apply AxiomI; split; intros.
       * apply AxiomII in H2; destruct H2, H3.
@@ -402,7 +402,7 @@ Proof.
       apply H0 in H17; add (z ∈ y) H1; apply Theorem111 in H1.
       unfold R; apply AxiomII; split; Ens. }
     apply Theorem94 with (u:= f[u]) in H17; auto; rewrite <- H12 in H13.
-    apply Lemma96''' in H13; try rewrite (Theorem61 f) in *; auto.
+    apply Lemma96''' in H13; try rewrite (Theorem61 f) in *; try apply H2; auto.
     rewrite <- H13 in H17; unfold LessEqual; destruct H15.
     - unfold Rrelation, E in H17; elim H17.
       apply AxiomII_P; split; auto.
@@ -557,6 +557,233 @@ Proof.
 Qed.
 
 Hint Resolve Theorem159 : set.
+
+
+(* Schroeder-Bernstein Theorem (proof without AC) *)
+
+(* 像集 *)
+
+Definition Imgset f x := \{ λ u, exists v, v ∈ x /\ u = f[v] \}.
+
+Hint Unfold Imgset : set.
+
+Inductive Ind := | fir : Ind | next : Ind -> Ind.
+
+Fixpoint C' x u g f (n: Ind) : Class :=
+   match n with
+      | fir => (x ~ u)
+      | next p => Imgset g (Imgset f (C' x u g f p))
+       end.
+
+Lemma tj : forall a b f, Function1_1 f -> b ∈ ran(f) -> a = f⁻¹[b] -> b = f [a].
+Proof.
+  intros. pattern b.
+  rewrite Lemma96''' with (f:=f); try apply H; auto.
+  rewrite H1; auto.
+Qed.
+
+Lemma tj0 : forall a b f, Function1_1 f -> a ∈ dom(f) -> b = f [a] -> a = f⁻¹[b].
+Proof.
+  intros. pattern a.
+  rewrite tj with (f:=f⁻¹) (a:=b); auto.
+  - destruct H; split; auto.
+    rewrite Theorem61; try apply H; auto.
+  - rewrite <- Lemma96; auto.
+  - rewrite Theorem61; try apply H; auto.
+Qed.
+
+Theorem Cantor_Bernstein_Schroeder : forall x y u v,
+  Ensemble x -> Ensemble y -> u ⊂ x -> v ⊂ y -> x ≈ v -> y ≈ u -> x ≈ y.
+Proof.
+  intros; destruct H3 as [f H3], H3, H5, H4 as [g H4], H4, H7.
+  set (C:= (C' x u g f)); set (CC:=  \{ λ u, exists n, u = C n \}).
+  assert (forall z, z ∈ x -> ~ z ∈ (∪ CC) -> z ∈ (x ~ (∪ CC))) as G1; intros.
+  { apply AxiomII; repeat split; Ens.
+    apply AxiomII; split; Ens. }
+  assert ((∪ CC) ⊂ x) as G2.
+  { red; intros.
+    apply AxiomII in H9; destruct H9, H10, H10.
+    apply AxiomII in H11; destruct H11, H12; subst x0.
+    clear H9 H11; generalize dependent z.
+    induction x1; intros; unfold C in H10; simpl in H10.
+    - apply AxiomII in H10; tauto.
+    - apply AxiomII in H10; destruct H10, H10, H10.
+      apply AxiomII in H10; destruct H10, H12, H12.
+      apply IHx1 in H12; subst x0 x v y u z.
+      apply Property_Value in H12; try apply H3.
+      apply Property_ran in H12; apply H2 in H12.
+      apply Property_Value in H12; try apply H4.
+      apply Property_ran in H12; auto. }
+  assert (forall z, z ∈ x -> ~ z ∈ (∪ CC) -> z ∈ ran( g)) as G3; intros.
+  { rewrite H8; destruct (classic (z ∈ u)); auto.
+    elim H10; apply AxiomII; split; Ens.
+    exists (C fir); unfold C; simpl; split.
+    - apply AxiomII; repeat split; Ens.
+      apply AxiomII; split; Ens.
+    - apply AxiomII; split.
+      + apply Theorem33 with (x:=x); auto.
+        red; intros; apply AxiomII in H12; tauto.
+      + exists fir; auto. }
+  exists \{\ λ p q, (p ∈ x) /\ ((p ∈ (∪CC) -> q = f[p]) /\ (p ∈ (x ~ (∪CC)) -> q = g⁻¹[p])) \}\.
+  repeat split; intros.
+  - red; intros; PP H9 a b; eauto.
+  - destruct H9; apply AxiomII_P in H9; destruct H9, H11, H12.
+    apply AxiomII_P in H10; destruct H10, H14, H15, (classic (x0 ∈ (∪ CC))).
+    + rewrite H12, H15; auto.
+    + rewrite H13, H16; auto.
+  - red; intros; PP H9 a b; eauto.
+  - destruct H9; apply AxiomII_P in H9; destruct H9.
+    apply AxiomII_P in H10; destruct H10.
+    apply AxiomII_P in H11; apply AxiomII_P in H12. 
+    destruct H11, H13, H14, H12, H16, H17.
+    destruct (classic (y0 ∈ (∪ CC))), (classic (z ∈ (∪ CC))).
+    + apply H14 in H19; apply H17 in H20; subst x.
+      apply tj0 in H19; apply tj0 in H20; auto.
+      rewrite H19, H20; auto.
+    + double H19; double H20; apply G1 in H20; auto.
+      apply H14 in H19; apply H18 in H20.
+      subst x; rewrite H19 in H20.
+      apply G3 in H16; apply tj in H20; auto.
+      elim H22; apply AxiomII; split; Ens.
+      apply AxiomII in H21; destruct H21, H21, H21.
+      apply AxiomII in H23; destruct H23, H24; subst x.
+      exists (C (next x1)); split.
+      * unfold C; simpl; apply AxiomII; split; Ens.
+        exists f[y0]; split; auto; apply AxiomII; split; Ens.
+        apply Theorem69 in H13; apply Theorem19; auto.
+      * apply AxiomII; split; Ens; unfold C; simpl.
+        apply Theorem33 with (x:= dom(f)); auto; red; intros.
+        apply AxiomII in H24; destruct H24, H25, H25; subst z0.
+        assert (x ∈ dom(g)).
+        { destruct (classic (x ∈ dom(g))); auto.
+          apply Theorem69 in H26; rewrite H26 in H24.
+          destruct (Theorem39 H24). }
+        apply Property_Value in H26; try apply H4.
+        apply Property_ran in H26.
+        rewrite H8 in H26; auto.
+    + double H19; double H20; apply G1 in H19; auto.
+      apply H17 in H20; apply H15 in H19.
+      subst x; rewrite H20 in H19.
+      apply G3 in H13; apply tj in H19; auto.
+      elim H21; apply AxiomII; split; Ens.
+      apply AxiomII in H22; destruct H22, H22, H22.
+      apply AxiomII in H23; destruct H23, H24; subst x.
+      exists (C (next x1)); split.
+      * unfold C; simpl; apply AxiomII; split; Ens.
+        exists f[z]; split; auto; apply AxiomII; split; Ens.
+        apply Theorem69 in H16; apply Theorem19; auto.
+      * apply AxiomII; split; Ens; unfold C; simpl.
+        apply Theorem33 with (x:= dom(f)); auto; red; intros.
+        apply AxiomII in H24; destruct H24, H25, H25; subst z0.
+        assert (x ∈ dom(g)).
+        { destruct (classic (x ∈ dom(g))); auto.
+          apply Theorem69 in H26; rewrite H26 in H24.
+          destruct (Theorem39 H24). }
+        apply Property_Value in H26; try apply H4.
+        apply Property_ran in H26.
+        rewrite H8 in H26; auto.
+    + double H13; double H16.
+      apply G3 in H21; apply G3 in H22; auto.
+      apply G1 in H19; apply G1 in H20; auto.
+      apply H15 in H19; apply H18 in H20; auto.
+      apply tj in H19; apply tj in H20; auto.
+      rewrite H19, H20; auto.
+  - apply AxiomI; split; intros.
+    + apply AxiomII in H9; destruct H9, H10.
+      apply AxiomII_P in H10; destruct H10; tauto.
+    + apply AxiomII; split; Ens.
+      destruct (classic (z ∈ (∪ CC))); subst x.
+      * exists f[z]; apply AxiomII_P.
+        repeat split; intros; auto.
+        { apply Theorem49; split; Ens.
+          apply Theorem19; apply Theorem69; auto. }
+        { apply AxiomII in H5; destruct H5, H11.
+          apply AxiomII in H12; destruct H12; contradiction. }
+      * exists g ⁻¹[z]; apply AxiomII_P.
+        repeat split; intros; auto; try tauto.
+        apply Theorem49; split; Ens; apply Theorem19; apply Theorem69.
+        rewrite <- Lemma96', H8.
+        destruct (classic (z ∈ u)); auto.
+        elim H10; apply AxiomII; split; Ens.
+        exists (C fir); split; apply AxiomII; repeat split; Ens.
+        -- apply AxiomII; split; Ens.
+        -- apply Theorem33 with dom(f); auto. 
+           red; intros; apply AxiomII in H11; tauto.
+  - apply AxiomI; split; intros.
+    + apply AxiomII in H9; destruct H9, H10.
+      apply AxiomII_P in H10; destruct H10, H11, H12.
+      destruct (classic (x0 ∈ (∪ CC))).
+      * apply H12 in H14; subst z.
+        apply H2; rewrite <- H6; rewrite <- H5 in H11.
+        apply Property_Value in H11; try apply H3.
+        apply Property_ran in H11; auto.
+      * double H11; apply G1 in H11; apply G3 in H15; auto.
+        apply H13 in H11; auto; rewrite Lemma96' in H15.
+        apply Property_Value in H15; try apply H4.
+        apply Property_ran in H15; subst z.
+        rewrite <- Lemma96, H7 in H15; auto.
+    + apply AxiomII; split; Ens.
+      destruct (classic (z ∈ (Imgset f (∪ CC)))).
+      * apply AxiomII in H10; destruct H10, H11, H11.
+        exists x0; apply AxiomII_P; repeat split; auto; intros.
+        { apply Theorem49; split; Ens. }
+        { apply AxiomII in H13; destruct H13, H14.
+          apply AxiomII in H15; destruct H15; contradiction. }
+      * assert (g[z] ∈ ran(g)).
+        { subst y; apply Property_Value in H9; try apply H4.
+          apply Property_ran in H9; Ens. }
+        assert (forall n, (C n) ⊂ (∪ CC)); intros.
+        { apply Theorem32; apply AxiomII; split; Ens. 
+          apply Theorem33 with (x:=x); auto.
+          red; induction n; intros.
+          - apply AxiomII in H12; tauto.
+          - unfold C in H12; simpl in H12.
+            apply AxiomII in H12; destruct H12, H13, H13.
+            apply AxiomII in H13; destruct H13, H15, H15.
+            apply IHn in H15; subst x z0 x0 v y u.
+            apply Property_Value in H15; try apply H3.
+            apply Property_ran in H15; apply H2 in H15.
+            apply Property_Value in H15; try apply H4.
+            apply Property_ran in H15; auto. }
+        assert (~ g[z] ∈ (∪ CC)); try intro.
+        { apply AxiomII in H13; destruct H13, H14, H14.
+          apply AxiomII in H15; destruct H15, H16; subst x0 u.
+          destruct x1.
+          - apply AxiomII in H14; destruct H14, H14.
+            apply AxiomII in H16; apply H16; auto.
+          - unfold C in H14; simpl in H14.
+            apply AxiomII in H14; destruct H14, H14, H14.
+            apply AxiomII in H14; destruct H14, H17, H17.
+            assert (z = x0) as G4.
+            { rewrite Lemma96''' with (f:=g⁻¹); try apply H4.
+              - pattern z; rewrite Lemma96''' with (f:=g⁻¹); try apply H4.
+                + repeat rewrite Theorem61; try apply H4; rewrite H16; auto.
+                + rewrite Theorem61; apply H4.
+                + rewrite <- Lemma96, H7; auto.
+              - rewrite Theorem61; apply H4.
+              - rewrite <- Lemma96; subst x x0 y v.
+                apply H12 in H17; apply G2 in H17.
+                apply Property_Value in H17; try apply H3.
+                apply Property_ran in H17; auto. }
+            subst x0 x; apply H10; apply AxiomII; split; Ens.
+            exists x2; split; auto.
+            apply AxiomII; split; Ens.
+            exists (C x1); split; auto.
+            apply AxiomII; split; eauto.
+            apply Theorem33 with (x:=∪ CC); auto.
+            apply Theorem33 with (x:=dom(f)); auto. }
+        exists g[z]; apply AxiomII_P; repeat split; intros.
+        { apply Theorem49; split; Ens. }
+        { subst u x; auto. }
+        { contradiction. }
+        { pattern g at 2; rewrite <- Theorem61; try apply H4.
+          rewrite <- Lemma96'''; auto; try apply H4.
+          - rewrite Theorem61; apply H4.
+          - apply Property_Value' in H11; try apply H4.
+            apply Property_dom in H11; rewrite <- Lemma96; auto. }
+Qed.
+
+Hint Resolve Cantor_Bernstein_Schroeder : set.
 
 
 (* 定理160 如果f是一个函数同时f是一个集，则P(f的值域)≼P(f的定义域) *)
@@ -932,12 +1159,12 @@ Proof.
         apply Theorem4 in H11; rewrite H9 in *; destruct H11; auto.
         apply AxiomII in H11; clear H5; destruct H11.
         rewrite <- H11 in H8; try apply Theorem19; Ens.
-        pattern f at 2 in H8; rewrite <- Theorem61 in H8.
-        rewrite <- Lemma96''' in H8; try rewrite Theorem61; auto.
+        pattern f at 2 in H8; rewrite <- Theorem61 in H8; try apply H1.
+        rewrite <- Lemma96''' in H8; try rewrite Theorem61; try apply H1; auto.
         { rewrite H8 in H7; generalize (Theorem101 x); contradiction. }
         { rewrite <- Lemma96; auto. }
       * apply Theorem49 in H6; apply Theorem55 in H8; auto; destruct H8.
-        rewrite H8 in H7; generalize (Theorem101 x); contradiction. 
+        rewrite H8 in H7; generalize (Theorem101 x); contradiction.
     + unfold Range; apply AxiomII; split; Ens.
       assert (z∈ran(f)). { rewrite H3; unfold PlusOne; apply Theorem4; auto. }
       generalize (classic (z = f[x])); intros; destruct H7.
@@ -3066,10 +3293,11 @@ Proof.
             assert (z∈ran(f) /\ f[[u,v]]∈ran(f) /\ Rrelation z E f[[u,v]]).
             { repeat split; auto; unfold Rrelation, E; apply AxiomII_P.
               split; auto; apply Theorem49; Ens. }
-            apply H5 in H; pattern f at 3 in H; rewrite <- Theorem61 in H.
+            apply H5 in H; pattern f at 3 in H.
+            rewrite <- Theorem61 in H; try apply H4.
             apply Property_Value' in H9; auto; apply Property_dom in H9.
             rewrite Lemma96 in H9; double H20; apply Property_ran in H2.
-            rewrite <- Lemma96''' in H; try rewrite Theorem61; auto.
+            rewrite<-Lemma96''' in H; try rewrite Theorem61; try apply H4;auto.
             rewrite Lemma96' in H2; apply Property_Value in H2; auto.
             assert ([z,x1] ∈ f ⁻¹).
             { apply AxiomII_P; split; auto; apply Theorem49.

@@ -147,8 +147,9 @@ Proof.
   assert (f|(dom(f)) = f).
   { unfold Restriction; apply AxiomI; split; intros.
     - apply AxiomII in H11; apply H11.
-    - apply AxiomII; repeat split; Ens.
-      PP' H12 a b; apply AxiomII_P; repeat split; Ens.
+    - apply AxiomII; repeat split; Ens; unfold Function, Relation in H3.
+      double H11; apply H3 in H12; destruct H12 as [a [b H12]].
+      rewrite H12 in *; clear H12; apply AxiomII_P; repeat split; Ens.
       + apply Property_dom in H11; auto.
       + apply Property_ran in H11; apply Theorem19; Ens. }
   rewrite H11 in *; clear H11.
@@ -337,8 +338,9 @@ Proof.
     apply H5 in H15; assert (f|(dom(f)) = f).
     { unfold Restriction; apply AxiomI; split; intros.
       - apply AxiomII in H16; apply H16.
-      - apply AxiomII; repeat split; Ens.
-        PP' H17 a b; apply AxiomII_P; repeat split; Ens.
+      - apply AxiomII; repeat split; Ens; unfold Function, Relation in H3.
+        double H16; apply H3 in H17; destruct H17 as [a [b H17]].
+        rewrite H17 in *; clear H17; apply AxiomII_P; repeat split; Ens.
         + apply Property_dom in H16; auto.
         + apply Property_ran in H16; apply Theorem19; Ens. }
     rewrite H16 in *; rewrite H15 in H12; clear H15 H16.
