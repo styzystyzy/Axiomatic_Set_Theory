@@ -28,7 +28,7 @@ The ``axiomatic set theory'' formal system is free from the more obvious paradox
 10. Choice_Axiom.v
   Presents the axiom of choice and proves the Hausdorff maximal principle.
 11. Cardinal_Numbers.v
-  Defines the catdinal numbers and proves the most commonly used properties.
+  Defines the cardinal numbers and proves the most commonly used properties.
 
 # Author
 
