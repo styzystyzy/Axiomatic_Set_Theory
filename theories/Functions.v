@@ -21,7 +21,7 @@ Proof.
   intros; destruct H.
   unfold Function; split; intros.
   - unfold Relation; intros; PP H1 a b; eauto.
-  - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
+  - destruct H1; apply Axiom_SchemeP in H1; apply Axiom_SchemeP in H2.
     destruct H1, H2, H3, H4, H3, H4.
     unfold Function in H, H0; destruct H; destruct H0.
     assert (x0=x1). { apply H8 with x; split; auto. }
@@ -40,7 +40,7 @@ Notation "dom( f )" := (Domain f)(at level 5).
 Corollary Property_dom : forall x y f,
   [x,y] ∈ f -> x ∈ dom( f ).
 Proof.
-  intros; unfold Domain; apply AxiomII; split; eauto.
+  intros; unfold Domain; apply Axiom_Scheme; split; eauto.
   AssE [x,y]; apply Theorem49 in H0; apply H0.
 Qed.
 
@@ -56,7 +56,7 @@ Notation "ran( f )" := (Range f)(at level 5).
 Corollary Property_ran : forall x y f,
   [x,y] ∈ f -> y ∈ ran( f ).
 Proof.
-  intros; apply AxiomII.
+  intros; apply Axiom_Scheme.
   split; eauto; AssE [x,y].
   apply Theorem49 in H0; apply H0.
 Qed.
@@ -68,15 +68,15 @@ Hint Unfold Range : set.
 
 Theorem Theorem67 : dom( μ ) = μ /\ ran( μ ) = μ.
 Proof.
-  intros; split; apply AxiomI; split; intros.
+  intros; split; apply Axiom_Extent; split; intros.
   - AssE z; apply Theorem19; auto.
   - apply Theorem19 in H.
-    unfold Domain; apply AxiomII; split; auto.
+    unfold Domain; apply Axiom_Scheme; split; auto.
     exists z; apply Theorem19.
     apply Theorem49; split; auto.
   - AssE z; apply Theorem19; auto.
   - apply Theorem19 in H.
-    unfold Range; apply AxiomII; split; auto.
+    unfold Range; apply Axiom_Scheme; split; auto.
     exists z; apply Theorem19.
     apply Theorem49; split; auto.
 Qed.
@@ -99,15 +99,15 @@ Corollary Property_Value : forall f x,
   Function f -> x ∈ dom( f ) -> [x,f[x]] ∈ f.
 Proof.
   intros; unfold Function in H;destruct H as [_ H].
-  apply AxiomII in H0; destruct H0, H1.
+  apply Axiom_Scheme in H0; destruct H0, H1.
   assert (x0=f[x]).
-  - apply AxiomI; split; intros.
-    + apply AxiomII; split; intros; try Ens.
-      apply AxiomII in H3; destruct H3.
+  - apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme; split; intros; try Ens.
+      apply Axiom_Scheme in H3; destruct H3.
       assert (x0=y). { apply H with x; split; auto. }
       rewrite <- H5; auto.
-    + apply AxiomII in H2; destruct H2 as [_ H2].
-      apply H2; apply AxiomII; split; auto.
+    + apply Axiom_Scheme in H2; destruct H2 as [_ H2].
+      apply H2; apply Axiom_Scheme; split; auto.
       AssE [x, x0]; apply Theorem49 in H3; apply H3.
   - rewrite <- H2; auto.
 Qed.
@@ -124,10 +124,10 @@ Proof.
   intros; split; intros.
   - generalize (classic (\{ λ y0, [x, y0] ∈ f \} = Φ)); intro.
     destruct H1; auto; apply Lemma35 in H1; auto.
-    elim H1; intro z; intros; apply AxiomII in H2.
+    elim H1; intro z; intros; apply Axiom_Scheme in H2.
     destruct H2 as [H2 H3]; apply Property_dom in H3; contradiction.
   - apply Lemma35; auto; exists f[x].
-    apply AxiomII; eapply Property_Value in H0; auto.
+    apply Axiom_Scheme; eapply Property_Value in H0; auto.
     split; auto; apply Property_ran in H0; Ens.
 Qed.
 
@@ -136,17 +136,17 @@ Theorem Theorem69 : forall x f,
 Proof.
   intros; split; intros.
   - assert (\{ λ y, [x,y] ∈ f \} = Φ).
-    { apply AxiomI; split; intros.
-      apply AxiomII in H0; destruct H0.
+    { apply Axiom_Extent; split; intros.
+      apply Axiom_Scheme in H0; destruct H0.
       apply Property_dom in H1; contradiction.
       generalize (Theorem16 z); intro; contradiction. }
     unfold Value; rewrite H0; apply Theorem24.
   - assert (\{ λ y, [x,y] ∈ f \} <> Φ).
-    { intro; apply AxiomII in H; destruct H, H1.
-      generalize (AxiomI \{ λ y, [x, y] ∈ f \} Φ); intro.
+    { intro; apply Axiom_Scheme in H; destruct H, H1.
+      generalize (Axiom_Extent \{ λ y, [x, y] ∈ f \} Φ); intro.
       destruct H2; apply H2 with x0 in H0; destruct H0.
       assert (x0 ∈ Φ).
-      { apply H0; apply AxiomII; split; auto.
+      { apply H0; apply Axiom_Scheme; split; auto.
         AssE [x, x0];  apply Theorem49 in H5; tauto. }
       eapply Theorem16; eauto. }
     apply Theorem35 in H0; apply Theorem19; auto.
@@ -161,7 +161,7 @@ Corollary Property_Value' : forall f x,
   Function f -> f[x] ∈ ran(f) -> [x,f[x]] ∈ f.
 Proof.
   intros; apply Property_Value; auto.
-  apply AxiomII in H0; destruct H0, H1.
+  apply Axiom_Scheme in H0; destruct H0, H1.
   generalize (classic (x ∈ dom( f))); intros.
   destruct H2; auto; apply Theorem69 in H2; auto.
   rewrite H2 in H0; generalize (Theorem39); intro; contradiction.
@@ -175,18 +175,18 @@ Hint Resolve Property_Value' : set.
 Theorem Theorem70 : forall f,
   Function f -> f = \{\ λ x y, y = f[x] \}\.
 Proof.
-  intros; apply AxiomI; split; intros.
+  intros; apply Axiom_Extent; split; intros.
   - double H0; unfold Function, Relation in H; destruct H.
     apply H in H1; destruct H1 as [a [b H1]]; rewrite H1 in *; clear H1.
-    apply AxiomII_P; split; try Ens; apply AxiomI; split; intros.
-    + apply AxiomII; split; intros; try Ens.
-      apply AxiomII in H3; destruct H3.
+    apply Axiom_SchemeP; split; try Ens; apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme; split; intros; try Ens.
+      apply Axiom_Scheme in H3; destruct H3.
       apply Lemma_xy with (y:=[a, y] ∈ f) in H0; auto.
       apply H2 in H0; rewrite <- H0; auto.
-    + unfold Value, Element_I in H1; apply AxiomII in H1; destruct H1.
-      apply H3; apply AxiomII; split; auto; AssE [a,b].
+    + unfold Value, Element_I in H1; apply Axiom_Scheme in H1; destruct H1.
+      apply H3; apply Axiom_Scheme; split; auto; AssE [a,b].
       apply Theorem49 in H4; try apply H4.
-  - PP H0 a b; apply AxiomII_P in H1; destruct H1.
+  - PP H0 a b; apply Axiom_SchemeP in H1; destruct H1.
     generalize (classic (a ∈ dom( f ))); intros; destruct H3.
     + apply Property_Value in H3; auto; rewrite H2; auto.
     + apply Theorem69 in H3; auto.
@@ -205,10 +205,10 @@ Theorem Theorem71 : forall f g,
 Proof.
   intros; split; intros; try rewrite H0; trivial.
   destruct H; intros; apply (Theorem70 f) in H; apply (Theorem70 g) in H1.
-  rewrite H; rewrite H1; apply AxiomI; split; intros.
-  - PP H2 a b; apply AxiomII_P in H3; apply AxiomII_P.
+  rewrite H; rewrite H1; apply Axiom_Extent; split; intros.
+  - PP H2 a b; apply Axiom_SchemeP in H3; apply Axiom_SchemeP.
     destruct H3; split; auto; rewrite <- H0; auto.
-  - PP H2 a b; apply AxiomII_P in H3; apply AxiomII_P.
+  - PP H2 a b; apply Axiom_SchemeP in H3; apply Axiom_SchemeP.
     destruct H3; split; auto; rewrite -> H0; auto.
 Qed.
 
@@ -217,17 +217,17 @@ Hint Resolve Theorem71 : set.
 
 (* 代换公理 V 如果f是一个函数同时f的定义域是一个集，则f的值域是一个集 *)
 
-Axiom AxiomV : forall f,
+Axiom Axiom_Substitution : forall f,
   Function f -> Ensemble dom(f) -> Ensemble ran(f).
 
-Hint Resolve AxiomV : set.
+Hint Resolve Axiom_Substitution : set.
 
 
 (* 合并公理 VI 如果x是一个集，则 ∪x 也是一个集 *)
 
-Axiom AxiomVI : forall x, Ensemble x -> Ensemble (∪ x).
+Axiom Axiom_Amalgamation : forall x, Ensemble x -> Ensemble (∪ x).
 
-Hint Resolve AxiomVI : set.
+Hint Resolve Axiom_Amalgamation : set.
 
 
 (* 定义72 x × y={[u,v]:u∈x/\v∈y} *)
@@ -249,27 +249,27 @@ Proof.
   exists (\{\ λ w z, w∈y /\ z = [u,w] \}\).
   repeat split; intros.
   - red; intros; PP H1 a b; Ens.
-  - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
+  - destruct H1; apply Axiom_SchemeP in H1; apply Axiom_SchemeP in H2.
     destruct H1 as [_ [_ H1]]; destruct H2 as [_ [_ H2]].
     rewrite H2; auto.
-  - apply AxiomI; split; intros.
-    + apply AxiomII in H1; destruct H1 as [_ [t H1]].
-      apply AxiomII_P in H1; tauto.
-    + apply AxiomII; split; try Ens.
-      exists [u,z]; apply AxiomII_P; split; auto.
+  - apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme in H1; destruct H1 as [_ [t H1]].
+      apply Axiom_SchemeP in H1; tauto.
+    + apply Axiom_Scheme; split; try Ens.
+      exists [u,z]; apply Axiom_SchemeP; split; auto.
       AssE z; apply Theorem49; split; auto.
       apply Theorem49; tauto.
-  - apply AxiomI; split; intros.
-    + apply AxiomII in H1; destruct H1, H1, H2.
-      apply AxiomII_P in H2; destruct H2, H3.
-      rewrite H4; apply AxiomII_P; repeat split; auto.
+  - apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme in H1; destruct H1, H1, H2.
+      apply Axiom_SchemeP in H2; destruct H2, H3.
+      rewrite H4; apply Axiom_SchemeP; repeat split; auto.
       * apply Theorem49; split; auto; AssE x0.
-      * apply AxiomII; split; auto.
-    + PP H1 a b; apply AxiomII_P in H2; destruct H2, H3.
-      apply AxiomII; split; auto; exists b.
-      apply AxiomII_P; repeat split; auto.
+      * apply Axiom_Scheme; split; auto.
+    + PP H1 a b; apply Axiom_SchemeP in H2; destruct H2, H3.
+      apply Axiom_Scheme; split; auto; exists b.
+      apply Axiom_SchemeP; repeat split; auto.
       * apply Theorem49; split; auto; AssE b.
-      * apply Theorem19 in H; apply AxiomII in H3.
+      * apply Theorem19 in H; apply Axiom_Scheme in H3.
         destruct H3; rewrite H5; auto.
 Qed.
 
@@ -278,7 +278,7 @@ Theorem Theorem73 : forall u y,
 Proof.
   intros.
   elim H; intros; apply Ex_Lemma73 in H; auto.
-  destruct H, H, H2; rewrite <- H3; apply AxiomV; auto.
+  destruct H, H, H2; rewrite <- H3; apply Axiom_Substitution; auto.
   rewrite H2; auto.
 Qed.
 
@@ -295,22 +295,22 @@ Proof.
   exists (\{\ λ u z, u∈x /\ z = [u] × y \}\).
   repeat split; intros.
   - red; intros; PP H1 a b; Ens.
-  - destruct H1; apply AxiomII_P in H1; apply AxiomII_P in H2.
+  - destruct H1; apply Axiom_SchemeP in H1; apply Axiom_SchemeP in H2.
     destruct H1, H2, H3, H4; subst z; auto.
-  - apply AxiomI; split; intros.
-    + apply AxiomII in H1; destruct H1, H2.
-      apply AxiomII_P in H2; tauto.
-    + apply AxiomII; split; try AssE z.
-      exists (([z]) × y); apply AxiomII_P.
+  - apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme in H1; destruct H1, H2.
+      apply Axiom_SchemeP in H2; tauto.
+    + apply Axiom_Scheme; split; try AssE z.
+      exists (([z]) × y); apply Axiom_SchemeP.
       repeat split; auto; apply Theorem49; split; auto.
       apply Theorem73; auto.
-  - apply AxiomI; split; intros.
-    + apply AxiomII in H1; destruct H1, H2.
-      apply AxiomII_P in H2; apply AxiomII.
+  - apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme in H1; destruct H1, H2.
+      apply Axiom_SchemeP in H2; apply Axiom_Scheme.
       split; auto; exists x0; tauto.
-    + apply AxiomII in H1; destruct H1, H2, H2.
-      apply AxiomII; split; auto.
-      exists x0; apply AxiomII_P; repeat split; auto.
+    + apply Axiom_Scheme in H1; destruct H1, H2, H2.
+      apply Axiom_Scheme; split; auto.
+      exists x0; apply Axiom_SchemeP; repeat split; auto.
       apply Theorem49; split; auto; AssE x0.
 Qed.
 
@@ -318,21 +318,21 @@ Lemma Lemma74 : forall x y,
   Ensemble x /\ Ensemble y ->
   ∪ \{ λ z, exists u, u∈x /\ z = [u] × y \} = x × y.
 Proof.
-  intros; apply AxiomI; split; intros.
-  - apply AxiomII in H0; destruct H0, H1, H1.
-    apply AxiomII in H2; destruct H2, H3, H3.
+  intros; apply Axiom_Extent; split; intros.
+  - apply Axiom_Scheme in H0; destruct H0, H1, H1.
+    apply Axiom_Scheme in H2; destruct H2, H3, H3.
     rewrite H4 in H1; PP H1 a b.
-    apply AxiomII_P in H5; destruct H5, H6.
-    apply AxiomII_P; repeat split; auto.
-    apply AxiomII in H6; destruct H6 as [_ H6].
+    apply Axiom_SchemeP in H5; destruct H5, H6.
+    apply Axiom_SchemeP; repeat split; auto.
+    apply Axiom_Scheme in H6; destruct H6 as [_ H6].
     AssE x1; apply Theorem19 in H8.
     rewrite <- H6 in H3; auto.
-  - PP H0 a b; apply AxiomII_P in H1; destruct H1, H2.
-    apply AxiomII; split; auto.
+  - PP H0 a b; apply Axiom_SchemeP in H1; destruct H1, H2.
+    apply Axiom_Scheme; split; auto.
     exists (([a]) × y); split; AssE a.
-    + apply AxiomII_P; repeat split; auto.
-      apply AxiomII; intros; auto.
-    + apply AxiomII; split.
+    + apply Axiom_SchemeP; repeat split; auto.
+      apply Axiom_Scheme; intros; auto.
+    + apply Axiom_Scheme; split.
       * apply Theorem73; split; try apply H; auto.
       * exists a; split; auto.
 Qed.
@@ -342,8 +342,8 @@ Theorem Theorem74 : forall x y,
 Proof.
   intros; double H; double H0; destruct H0.
   apply Ex_Lemma74 in H; destruct H, H, H3.
-  rewrite <- H3 in H0; apply AxiomV in H0; auto.
-  rewrite H4 in H0; apply AxiomVI in H0.
+  rewrite <- H3 in H0; apply Axiom_Substitution in H0; auto.
+  rewrite H4 in H0; apply Axiom_Amalgamation in H0.
   rewrite Lemma74 in H0; auto.
 Qed.
 
@@ -356,13 +356,13 @@ Theorem Theorem75 : forall f,
   Function f /\ Ensemble dom( f ) -> Ensemble f.
 Proof.
   intros; destruct H.
-  assert (Ensemble ran(f)); try apply AxiomV; auto.
+  assert (Ensemble ran(f)); try apply Axiom_Substitution; auto.
   assert (Ensemble (dom(f) × ran(f))).
   { apply Theorem74; split; auto. }
   apply Theorem33 with (x:=(dom( f ) × ran( f ))); auto.
-  unfold Included; intros; rewrite Theorem70 in H3; auto.
+  unfold Subclass; intros; rewrite Theorem70 in H3; auto.
   PP H3 a b; rewrite <- Theorem70 in H4; auto; AssE [a,b].
-  repeat split; auto; apply AxiomII_P; split; auto.
+  repeat split; auto; apply Axiom_SchemeP; split; auto.
   generalize (Property_dom a b f H4); intro.
   generalize (Property_ran a b f H4); intro; tauto.
 Qed.
@@ -385,15 +385,15 @@ Theorem Theorem77 : forall x y,
 Proof.
   intros; apply Theorem33 with (x:=(pow(x × y))).
   - apply Theorem38; auto; apply Theorem74; auto.
-  - unfold Included; intros; apply Theorem38.
+  - unfold Subclass; intros; apply Theorem38.
     + apply Theorem74; auto.
-    + apply AxiomII in H0; destruct H0, H1, H2.
-    unfold Included; intros; rewrite Theorem70 in H4; auto.
+    + apply Axiom_Scheme in H0; destruct H0, H1, H2.
+    unfold Subclass; intros; rewrite Theorem70 in H4; auto.
     PP H4 a b; rewrite <- Theorem70 in H5; auto.
-    AssE [a,b]; apply AxiomII_P; split; auto.
+    AssE [a,b]; apply Axiom_SchemeP; split; auto.
     generalize (Property_dom a b z H5); intro; rewrite H2 in H7.
     generalize (Property_ran a b z H5); intro.
-    unfold Included in H3; apply H3 in H8; split; auto.
+    unfold Subclass in H3; apply H3 in H8; split; auto.
 Qed.
 
 Hint Resolve Theorem77 : set.

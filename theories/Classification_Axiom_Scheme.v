@@ -18,10 +18,10 @@ Notation "x ∈ y" := (In x y) (at level 10).
 
 (* 外延公理I  对于每个x与y，x=y成立之充分必要条件是对每一个z当且仅当z∈x时，z∈y *)
 
-Axiom AxiomI : forall (x y: Class),
+Axiom Axiom_Extent : forall (x y: Class),
   x = y <-> (forall z: Class, z∈x <-> z∈y).
 
-Hint Resolve AxiomI : set.
+Hint Resolve Axiom_Extent : set.
 
 
 (* 定义1  x为一集当且仅当对于某一y，x∈y *)
@@ -44,10 +44,10 @@ Notation "\{ P \}" := (Classifier P) (at level 0).
 
 (* 分类公理II  *)
 
-Axiom AxiomII : forall (b: Class) (P: Class -> Prop),
+Axiom Axiom_Scheme : forall (b: Class) (P: Class -> Prop),
   b ∈ \{ P \} <-> Ensemble b /\ (P b).
 
-Hint Resolve AxiomII : set.
+Hint Resolve Axiom_Scheme : set.
 
 
 End Classification.

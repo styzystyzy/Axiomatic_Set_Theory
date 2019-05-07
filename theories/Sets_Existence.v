@@ -6,10 +6,10 @@ Module Existence.
 
 (* 子集公理III 如果x是一个集，存在一个集y使得对于每个z，假定z⊂x，则z∈y *)
 
-Axiom AxiomIII : forall (x: Class),
+Axiom Axiom_Subsets : forall (x: Class),
   Ensemble x -> exists y, Ensemble y /\ (forall z, z⊂x -> z∈y).
 
-Hint Resolve AxiomIII : set.
+Hint Resolve Axiom_Subsets : set.
 
 
 (* 定理33  如果x是一个集同时z⊂x，则z是一个集 *)
@@ -17,7 +17,7 @@ Hint Resolve AxiomIII : set.
 Theorem Theorem33 : forall x z,
   Ensemble x -> z ⊂ x -> Ensemble z.
 Proof.
-  intros; apply AxiomIII in H; destruct H.
+  intros; apply Axiom_Subsets in H; destruct H.
   apply H in H0; Ens.
 Qed.
 
@@ -28,23 +28,23 @@ Hint Resolve Theorem33 : set.
 
 Theorem Theorem34 : Φ = ∩μ.
 Proof.
-  intros; apply AxiomI; split; intros.
+  intros; apply Axiom_Extent; split; intros.
   - generalize (Theorem16 z); contradiction.
-  - apply AxiomII in H; destruct H; apply H0.
+  - apply Axiom_Scheme in H; destruct H; apply H0.
     apply Theorem19; generalize (Theorem26 z); intros.
     apply Theorem33 in H1; auto.
 Qed.
 
 Theorem Theorem34' : μ = ∪μ.
 Proof.
-  apply AxiomI; split; intros.
-  - apply Lemma_x in H; destruct H; apply AxiomII in H.
-    destruct H; apply AxiomII; split; try auto.
-    generalize (AxiomIII z H); intros.
+  apply Axiom_Extent; split; intros.
+  - apply Lemma_x in H; destruct H; apply Axiom_Scheme in H.
+    destruct H; apply Axiom_Scheme; split; try auto.
+    generalize (Axiom_Subsets z H); intros.
     destruct H2; destruct H2; exists x; split.
-    + apply H3; unfold Included; auto.
+    + apply H3; unfold Subclass; auto.
     + apply Theorem19; auto.
-  - apply AxiomII in H; destruct H; apply Theorem19; auto.
+  - apply Axiom_Scheme in H; destruct H; apply Theorem19; auto.
 Qed.
 
 Hint Rewrite Theorem34 Theorem34' : set.
@@ -57,8 +57,8 @@ Proof.
   intros; assert (x = Φ <-> ~ (exists y, y∈x)).
   { split; intros.
     - intro; destruct H0; rewrite H in H0.
-      apply AxiomII in H0; destruct H0; case H1; auto.
-    - apply AxiomI; split; intros.
+      apply Axiom_Scheme in H0; destruct H0; case H1; auto.
+    - apply Axiom_Extent; split; intros.
       + elim H; exists z; auto.
       + generalize (Theorem16 z); contradiction. }
   split; intros.
@@ -80,20 +80,20 @@ Hint Resolve Lemma35 Theorem35 : set.
 
 (* 定义36  pow(x)={y:y⊂x} *)
 
-Definition PowerSet x : Class := \{ λ y, y ⊂ x \}.
+Definition PowerClass x : Class := \{ λ y, y ⊂ x \}.
 
-Notation "pow( x )" := (PowerSet x) (at level 0, right associativity).
+Notation "pow( x )" := (PowerClass x) (at level 0, right associativity).
 
-Hint Unfold PowerSet : set.
+Hint Unfold PowerClass : set.
 
 
 (* 定理37  u=pow(u) *)
 
 Theorem Theorem37 : μ = pow(μ).
 Proof.
-  apply AxiomI; split; intros.
-  - apply AxiomII; split; Ens; apply Theorem26'.
-  - apply AxiomII in H; destruct H; apply Theorem19; auto.
+  apply Axiom_Extent; split; intros.
+  - apply Axiom_Scheme; split; Ens; apply Theorem26'.
+  - apply Axiom_Scheme in H; destruct H; apply Theorem19; auto.
 Qed.
 
 Hint Rewrite Theorem37 : set.
@@ -105,15 +105,15 @@ Theorem Theorem38 : forall x y,
   Ensemble x -> Ensemble pow(x) /\ (y ⊂ x <-> y ∈ pow(x)).
 Proof.
   intros; split.
-  - apply AxiomIII in H; destruct H, H.
+  - apply Axiom_Subsets in H; destruct H, H.
     assert (pow(x) ⊂ x0).
-    { unfold Included; intros; apply AxiomII in H1.
+    { unfold Subclass; intros; apply Axiom_Scheme in H1.
       destruct H1; apply H0 in H2; auto. }
     apply Theorem33 in H1; auto.
   - split; intros.
     + apply Theorem33 with (z:=y) in H; auto.
-      apply AxiomII; split; auto.
-    + apply AxiomII in H0; apply H0.
+      apply Axiom_Scheme; split; auto.
+    + apply Axiom_Scheme in H0; apply H0.
 Qed.
 
 Hint Resolve Theorem38 : set.
@@ -127,8 +127,8 @@ Lemma Lemma_N : ~ Ensemble \{ λ x, x ∉ x \}.
 Proof.
   generalize (classic (\{ λ x, x ∉ x \} ∈ \{ λ x, x ∉ x \})).
   intros; destruct H.
-  - double H; apply AxiomII in H; destruct H; contradiction.
-  - intro; elim H; apply AxiomII; split; auto.
+  - double H; apply Axiom_Scheme in H; destruct H; contradiction.
+  - intro; elim H; apply Axiom_Scheme; split; auto.
 Qed.
 
 Theorem Theorem39 : ~ Ensemble μ.
@@ -155,9 +155,9 @@ Hint Unfold Singleton : set.
 Theorem Theorem41 : forall x, Ensemble x -> (forall y, y∈[x] <-> y=x).
 Proof.
   intros; split; intros.
-  - apply AxiomII in H0; destruct H0; apply H1.
+  - apply Axiom_Scheme in H0; destruct H0; apply H1.
     apply Theorem19 in H; auto.
-  - apply AxiomII; split; intros; auto.
+  - apply Axiom_Scheme; split; intros; auto.
     rewrite <- H0 in H; auto.
 Qed.
 
@@ -170,11 +170,11 @@ Theorem Theorem42 : forall x, Ensemble x -> Ensemble [x].
 Proof.
   intros; double H; apply Theorem33 with (x:= pow(x)).
   - apply Theorem38 with (y:=x) in H0; destruct H0; auto.
-  - unfold Included; intros.
+  - unfold Subclass; intros.
     apply Theorem38 with (y:=z) in H0; destruct H0.
-    apply H2; apply AxiomII in H1; destruct H1.
+    apply H2; apply Axiom_Scheme in H1; destruct H1.
     apply Theorem19 in H; apply H3 in H.
-    rewrite H; unfold Included; auto.
+    rewrite H; unfold Subclass; auto.
 Qed.
 
 Hint Resolve Theorem42 : set.
@@ -189,9 +189,9 @@ Proof.
     rewrite H in H0; generalize Theorem39; contradiction.
   - generalize (Theorem19 x); intros.
     apply definition_not with (B:= x∈μ) in H; try tauto.
-    apply AxiomI; split; intros.
-    * apply AxiomII in H1; destruct H1; apply Theorem19; auto.
-    * apply AxiomII; split; try contradiction.
+    apply Axiom_Extent; split; intros.
+    * apply Axiom_Scheme in H1; destruct H1; apply Theorem19; auto.
+    * apply Axiom_Scheme; split; try contradiction.
       apply Theorem19 in H1; auto.
 Qed.
 
@@ -217,17 +217,17 @@ Hint Resolve Theorem42' : set.
 Theorem Theorem44 : forall x, Ensemble x -> ∩[x] = x /\ ∪[x] = x.
 Proof.
   intros; generalize (Theorem41 x H); intros.
-  split; apply AxiomI.
+  split; apply Axiom_Extent.
   - split; intros.
-    + apply AxiomII in H1; destruct H1; apply H2; apply H0; auto.
-    + apply AxiomII; split; Ens; intros.
+    + apply Axiom_Scheme in H1; destruct H1; apply H2; apply H0; auto.
+    + apply Axiom_Scheme; split; Ens; intros.
       apply H0 in H2; rewrite H2; auto.
   - split; intros.
-    + apply AxiomII in H1; destruct H1, H2, H2.
-      unfold Singleton in H3; apply AxiomII in H3; destruct H3.
+    + apply Axiom_Scheme in H1; destruct H1, H2, H2.
+      unfold Singleton in H3; apply Axiom_Scheme in H3; destruct H3.
       rewrite H4 in H2; auto; apply Theorem19; auto.
-    + apply AxiomII; split; Ens; exists x; split; auto.
-      unfold Singleton; apply AxiomII; auto.
+    + apply Axiom_Scheme; split; Ens; exists x; split; auto.
+      unfold Singleton; apply Axiom_Scheme; auto.
 Qed.
 
 Theorem Theorem44' : forall x, ~ Ensemble x -> ∩[x] = Φ /\ ∪[x] = μ.
@@ -242,22 +242,22 @@ Hint Resolve Theorem44 Theorem44' : set.
 
 (* 并的公理IV 如果x是一个集同时y是一个集，则x∪y也是一个集*)
 
-Axiom AxiomIV : forall (x y: Class),
+Axiom Axiom_Union : forall (x y: Class),
   Ensemble x /\ Ensemble y -> Ensemble (x∪y).
 
-Corollary AxiomIV': forall x y,
+Corollary Axiom_Union': forall x y,
   Ensemble (x∪y) -> Ensemble x /\ Ensemble y.
 Proof.
   intros; split.
   - assert (x ⊂ (x∪y)).
-    { unfold Included; intros; apply Theorem4; tauto. }
+    { unfold Subclass; intros; apply Theorem4; tauto. }
     apply Theorem33 in H0; auto.
   - assert (y ⊂ (x∪y)).
-    { unfold Included; intros; apply Theorem4; tauto. }
+    { unfold Subclass; intros; apply Theorem4; tauto. }
     apply Theorem33 in H0; auto.
 Qed.
 
-Hint Resolve AxiomIV AxiomIV' : set.
+Hint Resolve Axiom_Union Axiom_Union' : set.
 
 
 (* 定义45  [x|y]=[x]∪[y] *)
@@ -276,18 +276,18 @@ Theorem Theorem46 : forall x y z,
   Ensemble x /\ Ensemble y -> Ensemble [x|y] /\ (z∈[x|y] <-> (z=x \/ z=y)).
 Proof.
   split; intros; destruct H.
-  - apply Theorem42 in H; apply Theorem42 in H0; apply AxiomIV; auto.
+  - apply Theorem42 in H; apply Theorem42 in H0; apply Axiom_Union; auto.
   - split; intros.
-    + apply AxiomII in H1; destruct H1.
-      destruct H2; apply AxiomII in H2; destruct H2.
+    + apply Axiom_Scheme in H1; destruct H1.
+      destruct H2; apply Axiom_Scheme in H2; destruct H2.
       * left; apply H3; apply Theorem19; auto.
       * right; apply H3; apply Theorem19; auto.
-    + apply AxiomII; split.
+    + apply Axiom_Scheme; split.
       * destruct H1; try rewrite <- H1 in H; auto.
         rewrite <- H1 in H0; auto.
       * destruct H1.
-        -- left; apply AxiomII; split; rewrite <- H1 in H; auto.
-        -- right; apply AxiomII; split; rewrite <- H1 in H0; auto.
+        -- left; apply Axiom_Scheme; split; rewrite <- H1 in H; auto.
+        -- right; apply Axiom_Scheme; split; rewrite <- H1 in H0; auto.
 Qed.
 
 Theorem Theorem46' : forall x y, [x|y] = μ <-> ~ Ensemble x \/ ~ Ensemble y.
@@ -298,7 +298,7 @@ Proof.
     assert ([μ] = μ); try apply Theorem43; try apply Theorem39.
     apply H0 in H2; rewrite <- H in H2.
     assert (Ensemble([x]∪[y]) <-> Ensemble [x] /\ Ensemble [y]).
-    { split; try apply AxiomIV; try apply AxiomIV'. }
+    { split; try apply Axiom_Union; try apply Axiom_Union'. }
     apply definition_not in H3; auto.
     generalize (not_and_or (Ensemble [x]) (Ensemble [y])); intros.
     apply H4 in H3; destruct H3.
@@ -320,33 +320,33 @@ Hint Resolve Theorem46 Theorem46' : set.
 Theorem Theorem47 : forall x y,
   Ensemble x /\ Ensemble y -> (∩[x|y] = x ∩ y) /\ (∪[x|y] = x ∪ y).
 Proof.
-  intros; split; apply AxiomI; intros.
+  intros; split; apply Axiom_Extent; intros.
   - split; intros.
     + apply Theorem4'.
-      split; apply AxiomII in H0; destruct H0; apply H1; apply Theorem4.
-      * left; apply AxiomII; split; try apply H; auto.
-      * right; apply AxiomII; split; try apply H; auto.
+      split; apply Axiom_Scheme in H0; destruct H0; apply H1; apply Theorem4.
+      * left; apply Axiom_Scheme; split; try apply H; auto.
+      * right; apply Axiom_Scheme; split; try apply H; auto.
     + apply Theorem4' in H0; destruct H0.
-      apply AxiomII; split; intros; try AssE z.
+      apply Axiom_Scheme; split; intros; try AssE z.
       apply Theorem4 in H2; destruct H2.
-      * apply AxiomII in H2; destruct H2; destruct H.
+      * apply Axiom_Scheme in H2; destruct H2; destruct H.
         apply Theorem19 in H; apply H4 in H; rewrite H; auto.
-      * apply AxiomII in H2; destruct H2; destruct H.
+      * apply Axiom_Scheme in H2; destruct H2; destruct H.
         apply Theorem19 in H5; apply H4 in H5; rewrite H5; auto.
   - split; intros.
-    + apply AxiomII in H0; destruct H0; destruct H1; destruct H1.
+    + apply Axiom_Scheme in H0; destruct H0; destruct H1; destruct H1.
       apply Theorem4 in H2; apply Theorem4.
-      destruct H2; apply AxiomII in H2; destruct H2.
+      destruct H2; apply Axiom_Scheme in H2; destruct H2.
       * left; destruct H; apply Theorem19 in H.
         apply H3 in H; rewrite H in H1; auto.
       * right; destruct H; apply Theorem19 in H4.
         apply H3 in H4; rewrite H4 in H1; auto.
-    + apply Theorem4 in H0; apply AxiomII.
+    + apply Theorem4 in H0; apply Axiom_Scheme.
       split; destruct H0; try AssE z.
       * exists x; split; auto; apply Theorem4; left.
-        apply AxiomII; split; try apply H; trivial.
+        apply Axiom_Scheme; split; try apply H; trivial.
       * exists y; split; auto; apply Theorem4; right.
-        apply AxiomII; split; try apply H; trivial.
+        apply Axiom_Scheme; split; try apply H; trivial.
 Qed.
 
 Theorem Theorem47' : forall x y,
@@ -363,4 +363,3 @@ Hint Resolve Theorem47 Theorem47' : set.
 End Existence.
 
 Export Existence.
-

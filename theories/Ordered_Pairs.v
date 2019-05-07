@@ -20,11 +20,11 @@ Theorem Theorem49 : forall (x y: Class),
 Proof.
   intros; split; intro.
   - unfold Ordered in H; unfold Unordered in H.
-    apply AxiomIV' in H; destruct H; apply Theorem42' in H.
+    apply Axiom_Union' in H; destruct H; apply Theorem42' in H.
     apply Theorem42' in H; apply Theorem42' in H0; split; auto.
-    unfold Unordered in H0; apply AxiomIV' in H0.
+    unfold Unordered in H0; apply Axiom_Union' in H0.
     destruct H0; apply Theorem42' in H1; auto.
-  - destruct H; unfold Ordered, Unordered; apply AxiomIV; split.
+  - destruct H; unfold Ordered, Unordered; apply Axiom_Union; split.
     + apply Theorem42; auto; apply Theorem42; auto.
     + apply Theorem42; auto; apply Theorem46; auto.
 Qed.
@@ -49,7 +49,7 @@ Lemma Lemma50 : forall (x y: Class),
 Proof.
   intros; apply Theorem49 in H; auto.
   unfold Ordered in H; unfold Unordered in H.
-  apply AxiomIV' in H; destruct H.
+  apply Axiom_Union' in H; destruct H.
   apply Theorem42' in H; auto.
   apply Theorem42' in H0; auto.
 Qed.
@@ -61,65 +61,65 @@ Proof.
   intros; elim H; intros.
   repeat unfold Ordered; apply Lemma50 in H.
   apply Theorem47 in H; auto; elim H; intros; repeat split.
-  - rewrite H3; apply AxiomI; split; intros; try (apply Theorem4; tauto).
+  - rewrite H3; apply Axiom_Extent; split; intros; try (apply Theorem4; tauto).
     apply Theorem4 in H4; destruct H4; auto; apply Theorem4; tauto.
-  - rewrite H2; apply AxiomI; split; intros.
+  - rewrite H2; apply Axiom_Extent; split; intros.
     + apply Theorem4' in H4; apply H4.
     + apply Theorem4'; split; auto; apply Theorem4; tauto.
-  - rewrite H2; apply AxiomI; split; intros.
-    + apply AxiomII in H4; destruct H4, H5, H5. 
-      apply Theorem4' in H6; destruct H6; apply AxiomII in H6.
+  - rewrite H2; apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme in H4; destruct H4, H5, H5. 
+      apply Theorem4' in H6; destruct H6; apply Axiom_Scheme in H6.
       destruct H6; rewrite <- H8; auto.
       apply Theorem19; auto.
-    + apply AxiomII; split; Ens; exists x. 
+    + apply Axiom_Scheme; split; Ens; exists x. 
       split; auto; apply Theorem4'; split.
-      * apply AxiomII; split; auto.
-      * apply Theorem4; left; apply AxiomII.
+      * apply Axiom_Scheme; split; auto.
+      * apply Theorem4; left; apply Axiom_Scheme.
         split; try apply H0; trivial.
-  - rewrite H2; apply AxiomI; split; intros.
-    + apply AxiomII in H4; destruct H4.
+  - rewrite H2; apply Axiom_Extent; split; intros.
+    + apply Axiom_Scheme in H4; destruct H4.
       apply H5; apply Theorem4'; split.
-      * apply AxiomII; split; auto.
-      * apply Theorem4; left; apply AxiomII; split; auto.
-    + apply AxiomII; split; Ens.
+      * apply Axiom_Scheme; split; auto.
+      * apply Theorem4; left; apply Axiom_Scheme; split; auto.
+    + apply Axiom_Scheme; split; Ens.
       intros; apply Theorem4' in H5. destruct H5. 
-      apply AxiomII in H5. destruct H5. rewrite H7; auto. 
+      apply Axiom_Scheme in H5. destruct H5. rewrite H7; auto. 
       apply Theorem19; auto.
-  - rewrite H3; apply AxiomI; split; intros.
-    + apply Theorem4; apply AxiomII in H4; destruct H4, H5, H5. 
+  - rewrite H3; apply Axiom_Extent; split; intros.
+    + apply Theorem4; apply Axiom_Scheme in H4; destruct H4, H5, H5. 
       apply Theorem4 in H6; destruct H6.
-      * apply AxiomII in H6; destruct H6; left; rewrite <- H7; auto. 
+      * apply Axiom_Scheme in H6; destruct H6; left; rewrite <- H7; auto. 
         apply Theorem19; auto.
       * apply Theorem4 in H6; destruct H6. 
-        -- apply AxiomII in H6; destruct H6.
+        -- apply Axiom_Scheme in H6; destruct H6.
            left; rewrite <- H7; auto; apply Theorem19; auto.
-        -- apply AxiomII in H6; destruct H6.
+        -- apply Axiom_Scheme in H6; destruct H6.
            right; rewrite <- H7; auto; apply Theorem19; auto.
-    + apply AxiomII; apply Theorem4 in H4; split.
+    + apply Axiom_Scheme; apply Theorem4 in H4; split.
       * unfold Ensemble; destruct H4; Ens.
       * destruct H4.
         -- exists x; split; auto; apply Theorem4; left.
-           apply AxiomII; split; auto.
+           apply Axiom_Scheme; split; auto.
         -- exists y; split; auto; apply Theorem4; right.
-           apply Theorem4; right; apply AxiomII; split; auto.
-  - rewrite H3; apply AxiomI; split; intros.
+           apply Theorem4; right; apply Axiom_Scheme; split; auto.
+  - rewrite H3; apply Axiom_Extent; split; intros.
     + apply Lemma_x in H4; elim H4; intros.
-      apply AxiomII in H5; apply AxiomII in H6.
+      apply Axiom_Scheme in H5; apply Axiom_Scheme in H6.
       destruct H4; apply Theorem4'; split; auto.
       * apply H5; apply Theorem4; left.
-        apply AxiomII; split; auto.
+        apply Axiom_Scheme; split; auto.
       * apply H6; apply Theorem4; right.
         apply Theorem4; right.
-        apply AxiomII; split; auto.
+        apply Axiom_Scheme; split; auto.
     + apply Theorem4' in H4; destruct H4. 
-      apply AxiomII; split; Ens.
+      apply Axiom_Scheme; split; Ens.
       intros; apply Theorem4 in H6; destruct H6.
-      * apply AxiomII in H6; destruct H6; rewrite H7; auto.
+      * apply Axiom_Scheme in H6; destruct H6; rewrite H7; auto.
         apply Theorem19; auto.
-      * apply AxiomII in H6; destruct H6, H7.
-        -- apply AxiomII in H7; destruct H7. 
+      * apply Axiom_Scheme in H6; destruct H6, H7.
+        -- apply Axiom_Scheme in H7; destruct H7. 
            rewrite H8; auto; apply Theorem19; auto.
-        -- apply AxiomII in H7; destruct H7.
+        -- apply Axiom_Scheme in H7; destruct H7.
            rewrite H8; auto; apply Theorem19; auto.
 Qed.
 
@@ -167,10 +167,10 @@ Hint Unfold Second : set.
 
 Lemma Lemma53 : μ ~ Φ = μ.
 Proof.
-  intros; apply AxiomI; split; intros.
+  intros; apply Axiom_Extent; split; intros.
   - apply Theorem4' in H; destruct H; auto.
   - apply Theorem4'; split; auto.
-    apply AxiomII; split.
+    apply Axiom_Scheme; split.
     * apply Theorem19 in H; auto.
     * apply Theorem16; auto.
 Qed.
@@ -195,10 +195,10 @@ Lemma Lemma54 : forall (x y: Class),
   (x ∪ y) ~ x = y ~ x.
 Proof.
   intros.
-  apply AxiomI; split; intros.
+  apply Axiom_Extent; split; intros.
   - apply Theorem4' in H; apply Theorem4'.
     destruct H; apply Theorem4 in H; split; auto.
-    destruct H; auto; apply AxiomII in H0.
+    destruct H; auto; apply Axiom_Scheme in H0.
     destruct H0; elim H1; auto.
   - apply Theorem4' in H; apply Theorem4'.
     destruct H; split; auto.
@@ -212,7 +212,7 @@ Proof.
   - unfold First; apply H.
   - destruct H, H0, H1, H2, H3; unfold Second.
     rewrite H4; rewrite H3; rewrite H1.
-    rewrite Lemma54; auto; unfold Setminus.
+    rewrite Lemma54; auto; unfold Difference.
     rewrite Theorem6'; auto; rewrite <- Theorem8; auto.
     rewrite Property_μ; auto; rewrite Theorem20'; auto.
 Qed.
@@ -261,7 +261,7 @@ Parameter Classifier_P : (Class -> Class -> Prop) -> Class.
 
 Notation "\{\ P \}\" := (Classifier_P P) (at level 0).
 
-Axiom AxiomII_P : forall (a b: Class) (P: Class -> Class -> Prop),
+Axiom Axiom_SchemeP : forall (a b: Class) (P: Class -> Class -> Prop),
   [a,b] ∈ \{\ P \}\ <-> Ensemble [a,b] /\ (P a b).
 
 Axiom Property_P : forall (z: Class) (P: Class -> Class -> Prop),
@@ -270,7 +270,7 @@ Axiom Property_P : forall (z: Class) (P: Class -> Class -> Prop),
 Ltac PP H a b := apply Property_P in H; destruct H as [[a [b H]]];
   rewrite H in *.
 
-Hint Resolve AxiomII_P Property_P : set.
+Hint Resolve Axiom_SchemeP Property_P : set.
 
 
 (* 定义57 r∘s={u:对于某个x，某个y及某个z,u=[x,z],[x,y]∈s同时[y,z]∈r},类r∘s是r与s的合成 *)
@@ -284,7 +284,6 @@ Definition Composition' r s : Class :=
   \{ λ u, exists x y z, u = [x,z] /\ [x,y] ∈ s /\ [y,z] ∈ r \}.
 
 Hint Unfold Composition Composition' : set.
-Hint Resolve AxiomII_P : set.
 
 
 (* 定理58  (r∘s)∘t=r∘(s∘t) *)
@@ -292,15 +291,17 @@ Hint Resolve AxiomII_P : set.
 Theorem Theorem58 : forall (r s t: Class),
   (r ∘ s) ∘ t = r ∘ (s ∘ t).
 Proof.
-  intros; apply AxiomI; split; intros.
-  - PP H a b. apply AxiomII_P in H0; destruct H0, H1 as [y H1], H1.
-    apply AxiomII_P in H2; destruct H2, H3, H3; apply AxiomII_P; split; auto.
-    exists x; split; try tauto; apply AxiomII_P; split; Ens.
+  intros; apply Axiom_Extent; split; intros.
+  - PP H a b. apply Axiom_SchemeP in H0; destruct H0, H1 as [y H1], H1.
+    apply Axiom_SchemeP in H2; destruct H2, H3, H3.
+    apply Axiom_SchemeP; split; auto.
+    exists x; split; try tauto; apply Axiom_SchemeP; split; Ens.
     AssE [a,y]; AssE [y,x]; apply Theorem49 in H5; apply Theorem49 in H6.
     destruct H5, H6; apply Theorem49; auto.
-  - PP H a b; apply AxiomII_P in H0; destruct H0, H1 as [y H1], H1.
-    apply AxiomII_P in H1; destruct H1, H3, H3; apply AxiomII_P; split; auto.
-    exists x; split; auto; apply AxiomII_P; split; Ens.
+  - PP H a b; apply Axiom_SchemeP in H0; destruct H0, H1 as [y H1], H1.
+    apply Axiom_SchemeP in H1; destruct H1, H3, H3.
+    apply Axiom_SchemeP; split; auto.
+    exists x; split; auto; apply Axiom_SchemeP; split; Ens.
     AssE [a,x]; AssE [y,b]; apply Theorem49 in H5; apply Theorem49 in H6.
     destruct H5, H6; apply Theorem49; Ens.
 Qed.
@@ -315,29 +316,29 @@ Theorem Theorem59 : forall (r s t: Class),
   r ∘ (s ∩ t) ⊂ (r ∘ s) ∩ (r ∘ t).
 Proof.
   intros; split.
-  - apply AxiomI; split; intros.
-    + PP H0 a b; apply AxiomII_P in H1; destruct H1.
+  - apply Axiom_Extent; split; intros.
+    + PP H0 a b; apply Axiom_SchemeP in H1; destruct H1.
       apply Theorem4.
       destruct H2 as [y H2]; destruct H2.
       apply Theorem4 in H2; destruct H2.
-      * left; apply AxiomII_P; split; auto.
+      * left; apply Axiom_SchemeP; split; auto.
         exists y; split; auto.
-      * right; apply AxiomII_P; split; auto.
+      * right; apply Axiom_SchemeP; split; auto.
         exists y; split; auto.
-    + apply Theorem4 in H0; destruct H0; PP H0 a b; apply AxiomII_P.
-      * apply AxiomII_P in H1; destruct H1.
+    + apply Theorem4 in H0; destruct H0; PP H0 a b; apply Axiom_SchemeP.
+      * apply Axiom_SchemeP in H1; destruct H1.
         destruct H2 as [y H2]; destruct H2; split; auto.
         exists y; split; auto; apply Theorem4; try tauto.
-      * apply AxiomII_P in H1; destruct H1.
+      * apply Axiom_SchemeP in H1; destruct H1.
         destruct H2 as [y H2]; destruct H2; split; auto.
         exists y; split; auto; apply Theorem4; try tauto.
-  - unfold Included; intros; PP H0 a b.
-    apply AxiomII_P in H1; destruct H1.
+  - unfold Subclass; intros; PP H0 a b.
+    apply Axiom_SchemeP in H1; destruct H1.
     destruct H2 as [y H2]; destruct H2.
     apply Theorem4' in H2; apply Theorem4'; split.
-    + apply AxiomII_P; split; auto.
+    + apply Axiom_SchemeP; split; auto.
       exists y; split; try apply H2; auto.
-    + apply AxiomII_P; split; auto.
+    + apply Axiom_SchemeP; split; auto.
       exists y; split; try apply H2; auto.
 Qed.
 
@@ -368,12 +369,12 @@ Qed.
 Theorem Theorem61 : forall (r: Class),
   Relation r -> (r ⁻¹)⁻¹ = r.
 Proof.
-  intros; apply AxiomI; split; intros.
-  - PP H0 a b; apply AxiomII_P in H1; destruct H1.
-    apply AxiomII_P in H2; apply H2.
+  intros; apply Axiom_Extent; split; intros.
+  - PP H0 a b; apply Axiom_SchemeP in H1; destruct H1.
+    apply Axiom_SchemeP in H2; apply H2.
   - unfold Relation in H; double H0; apply H in H1.
     destruct H1 as [a [b H1]]; rewrite H1 in *; clear H1.
-    apply AxiomII_P; split; Ens; apply AxiomII_P; split; auto.
+    apply Axiom_SchemeP; split; Ens; apply Axiom_SchemeP; split; auto.
     apply Lemma61; auto; Ens.
 Qed.
 
@@ -385,19 +386,19 @@ Hint Rewrite Theorem61 : set.
 Theorem Theorem62 : forall (r s: Class),
   (r ∘ s)⁻¹ = (s⁻¹) ∘ (r⁻¹).
 Proof.
-  intros; apply AxiomI; split; intros.
-  - PP H a b; apply AxiomII_P in H0; destruct H0 as [H0 H1].
-    apply AxiomII_P; split; auto.
-    apply AxiomII_P in H1; destruct H1, H2, H2.
+  intros; apply Axiom_Extent; split; intros.
+  - PP H a b; apply Axiom_SchemeP in H0; destruct H0 as [H0 H1].
+    apply Axiom_SchemeP; split; auto.
+    apply Axiom_SchemeP in H1; destruct H1, H2, H2.
     exists x; split.
-    + apply AxiomII_P; split; auto. 
+    + apply Axiom_SchemeP; split; auto. 
       apply Lemma61; Ens; exists r; auto.
-    + apply AxiomII_P; split; auto.
+    + apply Axiom_SchemeP; split; auto.
       apply Lemma61; Ens.
-  - PP H a b; apply AxiomII_P in H0; destruct H0, H1, H1.
-    apply AxiomII_P; split; auto.
-    apply AxiomII_P in H1; apply AxiomII_P in H2.
-    apply AxiomII_P; split.
+  - PP H a b; apply Axiom_SchemeP in H0; destruct H0, H1, H1.
+    apply Axiom_SchemeP; split; auto.
+    apply Axiom_SchemeP in H1; apply Axiom_SchemeP in H2.
+    apply Axiom_SchemeP; split.
     + apply Lemma61; auto.
     + exists x; split; try apply H0; try apply H2.
       destruct H1; auto.
