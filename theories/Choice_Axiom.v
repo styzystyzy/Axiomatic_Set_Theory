@@ -4,7 +4,8 @@ Require Export NIntegers.
 
 Module Choice.
 
-(* 定义139 *)
+(* 139 Definition  c is a choice function if and only if c is a function and
+   c(x) ∈ x for each member x of domain c. *)
 
 Definition ChoiceFunction c : Prop :=
   Function c /\ (forall x, x ∈ dom(c) -> c[x] ∈ x).
@@ -12,14 +13,15 @@ Definition ChoiceFunction c : Prop :=
 Hint Unfold ChoiceFunction : set.
 
 
-(* 选择公理 IX *)
+(* IX Axiom of Choice  There is a choice function c whose domain is μ ~ [Φ]. *)
 
 Axiom Axiom_Choice : exists c, ChoiceFunction c /\ dom(c) = μ ~ [Φ].
 
 Hint Resolve Axiom_Choice : set.
 
 
-(* 定理140 *)
+(* 140 Theorem  If x is a set there is a 1_1 function whose range is x and
+   whose domain is an ordinal number. *)
 
 Lemma Ex_Lemma140 : forall x c,
   Ensemble x -> ChoiceFunction c ->
@@ -41,8 +43,6 @@ Proof.
     apply Axiom_SchemeP in H5; destruct H5.
     rewrite H6; auto.
 Qed.
-
-(** Lemma96 **)
 
 Lemma Property_F11 : forall f,
   dom(f⁻¹) = ran(f) /\ ran(f⁻¹) = dom(f).
@@ -185,7 +185,8 @@ Qed.
 Hint Resolve Theorem140 : set.
 
 
-(* 定义141 *)
+(* 141 Definition  n is a nest if and only if, whenever x an y are members of
+   n, then  x ⊂ y or y ⊂ x. *)
 
 Definition Nest n : Prop :=
   forall x y, x ∈ n /\ y ∈ n -> x ⊂ y \/ y ⊂ x.
@@ -193,7 +194,8 @@ Definition Nest n : Prop :=
 Hint Unfold Nest : set.
 
 
-(* 定理142 *)
+(* 142 Theorem  If n is a nest and each member of n is a nest, then ∪n is a
+   nest. *)
 
 Theorem Theorem142 : forall n,
   Nest n /\ (forall m, m ∈ n -> Nest m) -> Nest (∪ n).
@@ -213,7 +215,8 @@ Qed.
 Hint Resolve Theorem142 : set.
 
 
-(* 定理143 *)
+(* 143 Theorem (Hausdorff maximal principle)  If x is a set there is a nest n
+   such that n ⊂ x and if m is nest, m ⊂ x, and n ⊂ m, then m = n. *)
 
 Definition En_c x h : Class :=
   \{ λ m, Nest m /\ m ⊂ x /\ (forall p, p ∈ ran(h) -> p ⊂ m /\ p <> m) \}.
@@ -260,7 +263,7 @@ Proof.
   double H0; apply (Ex_Lemma143 x _) in H2; auto; destruct H2 as [g H2].
   generalize (Theorem128 g); intros; destruct H3 as [f H3], H3, H4.
   unfold ChoiceFunction in H0; destruct H0.
-  (* 如果 u ∈ dom(f)，则 f[u] 是 x 中的一个套。 *)
+  (* If u ∈ dom(f), then f[u] is a nest of x. *)
   assert (forall u, u ∈ dom(f) -> Nest f[u] /\ f[u] ⊂ x /\
          (forall p, p ∈ ran(f|(u)) -> p ⊊ f[u])).
   { intros; assert (Ordinal_Number u).
@@ -275,7 +278,7 @@ Proof.
       generalize Theorem39; intros; contradiction. }
     apply H6 in H9; rewrite <- H8 in H9; clear H8.
     apply Axiom_Scheme in H9; apply H9. }
-  (* 如果 u 与 v 均为 dom(f) 的元，并且 u<v，则 f[u] ⊊ f[v]。 *)
+  (* If u and v are members of dom(f) and u<v, then f[u] ⊊ f[v]. *)
   assert (forall u v, u ∈ dom(f) -> v ∈ dom(f) -> u ∈ v -> f[u] ⊊ f[v]).
   { intros; apply H7 in H9; clear H7; destruct H9, H9.
     apply H11; unfold Range; apply Axiom_Scheme.

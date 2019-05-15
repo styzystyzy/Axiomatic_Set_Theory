@@ -4,7 +4,8 @@ Require Export Ordinals.
 
 Module NInt.
 
-(* 无限性公理 VIII *)
+(* VIII Axiom of infinity : For some y, y is a set, Φ ∈ y and (x ∪ {x}) ∈ y
+   whenever x ∈ y. *)
 
 Axiom Axiom_Infinity : exists y, Ensemble y /\ Φ ∈ y /\
   (forall x, x ∈ y -> (x ∪ [x]) ∈ y).
@@ -12,28 +13,30 @@ Axiom Axiom_Infinity : exists y, Ensemble y /\ Φ ∈ y /\
 Hint Resolve Axiom_Infinity : set.
 
 
-(* 定义129 *)
+(* 129 Definition  x is an integer if and only if x is an ordinal and E⁻¹
+   well-orders x. *)
 
 Definition NInteger x : Prop := Ordinal x /\ WellOrdered (E ⁻¹) x.
 
 Hint Unfold NInteger : set.
 
 
-(* 定义130 *)
+(* 130 Definition  x is an E-last member of y is and only if x is an E⁻¹-first
+   member of y. *)
 
 Definition LastMember x E y : Prop := FirstMember x (E ⁻¹) y.
 
 Hint Unfold LastMember : set.
 
 
-(* 定义131 *)
+(* 131 Definition  W = { x : x is an integer }. *)
 
 Definition W : Class := \{ λ x, NInteger x \}.
 
 Hint Unfold W : set.
 
 
-(* 定理132 *)
+(* 132 Theorem  A member of an integer is an integer. *)
 
 Theorem Theorem132 : forall x y, NInteger x -> y∈x -> NInteger y.
 Proof.
@@ -55,7 +58,7 @@ Qed.
 Hint Resolve Theorem132 : set.
 
 
-(* 定理133 *)
+(* 133 Theorem  If y∈R and x is an E-last member of y, then y = x+1. *)
 
 Theorem Theorem133 : forall x y,
   y ∈ R /\ LastMember x E y -> y = PlusOne x.
@@ -88,7 +91,7 @@ Qed.
 Hint Resolve Theorem133 : set.
 
 
-(* 定理134 *)
+(* 134 Theorem  If x ∈ W, then x+1 ∈ W. *)
 
 Theorem Theorem134 : forall x, x ∈ W -> (PlusOne x) ∈ W.
 Proof.
@@ -139,7 +142,7 @@ Qed.
 Hint Resolve Theorem134 : set.
 
 
-(* 定理135 *)
+(* 135 Theorem  Φ ∈ W and if x ∈ W, then Φ ≠ x+1. *)
 
 Theorem Theorem135 : forall x, 
   Φ ∈ W /\ (x ∈ W -> Φ ≠ PlusOne x).
@@ -167,7 +170,7 @@ Qed.
 Hint Resolve Theorem135 : set.
 
 
-(* 定理136 *)
+(* 136 Theorem  If x and y are members of W and x + 1 = y + 1, then x = y. *)
 
 Theorem Theorem136 : forall x y,
   x ∈ W /\ y ∈ W -> PlusOne x = PlusOne y -> x = y.
@@ -186,7 +189,7 @@ Qed.
 Hint Resolve Theorem136 : set.
 
 
-(* 定理137 *)
+(* 137 Theorem  If x ⊂ W, Φ∈x and u+1∈x whenever u∈x, then x = W. *)
 
 Corollary Property_W : Ordinal W.
 Proof.
@@ -248,7 +251,7 @@ Qed.
 Hint Resolve Theorem137 : set.
 
 
-(* 定理138 *)
+(* 138 Theorem  W ∈ R. *)
 
 Theorem Theorem138 : W ∈ R.
 Proof.
@@ -267,7 +270,7 @@ Qed.
 Hint Resolve Theorem138 : set.
 
 
-(* 数学归纳法 *)
+(* Mathematical Induction *)
 
 Theorem MiniMember_Principle : forall S,
   S ⊂ W /\ S ≠ Φ -> exists a, a ∈ S /\ (forall c, c ∈ S -> a ≼ c).
