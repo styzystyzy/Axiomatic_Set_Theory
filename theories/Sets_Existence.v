@@ -4,7 +4,8 @@ Require Export Elementary_Algebra.
 
 Module Existence.
 
-(* 子集公理III 如果x是一个集，存在一个集y使得对于每个z，假定z⊂x，则z∈y *)
+(* III Axiom of subsets  If x is a set there is a set y such that for each z,
+   if z⊂x, then z∈y. *)
 
 Axiom Axiom_Subsets : forall (x: Class),
   Ensemble x -> exists y, Ensemble y /\ (forall z, z⊂x -> z∈y).
@@ -12,7 +13,7 @@ Axiom Axiom_Subsets : forall (x: Class),
 Hint Resolve Axiom_Subsets : set.
 
 
-(* 定理33  如果x是一个集同时z⊂x，则z是一个集 *)
+(* 33 Theorem  If x is a set and z⊂x, then z is a set. *)
 
 Theorem Theorem33 : forall x z,
   Ensemble x -> z ⊂ x -> Ensemble z.
@@ -24,7 +25,7 @@ Qed.
 Hint Resolve Theorem33 : set.
 
 
-(* 定理34  0=∩μ同时∪μ =μ *)
+(* 34 Theorem  Φ = ∩μ and ∪μ = μ. *)
 
 Theorem Theorem34 : Φ = ∩μ.
 Proof.
@@ -50,7 +51,7 @@ Qed.
 Hint Rewrite Theorem34 Theorem34' : set.
 
 
-(* 定理35  如果x≠0，则∩x是一个集 *)
+(* 35 Theorem  If x ≠ Φ, then ∩x is a set. *)
 
 Lemma Lemma35 : forall x, x ≠ Φ <-> exists z, z∈x.
 Proof.
@@ -78,7 +79,7 @@ Qed.
 Hint Resolve Lemma35 Theorem35 : set.
 
 
-(* 定义36  pow(x)={y:y⊂x} *)
+(* 36 Definition  pow(x) = { y : y ⊂ x }. *)
 
 Definition PowerClass x : Class := \{ λ y, y ⊂ x \}.
 
@@ -87,7 +88,7 @@ Notation "pow( x )" := (PowerClass x) (at level 0, right associativity).
 Hint Unfold PowerClass : set.
 
 
-(* 定理37  u=pow(u) *)
+(* 37 Theorem  μ = pow(μ). *)
 
 Theorem Theorem37 : μ = pow(μ).
 Proof.
@@ -99,7 +100,8 @@ Qed.
 Hint Rewrite Theorem37 : set.
 
 
-(* 定理38  如果x是一个集,则pow(x)是一个集*)
+(* 38 Theorem  If x is a set, then pow(x) is a set, and for each y, y ⊂ x iff
+   y ∈ pow(x). *)
 
 Theorem Theorem38 : forall x y,
   Ensemble x -> Ensemble pow(x) /\ (y ⊂ x <-> y ∈ pow(x)).
@@ -119,9 +121,9 @@ Qed.
 Hint Resolve Theorem38 : set.
 
 
-(* 定理39  μ不是一个集 *)
+(* 39 Theorem  μ is not a set. *)
 
-(* 一个不是集的类 *)
+(* Russell paradox *)
 
 Lemma Lemma_N : ~ Ensemble \{ λ x, x ∉ x \}.
 Proof.
@@ -141,7 +143,7 @@ Qed.
 Hint Resolve Lemma_N Theorem39 : set.
 
 
-(* 定义40  [x]={z:如果x∈μ，则z=x} *)
+(* 40 Definition  [x] = { z : if x∈μ, then z=x }. *)
 
 Definition Singleton x : Class := \{ λ z, x∈μ -> z=x \}.
 
@@ -150,7 +152,7 @@ Notation "[ x ]" := (Singleton x) (at level 0, right associativity).
 Hint Unfold Singleton : set.
 
 
-(* 定理41  如果x是一个集，则对于每个y，y∈[x]当且仅当y=x *)
+(* 41 Theorem  If x is a set, for each y, y∈[x] iff y=x. *)
 
 Theorem Theorem41 : forall x, Ensemble x -> (forall y, y∈[x] <-> y=x).
 Proof.
@@ -164,7 +166,7 @@ Qed.
 Hint Resolve Theorem41 : set.
 
 
-(* 定理42  如果x是一个集，则[x]是一个集 *)
+(* 42 Theorem  If x is a set, then [x] is a set. *)
 
 Theorem Theorem42 : forall x, Ensemble x -> Ensemble [x].
 Proof.
@@ -180,7 +182,7 @@ Qed.
 Hint Resolve Theorem42 : set.
 
 
-(* 定理43  [x]=μ当且仅当x不是一个集*)
+(* 43 Theorem  [x] = μ if and only if x is not a set. *)
 
 Theorem Theorem43 : forall x, [x] = μ <-> ~ Ensemble x.
 Proof.
@@ -198,7 +200,7 @@ Qed.
 Hint Rewrite Theorem43 : set.
 
 
-(* 定理42'  如果[x]是一个集，则x是一个集 *)
+(* 42' Theorem  If [x] is a set, then x is a set. *)
 
 Theorem Theorem42' : forall x, Ensemble [x] -> Ensemble x.
 Proof.
@@ -212,7 +214,8 @@ Qed.
 Hint Resolve Theorem42' : set.
 
 
-(* 定理44  如果x是一个集，则∩[x]=x同时∪[x]=x；如果x不是一个集，则∩[x]=0同时∪[x]=u *)
+(* 44 Theorem  If x is a set, then ∩[x] = x and ∪[x] = x; if x is not a set,
+   then ∩[x] = Φ and ∪[x] = μ. *)
 
 Theorem Theorem44 : forall x, Ensemble x -> ∩[x] = x /\ ∪[x] = x.
 Proof.
@@ -240,7 +243,7 @@ Qed.
 Hint Resolve Theorem44 Theorem44' : set.
 
 
-(* 并的公理IV 如果x是一个集同时y是一个集，则x∪y也是一个集*)
+(* IV Axiom of union  If x is a set and y is a set so is x∪y. *)
 
 Axiom Axiom_Union : forall (x y: Class),
   Ensemble x /\ Ensemble y -> Ensemble (x∪y).
@@ -260,7 +263,7 @@ Qed.
 Hint Resolve Axiom_Union Axiom_Union' : set.
 
 
-(* 定义45  [x|y]=[x]∪[y] *)
+(* 45 Definition  [x|y] = [x] ∪ [y]. *)
 
 Definition Unordered x y : Class := [x]∪[y].
 
@@ -269,8 +272,8 @@ Notation "[ x | y ]" := (Unordered x y) (at level 0).
 Hint Unfold Unordered : set.
 
 
-(* 定理46  如果x是一个集同时y是一个集，则[x|y]是一个集，同时z∈[x|y] 当且仅当 z=x或者z=y;
-          [x|y]=μ 当且仅当 x不是一个集或者y不是一个集 *)
+(* 46 Theorem  If x is a set and y is a set, then [x|y] is a set and z∈[x|y]
+   iff z=x or z=y; [x|y] = μ iff x is not a set or y is not a set. *)
 
 Theorem Theorem46 : forall x y z,
   Ensemble x /\ Ensemble y -> Ensemble [x|y] /\ (z∈[x|y] <-> (z=x \/ z=y)).
@@ -315,7 +318,8 @@ Qed.
 Hint Resolve Theorem46 Theorem46' : set.
 
 
-(* 定理47  如果x与y是两个集，则∩[x|y]=x∩y同时∪[x|y]=x∪y; 如果x或者y不是一个集，则∩[x|y]=0同时∪[x|y]=u *)
+(* 47 Theorem  If x and y are sets, then ∩[x|y] = x ∩ y and ∪[x|y] = x ∪ y;
+   if either x or y is not a set, then ∩[x|y] = Φ and ∪[x|y] = μ. *)
 
 Theorem Theorem47 : forall x y,
   Ensemble x /\ Ensemble y -> (∩[x|y] = x ∩ y) /\ (∪[x|y] = x ∪ y).

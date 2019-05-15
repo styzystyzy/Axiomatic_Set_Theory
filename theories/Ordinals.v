@@ -4,14 +4,14 @@ Require Export WellOrdering.
 
 Module Ord.
 
-(* 正则公理 VII *)
+(* VII Axiom of regularity : If x ≠ Φ there is a member y of x such x∩y = Φ. *)
 
 Axiom Axiom_Regularity : forall x, x ≠ Φ -> exists y, y ∈ x /\ x ∩ y = Φ.
 
 Hint Resolve Axiom_Regularity : set.
 
 
-(* 定理 101 *)
+(* 101 Theorem101  x ∉ x. *)
 
 Theorem Theorem101 : forall x, x ∉ x.
 Proof.
@@ -28,7 +28,7 @@ Qed.
 Hint Resolve Theorem101 : set.
 
 
-(* 定理102 *)
+(* 102 Theorem  It is false that x∈y and y∈x. *)
 
 Theorem Theorem102 : forall x y, ~ (x ∈ y /\ y ∈ x).
 Proof.
@@ -48,14 +48,14 @@ Qed.
 Hint Resolve Theorem102 : set.
 
 
-(* 定义103 *)
+(* 103 Definition  E = { [x,y] : x∈y}. *)
 
 Definition E : Class := \{\ λ x y, x ∈ y \}\.
 
 Hint Unfold E : set.
 
 
-(* 定理104 *)
+(* 104 Theorem  E is not a set. *)
 
 Lemma Lemma104 : forall a b c, a ∈ b -> b ∈ c -> c ∈ a -> False.
 Proof.
@@ -89,7 +89,7 @@ Qed.
 Hint Resolve Theorem104 : set.
 
 
-(* 定义105 *)
+(* 105 Definition  x is full iff each member of x is a subset of x. *)
 
 Definition full x : Prop := forall m, m∈x -> m⊂x.
 
@@ -105,15 +105,14 @@ Hint Unfold full : set.
 Hint Resolve Property_Full : set.
 
 
-(* 定义106 *)
+(* 106 Definition  x is an ordinal iff E connects x and x is full. *)
 
 Definition Ordinal x : Prop := Connect E x /\ full x.
 
 Hint Unfold Ordinal : set.
 
 
-(* 定理107 *)
-
+(* 107 Theorem  If x is an ordinal E well-orders x. *)
 
 Theorem Theorem107 : forall x, 
   Ordinal x -> WellOrdered E x.
@@ -132,7 +131,7 @@ Qed.
 Hint Resolve Theorem107 : set.
 
 
-(* 定理108 *)
+(* 108 Theorem  If x is an ordinal, y⊂x, y≠x, and y is full, then y∈x. *)
 
 Theorem Theorem108 : forall x y, 
   Ordinal x -> y ⊂ x -> y≠x -> full y -> y ∈ x.
@@ -160,7 +159,7 @@ Qed.
 Hint Resolve Theorem108 : set.
 
 
-(* 定理109 *)
+(* 109 Theorem  If x is an ordinal an y is an ordinal, then x⊂y or y⊂x. *)
 
 Lemma Lemma109 : forall x y,
   Ordinal x /\ Ordinal y -> full (x ∩ y).
@@ -198,7 +197,8 @@ Qed.
 Hint Resolve Theorem109 : set.
 
 
-(* 定理110 *)
+(* 110 Theorem  If x is an ordinal an y is an ordinal, then x∈y or y∈x or
+   x = y. *)
 
 Theorem Theorem110 : forall x y,
   Ordinal x /\ Ordinal y -> x ∈ y \/ y ∈ x \/ x = y.
@@ -213,7 +213,7 @@ Qed.
 Hint Resolve Theorem110 : set.
 
 
-(* 定理111 *)
+(* 111 Theorem  If x is an ordinal and y∈x, then y is an ordinal. *)
 
 Theorem Theorem111 : forall x y, Ordinal x /\ y ∈ x -> Ordinal y.
 Proof.
@@ -240,14 +240,14 @@ Qed.
 Hint Resolve Theorem111 : set.
 
 
-(* 定义112 *)
+(* 112 Definition  R = { x : x is an ordinal }. *)
 
 Definition R : Class := \{ λ x, Ordinal x \}.
 
 Hint Unfold R : set.
 
 
-(* 定理113 *)
+(* 113 Theorem  R is an ordinal and R is not a set. *)
 
 Lemma Lemma113 :forall u v,
   Ensemble u -> Ensemble v -> Ordinal u /\ Ordinal v ->
@@ -281,7 +281,7 @@ Qed.
 Hint Resolve Theorem113 : set.
 
 
-(* 定理114 *)
+(* 114 Theorem  Each E-section of R is an ordinal. *)
 
 Theorem Theorem114 : forall x, Section x E R -> Ordinal x.
 Proof.
@@ -316,14 +316,14 @@ Qed.
 Hint Resolve Theorem114 : set.
 
 
-(* 定义115 *)
+(* 115 Definition  x is an ordinal number iff x ∈ R. *)
 
 Definition Ordinal_Number x : Prop := x ∈ R.
 
 Hint Unfold Ordinal_Number : set.
 
 
-(* 定义116 *)
+(* 116 Definition  x ≺ y if and only if x ∈ y. *)
 
 Definition Less x y : Prop := x ∈ y.
 
@@ -332,14 +332,14 @@ Notation "x ≺ y" := (Less x y)(at level 67, left associativity).
 Hint Unfold Less : set.
 
 
-(* 定义117 *)
+(* 117 Definition  x ≼ y if and only if x ∈ y or x = y. *)
 
 Definition LessEqual x y := x ∈ y \/ x=y.
 
 Notation "x ≼ y" := (LessEqual x y)(at level 67, left associativity).
 
 
-(* 定理118 *)
+(* 118 Theorem  If x and y are ordinals, then x ≼ y if and only if x ⊂ y. *)
 
 Theorem Theorem118 : forall x y,
   Ordinal x /\ Ordinal y -> (x ⊂ y <-> x ≼ y).
@@ -357,10 +357,10 @@ Qed.
 Hint Resolve Theorem118 : set.
 
 
-(* 定理119 *)
+(* 119 Theorem  If x is an ordinal, then x = { y : y ∈ R /\ y ≺ x }. *)
 
 Theorem Theorem119 : forall x,
-  Ordinal x -> x = \{ λ y, (y ∈ R /\ Less y x) \}.
+  Ordinal x -> x = \{ λ y, y ∈ R /\ y ≺ x \}.
 Proof.
   intros; apply Axiom_Extent; split; intros.
   - apply Axiom_Scheme; repeat split; Ens.
@@ -371,10 +371,9 @@ Qed.
 Hint Resolve Theorem119 : set.
 
 
-(* 定理120 *)
+(* 120 Theorem  If x ⊂ R, then ∪x is an ordinal. *)
 
-Theorem Theorem120 : forall x, 
-  x ⊂ R -> Ordinal (∪ x).
+Theorem Theorem120 : forall x, x ⊂ R -> Ordinal (∪ x).
 Proof.
   intros; red; split.
   - unfold Connect; intros; destruct H0; apply Axiom_Scheme in H0.
@@ -394,7 +393,7 @@ Qed.
 Hint Resolve Theorem120 : set.
 
 
-(* 定理121 *)
+(* 121 Theorem  If x ⊂ R and x ≠ Φ, then ∩x ∈ x. *)
 
 Lemma Lemma121 : forall x, x ⊂ R /\ x ≠ Φ -> FirstMember (∩ x) E x.
 Proof.
@@ -430,14 +429,14 @@ Qed.
 Hint Resolve Theorem121 : set.
 
 
-(* 定义122 *)
+(* 122 Definition  x + 1 = x ∪ {x}. *)
 
 Definition PlusOne x := x ∪ [x].
 
 Hint Unfold PlusOne: set.
 
 
-(* 定理123 *)
+(* 123 Theorem  If x∈R, then x+1 is the E-first member of {y : y∈R and x≺y}. *)
 
 Lemma Lemma123 : forall x, x ∈ R -> (PlusOne x) ∈ R.
 Proof.
@@ -491,7 +490,7 @@ Qed.
 Hint Resolve Theorem123 : set.
 
 
-(* 定理124 *)
+(* 124 Theorem  If x ∈ R, then ∪(x+1) = x. *)
 
 Theorem Theorem124 : forall x, 
   x ∈ R -> ∪ PlusOne x = x.
@@ -511,7 +510,7 @@ Qed.
 Hint Resolve Theorem124 : set.
 
 
-(* 定义125 *)
+(* 125 Definition  f|x = f ∩ (x × μ). *)
 
 Definition Restriction f x : Class := f ∩ (x × μ).
 
@@ -520,7 +519,8 @@ Notation "f | ( x )" := (Restriction f x)(at level 30).
 Hint Unfold Restriction: set.
 
 
-(* 定理126 *)
+(* 126 Theorem  If f is a function, f|x is a function whose domain is
+   x ∩ (domain f) and (f|x)[y] = f[y] for each y in domain f|x. *)
 
 Theorem Theorem126 : forall f x,
   Function f -> Function (f|(x)) /\ dom(f|(x)) = x ∩ dom( f) /\
@@ -537,7 +537,8 @@ Proof.
       apply Axiom_Scheme in H1; destruct H1, H2.
       apply Property_dom in H2; apply Axiom_SchemeP in H3.
       apply Axiom_Scheme; split; tauto.
-    + apply Axiom_Scheme in H0; destruct H0, H1; apply Axiom_Scheme; split; auto.
+    + apply Axiom_Scheme in H0; destruct H0, H1.
+      apply Axiom_Scheme; split; auto.
       apply Property_Value in H2; auto.
       exists f[z]; apply Axiom_Scheme; repeat split; Ens.
       apply Axiom_SchemeP; repeat split; Ens; apply Theorem19.
@@ -553,7 +554,8 @@ Proof.
       * apply Property_Value in H4; auto.
       * apply Axiom_SchemeP in H5; apply Theorem19 in H6.
         apply Axiom_SchemeP; repeat split; try tauto; try apply Theorem49; Ens.
-    + apply Axiom_Scheme in H1; destruct H1; apply Axiom_Scheme; split; auto; intros.
+    + apply Axiom_Scheme in H1; destruct H1.
+      apply Axiom_Scheme; split; auto; intros.
       apply Axiom_Scheme in H3; destruct H3; apply Axiom_Scheme in H4.
       apply H2; apply Axiom_Scheme; split; tauto.
 Qed.
@@ -561,7 +563,9 @@ Qed.
 Hint Resolve Theorem126 : set.
 
 
-(* 定理127 *)
+(* 127 Theorem  Let f be a function such that domain f is an ordinal and
+   f[u] = g[f|u] for u in domain f. If h is also a function such that domain h
+   is an ordinal and h[u] = g[h|u] for u in domain h, then h ⊂ f or f ⊂ h. *)
 
 Theorem Lemma127 : forall f h,
   dom( f) ⊂ dom( h) -> Function f -> Function h ->
@@ -606,11 +610,13 @@ Proof.
         apply Axiom_SchemeP in H17; destruct H17 ,H18.
         generalize H15 as H22; intro; apply Property_dom in H22.
         rewrite Theorem70 in H15; auto; rewrite Theorem70; auto.
-        apply Axiom_SchemeP in H15; destruct H15; apply Axiom_SchemeP; split; auto.
+        apply Axiom_SchemeP in H15; destruct H15.
+        apply Axiom_SchemeP; split; auto.
         rewrite H20; symmetry.
         generalize (classic (f [a] = h [a])); intro; destruct H21; auto.
         assert (a ∈ \{ λ a, a ∈ (dom(f) ∩ dom(h)) /\ f[a] ≠ h[a] \}).
-        { apply Axiom_Scheme; repeat split; Ens; apply Axiom_Scheme; repeat split; Ens.
+        { apply Axiom_Scheme.
+          repeat split; Ens; apply Axiom_Scheme; repeat split; Ens.
           unfold Ordinal in H0; destruct H0; apply H23 in H9; auto. }
         apply H8 in H23; elim H23; unfold Rrelation, E.
         apply Axiom_SchemeP; split; auto; apply Theorem49; split; Ens.
@@ -619,11 +625,13 @@ Proof.
         apply Axiom_SchemeP in H17; destruct H17 ,H18.
         generalize H15 as H22; intro; apply Property_dom in H22.
         rewrite Theorem70 in H15; auto; rewrite Theorem70; auto.
-        apply Axiom_SchemeP in H15; destruct H15; apply Axiom_SchemeP; split; auto.
+        apply Axiom_SchemeP in H15; destruct H15.
+        apply Axiom_SchemeP; split; auto.
         rewrite H20; symmetry.
         generalize (classic (f[a] = h[a])); intro; destruct H21; auto.
         assert (a ∈ \{ λ a, a ∈ (dom(f) ∩ dom(h)) /\ f[a] ≠ h[a] \}).
-        { apply Axiom_Scheme; repeat split; Ens; apply Axiom_Scheme; repeat split; Ens.
+        { apply Axiom_Scheme.
+          repeat split; Ens; apply Axiom_Scheme; repeat split; Ens.
           unfold Ordinal in H3; destruct H3; apply H23 in H11; auto. }
         apply H8 in H23; elim H23; unfold Rrelation, E.
         apply Axiom_SchemeP; split; auto; apply Theorem49; split; Ens. }
@@ -633,7 +641,8 @@ Qed.
 Hint Resolve Theorem127 : set.
 
 
-(* 定理128 *)
+(* 128 Theorem  For each g there is a unique function f such that domain f is
+   an ordinal and f[x] = g[f|x] for each ordinal number x. *)
 
 Definition En_f' g := \{\ λ u v, u ∈ R /\ (exists h, Function h /\
   Ordinal dom(h) /\ (forall z, z ∈ dom(h) -> h[z] = g [h | (z)] ) /\
@@ -704,7 +713,8 @@ Proof.
       { double H5; unfold Subclass; intros; unfold Function, Relation in H9.
         destruct H9 as [H9 _]; double H10; apply H9 in H11.
         destruct H11 as [a [b H11]]; rewrite H11 in *; clear H9 H11 z.
-        apply Axiom_SchemeP; split; try Ens; double H10; apply Property_dom in H9.
+        apply Axiom_SchemeP; split; try Ens.
+        double H10; apply Property_dom in H9.
         split; try apply Axiom_Scheme; Ens; split; Ens.
         eapply Theorem111; eauto. }
       double H8; apply H9 in H10; double H8.
@@ -715,12 +725,14 @@ Proof.
       assert (h [x] = (En_f' g) [x]). { eapply H; eauto. }
       rewrite <- H13; clear H13.
       assert (h | (x) = En_f' g | (x)).
-      { apply Axiom_Extent; split; intros; apply Axiom_Scheme in H13; destruct H13, H14.
-       - apply Axiom_Scheme; repeat split; auto.
-       - apply Axiom_Scheme; repeat split; auto; rewrite Theorem70; auto.
-         PP H15 a b; apply Axiom_SchemeP in H16; apply Axiom_SchemeP; split; auto.
-         destruct H16, H17; assert (a ∈ dom(h)). { eapply Lemma128; eauto. }
-         apply Property_Value in H19; auto; apply H9 in H19; eapply H; eauto. }
+      { apply Axiom_Extent.
+        split; intros; apply Axiom_Scheme in H13; destruct H13, H14.
+        - apply Axiom_Scheme; repeat split; auto.
+        - apply Axiom_Scheme; repeat split; auto; rewrite Theorem70; auto.
+          PP H15 a b; apply Axiom_SchemeP in H16.
+          apply Axiom_SchemeP; split; auto.
+          destruct H16, H17; assert (a ∈ dom(h)). { eapply Lemma128; eauto. }
+          apply Property_Value in H19; auto; apply H9 in H19; eapply H; eauto. }
       rewrite <- H13; auto.
     + generalize H2; intro; apply Theorem69 in H2; auto.
       rewrite (Lemma128' _ _ H H0 H1 H3).
@@ -735,14 +747,16 @@ Proof.
           rewrite <- H7 in H3; contradiction. }
         apply H6 in H7; destruct H7 as [y H7].
         assert (((En_f' g) ∪ [[y,g[En_f' g]]]) ⊂ (En_f' g)).
-        { unfold Subclass; intros; apply Axiom_Scheme in H8; destruct H8, H9; auto.
+        { unfold Subclass; intros.
+          apply Axiom_Scheme in H8; destruct H8, H9; auto.
           assert (Ensemble ([y, g [En_f' g]])).
           { destruct H7; AssE y; apply Theorem69 in H4.
             apply Theorem19 in H4; apply Theorem49; tauto. }
           apply Axiom_Scheme in H9; destruct H9.
           rewrite H11; try apply Theorem19; auto.
           apply Axiom_SchemeP; split; auto; split.
-          - unfold FirstMember in H7; destruct H7; apply Axiom_Scheme in H7; tauto.
+          - unfold FirstMember in H7; destruct H7.
+            apply Axiom_Scheme in H7; tauto.
           - exists ((En_f' g) ∪ [[y,g[En_f' g]]]).
             assert (Function (En_f' g ∪ [[y, g [En_f' g]]])).
             { unfold Function; split; intros.
@@ -750,21 +764,25 @@ Proof.
                 destruct H12, H13; try PP H13 a b; eauto.
                 apply Axiom_Scheme in H13; destruct H13; apply Theorem19 in H10.
                 apply H14 in H10; eauto.
-              - destruct H12; apply Axiom_Scheme in H12; destruct H12 as [_ H12].
+              - destruct H12; apply Axiom_Scheme in H12.
+                destruct H12 as [_ H12].
                 apply Axiom_Scheme in H13; destruct H13 as [_ H13].
                 unfold FirstMember in H7; destruct H7.
                 apply Axiom_Scheme in H7; destruct H7 as [_ [_ H7]].
                 apply Axiom_Scheme in H7; destruct H7, H12, H13.
                 + eapply H; eauto.
-                + apply Axiom_Scheme in H13; destruct H13; apply Theorem19 in H10.
+                + apply Axiom_Scheme in H13; destruct H13.
+                  apply Theorem19 in H10.
                   apply H16 in H10; apply Theorem55 in H10;
                   destruct H10; try apply Theorem49; auto; rewrite H10 in H12.
                   apply Property_dom in H12; contradiction.
-                + apply Axiom_Scheme in H12; destruct H12; apply Theorem19 in H10.
+                + apply Axiom_Scheme in H12; destruct H12.
+                  apply Theorem19 in H10.
                   apply H16 in H10; apply Theorem55 in H10; destruct H10;
                   try apply Theorem49; auto; rewrite H10 in H13.
                   apply Property_dom in H13; contradiction.
-                + double H12; apply Axiom_Scheme in H12; apply Axiom_Scheme in H13.
+                + double H12; apply Axiom_Scheme in H12.
+                  apply Axiom_Scheme in H13.
                   destruct H12, H13; double H10.
                   apply Theorem19 in H10; apply H17 in H10.
                   apply Theorem19 in H19; apply H18 in H19.
@@ -780,7 +798,8 @@ Proof.
                 apply Axiom_Scheme in H14; destruct H14, H15.
                 -- apply Property_dom in H15; apply Axiom_Scheme.
                    split; Ens; eapply Theorem111; eauto.
-                -- apply Axiom_Scheme in H15; destruct H15; apply Theorem19 in H10.
+                -- apply Axiom_Scheme in H15; destruct H15.
+                   apply Theorem19 in H10.
                    apply H16 in H10; apply Theorem55 in H10; destruct H10;
                    try apply Theorem49; auto; destruct H7.
                    apply Axiom_Scheme in H7; rewrite H10; tauto.
@@ -828,7 +847,8 @@ Proof.
                      assert ((z0) × μ ∩ [[y, g [En_f' g]]] = Φ).
                      { apply Axiom_Extent; split; intros.
                        - apply Axiom_Scheme in H23; destruct H23, H24; auto.
-                         PP H24 a b; apply Axiom_SchemeP in H26; destruct H26, H27.
+                         PP H24 a b; apply Axiom_SchemeP in H26.
+                         destruct H26, H27.
                          apply Axiom_Scheme in H25; destruct H25.
                          apply Theorem19 in H10; apply H29 in H10.
                          apply Theorem55 in H10; apply Theorem49 in H25; auto.
@@ -846,9 +866,11 @@ Proof.
                    { apply Axiom_Extent; split; intros.
                      - apply Axiom_Scheme in H24; destruct H24, H25.
                        apply Axiom_Scheme; repeat split; auto.
-                     - apply Axiom_Scheme in H24; destruct H24, H25; apply Axiom_Scheme.
+                     - apply Axiom_Scheme in H24; destruct H24, H25.
+                       apply Axiom_Scheme.
                        repeat split; auto; rewrite Theorem70; auto.
-                       PP H26 a b; apply Axiom_SchemeP in H27; apply Axiom_SchemeP.
+                       PP H26 a b; apply Axiom_SchemeP in H27.
+                       apply Axiom_SchemeP.
                        split; auto; destruct H27 as [_ [H27 _]].
                        assert (a ∈ dom(h)). { eapply Lemma128; eauto. }
                        apply Property_Value in H28; auto; apply H22 in H28.
@@ -863,18 +885,22 @@ Proof.
                      - apply Axiom_Scheme in H10; destruct H10, H18.
                        apply Axiom_Scheme in H18; destruct H18, H20.
                        + apply Axiom_Scheme; tauto.
-                       + PP H19 a b; apply Axiom_SchemeP in H21; destruct H21, H22.
+                       + PP H19 a b; apply Axiom_SchemeP in H21.
+                         destruct H21, H22.
                          apply Axiom_Scheme in H20; destruct H20.
                          apply Theorem19 in H16; apply H24 in H16.
                          apply Theorem55 in H16; apply Theorem49 in H21; auto.
                          destruct H16; rewrite H16 in H22.
                          generalize (Theorem101 y); intro; contradiction.
                      - unfold Restriction; rewrite Theorem6', Theorem8.
-                      apply Axiom_Scheme; split; Ens; left; rewrite Theorem6'; Ens. }
+                       apply Axiom_Scheme.
+                       split; Ens; left; rewrite Theorem6'; Ens. }
                    rewrite H10; unfold FirstMember in H7; destruct H7.
                    apply Axiom_Scheme in H7; destruct H7, H19.
-                   apply Axiom_Scheme in H20; destruct H20; rewrite Lemma128'; auto.
-              * apply Axiom_Scheme; split; Ens; right; apply Axiom_Scheme; split; Ens. }
+                   apply Axiom_Scheme in H20; destruct H20.
+                   rewrite Lemma128'; auto.
+              * apply Axiom_Scheme; split; Ens; right.
+                apply Axiom_Scheme; split; Ens. }
         unfold FirstMember in H7; destruct H7.
         assert (y ∈ dom(En_f' g ∪ [[y, g [En_f' g]]])).
         { apply Axiom_Scheme; split; Ens; exists g [En_f' g].

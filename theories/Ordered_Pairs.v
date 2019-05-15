@@ -4,7 +4,7 @@ Require Export Sets_Existence.
 
 Module OrderedP.
 
-(* 定义48  [x,y] = [[x]|[x|y]] *)
+(* 48 Definition  [x,y] = [[x]|[x|y]] *)
 
 Definition Ordered x y : Class := [ [x] | [x|y]].
 
@@ -13,7 +13,8 @@ Notation "[ x , y ]" := (Ordered x y) (at level 0).
 Hint Unfold Ordered : set.
 
 
-(* 定理49  [x,y]是一个集当且仅当x是一个集,并且y是一个集;如果[x,y]不是一个集，则[x,y]=μ *)
+(* 49 Theorem  [x,y] is a set if and only if x is a set and y is a set;
+   if [x,y] is not a set, then [x,y] = μ. *)
 
 Theorem Theorem49 : forall (x y: Class),
   Ensemble [x,y] <-> Ensemble x /\ Ensemble y.
@@ -42,7 +43,9 @@ Qed.
 Hint Resolve Theorem49 Theorem49' : set.
 
 
-(* 定理50  如果x与y均为集,则∪[x,y]=[x|y],∩[x,y]=[x],∪∩[x,y]=x,∩∩[x,y]=x,∪∪[x,y]=x∪y,∩∪[x,y]=x∩y如果x或者y不是一个集,则∪∩[x,y]=Φ,∩∩[x,y]=Φ,∪∪[x,y]=Φ,∩∪[x,y]=Φ *)
+(* 50 Theorem  If x and y are sets, then ∪[x,y]=[x|y], ∩[x,y]=[x], ∪∩[x,y]=x,
+   ∩∩[x,y]=x, ∪∪[x,y]=x∪y, ∩∪[x,y]=x∩y. If either x or y is not a set,
+   then ∪∩[x,y]=Φ, ∩∩[x,y]=Φ, ∪∪[x,y]=Φ, ∩∪[x,y]=Φ. *)
 
 Lemma Lemma50 : forall (x y: Class),
   Ensemble x /\ Ensemble y -> Ensemble [x] /\ Ensemble [x | y].
@@ -149,21 +152,21 @@ Qed.
 Hint Resolve Theorem50 Theorem50' : set.
 
 
-(* 定义51  z的1st坐标=∩∩z *)
+(* 51 Definition  1st coord z = ∩∩z. *)
 
 Definition First z := ∩∩z.
 
 Hint Unfold First : set.
 
 
-(* 定义52  z的2nd坐标=(∩∪z)∪(∪∪z)~(∪∩z) *)
+(* 52 Definition  2nd coord z = (∩∪z)∪(∪∪z)~(∪∩z). *)
 
 Definition Second z := (∩∪z)∪(∪∪z)~(∪∩z).
 
 Hint Unfold Second : set.
 
 
-(* 定理53  μ的2nd坐标=μ *)
+(* 53 Theorem  2nd coord μ = μ. *)
 
 Lemma Lemma53 : μ ~ Φ = μ.
 Proof.
@@ -188,8 +191,9 @@ Qed.
 Hint Rewrite Theorem53 : set.
 
 
-(* 定理54  如果x与y均为集,[x,y]的1st坐标=x同时[x,y]的2nd坐标=y
-          如果x或者y不是一个集，则[x,y]的1st坐标=μ,同时[x,y]的2nd坐标=μ *)
+(* 54 Theorem  If x and y are sets, 1st coord [x,y] = x and 2nd coord [x,y] = y.
+   If either of x and y is not a set, then 1st coord [x,y] = μ and
+   2nd coord [x,y] = μ. *)
 
 Lemma Lemma54 : forall (x y: Class),
   (x ∪ y) ~ x = y ~ x.
@@ -232,7 +236,7 @@ Qed.
 Hint Resolve Theorem54 Theorem54' : set.
 
 
-(* 定理55  如果x与y均为集,同时[x,y]=[u,v],则z=x同时y=v *)
+(* 55 Theorem  If x and y are sets and [x,y] = [u,v], then x=u and y=v. *)
 
 Theorem Theorem55 : forall (x y u v: Class),
   Ensemble x /\ Ensemble y -> ([x,y] = [u,v] <-> x = u /\ y = v).
@@ -247,7 +251,8 @@ Qed.
 Hint Resolve Theorem55 : set.
 
 
-(* 定义56  r是一个关系当且仅当对于r的每个元z存在x与y使得z=[x,y]; 一个关系是一个类，它的元为序偶 *)
+(* 56 Definition  r is a relation if and only if for each member z of r there
+   is x and y such that z = [x,y]. *)
 
 Definition Relation r : Prop :=
   forall z, z∈r -> exists x y, z = [x,y].
@@ -255,7 +260,13 @@ Definition Relation r : Prop :=
 Hint Unfold Relation: set.
 
 
-(* { (x,y) : ... } *) (** C **)
+(* II Classification axiom-scheme  For each b, b ∈ { a : A } if and only if
+   b is a set and B. *)
+
+(* { [x,y] : ... }  If the member is a ordered pair, then { [x,y] : ... } is
+   used. The definition of { [x,y] : ... } is to avoid excessive notation. We
+   agree that { [x,y] : ... } is to be identical with { u : for some x, some y,
+   u = (x,y) and ... }. *)
 
 Parameter Classifier_P : (Class -> Class -> Prop) -> Class.
 
@@ -273,12 +284,14 @@ Ltac PP H a b := apply Property_P in H; destruct H as [[a [b H]]];
 Hint Resolve Axiom_SchemeP Property_P : set.
 
 
-(* 定义57 r∘s={u:对于某个x，某个y及某个z,u=[x,z],[x,y]∈s同时[y,z]∈r},类r∘s是r与s的合成 *)
+(* 57 Definition  r ∘ s = { [x,z] : for some y, [x,y]∈s and [y,z]∈r }. *)
 
 Definition Composition r s : Class :=
  \{\ λ x z, exists y, [x,y]∈s /\ [y,z]∈r \}\.
 
 Notation "r ∘ s" := (Composition r s) (at level 50, no associativity).
+
+(* r∘s = {u : for some x, some y and some z, u=[x,z], [x,y]∈s and [y,z]∈r}. *)
 
 Definition Composition' r s : Class :=
   \{ λ u, exists x y z, u = [x,z] /\ [x,y] ∈ s /\ [y,z] ∈ r \}.
@@ -286,7 +299,7 @@ Definition Composition' r s : Class :=
 Hint Unfold Composition Composition' : set.
 
 
-(* 定理58  (r∘s)∘t=r∘(s∘t) *)
+(* 58 Theorem  (r∘s)∘t = r∘(s∘t). *)
 
 Theorem Theorem58 : forall (r s t: Class),
   (r ∘ s) ∘ t = r ∘ (s ∘ t).
@@ -309,7 +322,7 @@ Qed.
 Hint Rewrite Theorem58 : set.
 
 
-(* 定理59  r∘(s∪t)=r∘s∪r∘t,同时r∘(s∩t)⊂r∩s∘r∩t *)
+(* 59 Theorem  r∘(s∪t) = r∘s ∪ r∘t and r∘(s∩t) ⊂ r∘s ∩ r∘t. *)
 
 Theorem Theorem59 : forall (r s t: Class),
   Relation r /\ Relation s -> r ∘ (s ∪ t) = (r ∘ s) ∪ (r ∘ t) /\ 
@@ -345,7 +358,7 @@ Qed.
 Hint Resolve Theorem59 : set.
 
 
-(* 定义60  r ⁻¹={[x,y]:[y,x]∈r} *)
+(* 60 Definition  r⁻¹ = { [x,y] : [y,x] ∈ r }. *)
 
 Definition Inverse r : Class := \{\ λ x y, [y,x]∈r \}\.
 
@@ -354,7 +367,7 @@ Notation "r ⁻¹" := (Inverse r)(at level 5).
 Hint Unfold Inverse : set.
 
 
-(* 定理61  (r ⁻¹)⁻¹=r *)
+(* 61 Theorem  If r is a relation, then (r⁻¹)⁻¹ = r. *)
 
 Lemma Lemma61 : forall (x y: Class),
   Ensemble [x,y] <-> Ensemble [y,x].
@@ -381,7 +394,7 @@ Qed.
 Hint Rewrite Theorem61 : set.
 
 
-(* 定理62  (r∘s)⁻¹=(s⁻¹)∘(r⁻¹) *)
+(* 62 Theorem  (r∘s)⁻¹ = (s⁻¹) ∘ (r⁻¹). *)
 
 Theorem Theorem62 : forall (r s: Class),
   (r ∘ s)⁻¹ = (s⁻¹) ∘ (r⁻¹).

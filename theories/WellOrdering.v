@@ -4,14 +4,15 @@ Require Export Functions.
 
 Module WellOrder.
 
-(* 定义81 *)
+(* 81 Definition  x r y if and only [x,y] ∈ r. *)
 
 Definition Rrelation x r y : Prop := [x,y] ∈ r.
 
 Hint Unfold Rrelation : set.
 
 
-(* 定义82 *)
+(* 82 Definition  r connects x if and only if when u and v belong to x either
+   u r v or v r u or v = u. *)
 
 Definition Connect r x : Prop := 
   forall u v, u∈x /\ v∈x -> (Rrelation u r v) \/ (Rrelation v r u) \/ (u=v).
@@ -19,7 +20,8 @@ Definition Connect r x : Prop :=
 Hint Unfold Connect : set.
 
 
-(* 定义83 *)
+(* 83 Definition  r is transitive in x if and only if, when u, v, and w
+   are members of x and u r v and v r w, then u r w. *)
 
 Definition Transitive r x : Prop :=
   forall u v w, (u∈x /\ v∈x /\ w∈x /\ Rrelation u r v /\  Rrelation v r w) ->
@@ -28,7 +30,8 @@ Definition Transitive r x : Prop :=
 Hint Unfold Transitive: set.
 
 
-(* 定义84 *)
+(* 84 Definition  r is asymmetric in x if and only if, when u and v are
+   members of x and u r v, then it is not true that v r u. *)
 
 Definition Asymmetric r x : Prop := 
   forall u v, (u ∈ x /\ v ∈ x /\ Rrelation u r v) -> ~ Rrelation v r u.
@@ -44,14 +47,13 @@ Hint Unfold Asymmetric: set.
 Hint Resolve Property_Asy: set.
 
 
-(* 定义85 *)
-
-(* Definition Inequality (x y:Class) := ~ (x = y) . *)
+(* 85 Definition Inequality (x y:Class) := ~ (x = y) . *)
 
 (* Notation "x ≠ y" := (Inequality x y) (at level 70). *)
 
 
-(* 定义86 *)
+(* 86 Definition  z is an r-first member of x if and only if z∈x and if y∈x,
+   then it is false that y r z. *)
 
 Definition FirstMember z r x : Prop :=
   z ∈ x /\ (forall y, y ∈ x -> ~ Rrelation y r z).
@@ -59,7 +61,8 @@ Definition FirstMember z r x : Prop :=
 Hint Unfold FirstMember : set.
 
 
-(* 定义87 *)
+(* 87 Definition  r well-orders x if and only if r connects x and if y⊂x and
+   y ≠ Φ, then there is an r-first member of y. *)
 
 Definition WellOrdered r x : Prop :=
   Connect r x /\ (forall y, y ⊂ x /\ y ≠ Φ -> exists z, FirstMember z r y).
@@ -67,7 +70,8 @@ Definition WellOrdered r x : Prop :=
 Hint Unfold WellOrdered : set.
 
 
-(* 定理88 *)
+(* 88 Theorem  If r well-orders x, then r is transitive in x and r is
+   asymmetric in x. *)
 
 Lemma Lemma88 : forall x u v w,
   Ensemble u -> Ensemble v -> Ensemble w -> 
@@ -141,7 +145,8 @@ Qed.
 Hint Resolve Theorem88: set.
 
 
-(* 定义89 *)
+(* 89 Definition  y is an r-section of x if and only if y⊂x, r well-orders x,
+   and for each u and v such that u∈x, v∈y, and u r v it is true that u∈y. *)
 
 Definition Section y r x : Prop :=
   y ⊂ x /\ WellOrdered r x /\
@@ -150,7 +155,8 @@ Definition Section y r x : Prop :=
 Hint Unfold Section : set.
 
 
-(* 定理90 *)
+(* 90 Theorem  If n ≠ Φ and each member of n is an r-section of x, then ∪n and
+   ∩n are r-sections of x. *)
 
 Theorem Theorem90 : forall n x r,
   n ≠ Φ /\ (forall y, y ∈ n -> Section y r x) -> 
@@ -177,7 +183,8 @@ Qed.
 Hint Resolve Theorem90 : set.
 
 
-(* 定理91 *)
+(* 91 Theorem  If y is an r-section of x an y≠x, then y = {u : u∈x and u r v}
+   for some v in x. *)
 
 Theorem Theorem91 : forall x y r,
   Section y r x /\ y≠x ->
@@ -206,13 +213,14 @@ Proof.
     generalize (classic (z ∈ (x ~ y))); intro; destruct H8.
     + apply H2 in H8; contradiction.
     + generalize (classic (z ∈ y)); intro; destruct H9; auto.
-      elim H8; apply Axiom_Scheme; repeat split; auto; apply Axiom_Scheme; tauto.
+      elim H8; apply Axiom_Scheme.
+      repeat split; auto; apply Axiom_Scheme; tauto.
 Qed.
 
 Hint Resolve Theorem91 : set.
 
 
-(* 定理92 *)
+(* 92 Theorem  If x and y are r-sections of z, then x⊂y or y⊂x. *)
 
 Theorem Theorem92 : forall x y z r,
   Section x r z /\ Section y r z -> x ⊂ y \/ y ⊂ x.
@@ -234,10 +242,12 @@ Proof.
       unfold Connect in H; generalize (H _ _ H8); intros.
       destruct H9 as [H9 | [H9 | H9]].
       * left; unfold Subclass; intros; rewrite H3 in H10.
-        apply Axiom_Scheme in H10; destruct H10, H11; rewrite H4; apply Axiom_Scheme.
+        apply Axiom_Scheme in H10; destruct H10, H11; rewrite H4.
+        apply Axiom_Scheme.
         repeat split; auto; apply H5 with x0; auto.
       * right; unfold Subclass; intros; rewrite H4 in H10.
-        apply Axiom_Scheme in H10; destruct H10, H11; rewrite H3; apply Axiom_Scheme.
+        apply Axiom_Scheme in H10; destruct H10, H11.
+        rewrite H3; apply Axiom_Scheme.
         repeat split; auto; apply H5 with x1; auto.
       * right; subst x0; rewrite H3, H4; unfold Subclass; intros; auto.
 Qed.
@@ -245,7 +255,9 @@ Qed.
 Hint Resolve Theorem92 : set.
 
 
-(* 定义93 *)
+(* 93 Definition  f is r-s order preserving if and only if f is a function,
+   r well-orders domain f, s well-orders range f, and f[u] s f[v] whenever u
+   and v are members of domain f such that u r v. *)
 
 Definition Order_Pr f r s : Prop := 
   Function f /\ WellOrdered r dom(f) /\ WellOrdered s ran(f) /\
@@ -255,7 +267,8 @@ Definition Order_Pr f r s : Prop :=
 Hint Unfold Order_Pr : set.
 
 
-(* 定理94 *)
+(* 94 Theorem  If x is an r-section of y and f is an r-r order-preserving
+   function on x to y, then for each u in x it is false that f[u] r u. *)
 
 Theorem Theorem94 : forall x r y f,
   Section x r y /\ Order_Pr f r r /\ On f x /\ To f y -> 
@@ -290,14 +303,15 @@ Qed.
 Hint Resolve Theorem94 : set.
 
 
-(* 定义95 *)
+(* 95 Definition  f is a 1_1 function iff both f and f⁻¹ are functions. *)
 
 Definition Function1_1 f : Prop := Function f /\ Function (f⁻¹).
 
 Hint Unfold Function1_1 : set.
 
 
-(* 定理96 *)
+(* 96 Theorem  If f is r-s order preserving, then f is a 1_1 function and
+   f ⁻¹ is s-r order preserving. *)
 
 Lemma Lemma96 : forall f, dom( f) = ran( f⁻¹ ).
 Proof.
@@ -387,7 +401,9 @@ Qed.
 Hint Resolve Theorem96 : set.
 
 
-(* 定理97 *)
+(* 97 Theorem  If f and g are r-s order preserving, domain f and domain g are
+   r-sections of x and range f and range g are s-sections of y, then f⊂g or
+   g⊂f. *)
 
 Lemma Lemma97 : forall y r x,
   WellOrdered r x -> y ⊂ x -> WellOrdered r y.
@@ -558,7 +574,9 @@ Qed.
 Hint Resolve Theorem97 : set.
 
 
-(* 定义98 *)
+(* 98 Definition  f is r-s order preserving in x and y if and only if r
+   well-orders x, s well-orders y, f is r-s order preserving, domain f is an
+   r-section of x, and range f is an s-section of y. *)
 
 Definition Order_PXY f x y r s : Prop :=
   WellOrdered r x /\ WellOrdered s y /\ Order_Pr f r s /\
@@ -567,7 +585,9 @@ Definition Order_PXY f x y r s : Prop :=
 Hint Unfold Order_PXY : set.
 
 
-(* 定理99 *)
+(* 99 Theorem  If r well-orders x and s well-orders y, then there is a function
+   f which is r-s order preserving in x and y such that either domain f = x or
+   range f = y. *)
 
 Definition En_f x y r s := 
   \{\ λ u v, u ∈ x /\ (exists g, Function g /\ Order_PXY g x y r s /\
@@ -876,7 +896,9 @@ Qed.
 Hint Resolve Theorem99 : set.
 
 
-(* 定理100 *)
+(* 100 Theorem  If r well-orders x, s well-orders y, x is a set, and y is not
+   a set, then there is a unique r-s order-preserving function in x and y whose
+   domain is x. *)
 
 Theorem Theorem100 : forall r s x y,
   WellOrdered r x /\ WellOrdered s y -> Ensemble x -> ~ Ensemble y ->

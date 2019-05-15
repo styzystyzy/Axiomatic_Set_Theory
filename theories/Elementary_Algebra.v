@@ -4,7 +4,7 @@ Require Export Classification_Axiom_Scheme.
 
 Module Algebra.
 
-(* 定理2  并集 x∪y = {z:z∈x或者z∈y} *)
+(* 2 Definition  x∪y = { z : z∈x or z∈y }. *)
 
 Definition Union x y : Class := \{ λ z, z∈x \/ z∈y \}.
 
@@ -13,7 +13,7 @@ Notation "x ∪ y" := (Union x y) (at level 65, right associativity).
 Hint Unfold Union : set.
 
 
-(* 定义3  交集 x∩y = {z:z∈x同时z∈y} *)
+(* 3 Definition  x∩y = { z : z∈x and z∈y }. *)
 
 Definition Intersection x y : Class := \{ λ z, z∈x /\ z∈y \}.
 
@@ -22,7 +22,8 @@ Notation "x ∩ y" := (Intersection x y) (at level 60, right associativity).
 Hint Unfold Intersection : set.
 
 
-(* 定理4  z∈x∪y当且仅当z∈x或者z∈y，而z∈x∩y当且仅当z∈x同时z∈y *)
+(* 4 Theorem  z∈x∪y if and only if z∈x or z∈y, and z∈x∩y if and only if
+   z∈x and z∈y. *)
 
 Theorem Theorem4 : forall (x y: Class) (z: Class),
   z∈x \/ z∈y <-> z ∈ (x ∪ y).
@@ -46,7 +47,7 @@ Qed.
 Hint Resolve Theorem4 Theorem4' : set.
 
 
-(* 定理5  x∪x=x同时x∩x=x *)
+(* 5 Theorem  x∪x=x and x∩x=x. *)
 
 Theorem Theorem5 : forall x, x ∪ x = x.
 Proof.
@@ -65,7 +66,7 @@ Qed.
 Hint Rewrite Theorem5 Theorem5' : set.
 
 
-(* 定理6  x∪y=y∪x同时x∩y=y∩x *)
+(* 6 Theorem  x∪y=y∪x and x∩y=y∩x. *)
 
 Theorem Theorem6 : forall x y, x ∪ y = y ∪ x.
 Proof.
@@ -84,7 +85,7 @@ Qed.
 Hint Rewrite Theorem6 Theorem6' : set.
 
 
-(* 定理7  (x∪y)∪z=x∪(y∪z)同时(x∩y)∩z=x∩(y∩z) *)
+(* 7 Theorem  (x∪y)∪z=x∪(y∪z) and (x∩y)∩z=x∩(y∩z). *)
 
 Theorem Theorem7 : forall x y z, (x ∪ y) ∪ z = x ∪ (y ∪ z).
 Proof.
@@ -112,7 +113,7 @@ Qed.
 Hint Rewrite Theorem7 Theorem7' : set.
 
 
-(* 定理8  x∩(y∪z)=(x∩y)∪(x∩z)同时x∪(y∩z)=(x∪y)∩(x∪z) *)
+(* 8 Theorem  x∩(y∪z)=(x∩y)∪(x∩z) and x∪(y∩z)=(x∪y)∩(x∪z). *)
 
 Theorem Theorem8 : forall x y z, x ∩ (y ∪ z) = (x ∩ y) ∪ (x ∩ z).
 Proof.
@@ -144,7 +145,7 @@ Qed.
 Hint Rewrite Theorem8 Theorem8' : set.
 
 
-(* 定义9  x∉y当且仅当x∈y不真 *)
+(* 9 Definition  x∉y if and only if it is false that x∈y. *)
 
 Definition NotIn x y : Prop := ~ x∈y.
 
@@ -153,7 +154,7 @@ Notation "x ∉ y" := (NotIn x y) (at level 10).
 Hint Unfold NotIn : set.
 
 
-(* 定义10  ¬x={y：y∉x} *)
+(* 10 Definition  ¬x = { y : y ∉ x }. *)
 
 Definition Complement x : Class := \{λ y, y ∉ x \}.
 
@@ -162,7 +163,7 @@ Notation "¬ x" := (Complement x) (at level 5, right associativity).
 Hint Unfold Complement : set.
 
 
-(* 定理11  ¬ (¬ x) = x *)
+(* 11 Theorem  ¬ (¬ x) = x *)
 
 Theorem Theorem11: forall x, ¬ (¬ x) = x.
 Proof.
@@ -181,7 +182,7 @@ Qed.
 Hint Rewrite Theorem11 : set.
 
 
-(* 定理12  De Morgan   ¬(x∪y)=(¬x)∩(¬y)同时¬(x∩y)=(¬x)∪(¬y) *)
+(* 12 Theorem (De Morgan)  ¬(x∪y)=(¬x)∩(¬y) and ¬(x∩y)=(¬x)∪(¬y). *)
 
 Theorem Theorem12 : forall x y, ¬ (x ∪ y) = (¬ x) ∩ (¬ y).
 Proof.
@@ -221,7 +222,7 @@ Qed.
 Hint Rewrite Theorem12 Theorem12' : set.
 
 
-(* 定义13  x~y=x∩(¬ y) *)
+(* 13 Definition  x~y = x ∩ (¬ y). *)
 
 Definition Difference x y : Class := x ∩ (¬ y).
 
@@ -230,7 +231,7 @@ Notation "x ~ y" := (Difference x y) (at level 50, left associativity).
 Hint Unfold Difference : set.
 
 
-(* 定理14  x∩(y~z)=(x∩y)~z *)
+(* 14 Theorem  x ∩ (y~z) = (x∩y) ~ z. *)
 
 Theorem Theorem14 : forall x y z, x ∩ (y ~ z) = (x ∩ y) ~ z.
 Proof.
@@ -240,7 +241,7 @@ Qed.
 Hint Rewrite Theorem14 : set.
 
 
-(* 定义85  x≠y 当且仅当 x=y 不真 *)
+(* Definition (85)  x≠y if and only if it is false that x=y. *)
 
 Definition Inequality (x y: Class) : Prop := ~ (x = y).
 
@@ -255,14 +256,14 @@ Hint Unfold Inequality: set.
 Hint Resolve Property_Ineq: set.
 
 
-(* 定义15  Φ={x:x≠x} *)
+(* 15 Definition  Φ = { x : x ≠ x }. *)
 
 Definition Φ : Class := \{λ x, x ≠ x \}.
 
 Hint Unfold Φ : set.
 
 
-(* 定理16  x∉Φ *)
+(* 16 Theorem  x ∉ Φ. *)
 
 Theorem Theorem16 : forall x, x ∉ Φ.
 Proof.
@@ -273,7 +274,7 @@ Qed.
 Hint Resolve Theorem16 : set. 
 
 
-(* 定理17  Φ∪x=x同时Φ∩x=Φ *)
+(* 17 Theorem  Φ ∪ x = x and Φ ∩ x = Φ. *)
 
 Theorem Theorem17 : forall x, Φ ∪ x = x.
 Proof.
@@ -293,7 +294,7 @@ Qed.
 Hint Rewrite Theorem17 Theorem17' : set.
 
 
-(* 定义18  全域 μ={x:x=x} *)
+(* 18 Definition  μ = { x : x = x }. *)
 
 Definition μ : Class := \{ λ x, x = x \}.
 
@@ -310,7 +311,7 @@ Hint Unfold μ : set.
 Hint Rewrite Property_μ : set.
 
 
-(* 定理19  x∈μ当且仅当x是一个集  *)
+(* 19 Theorem  x∈μ if and only if x is a set.  *)
 
 Theorem Theorem19 : forall x, x ∈ μ <-> Ensemble x.
 Proof.
@@ -322,7 +323,7 @@ Qed.
 Hint Resolve Theorem19 : set.
 
 
-(* 定理20  x∪μ=μ同时x∩μ=x *)
+(* 20 Theorem  x ∪ μ = μ and x ∩ μ = x. *)
 
 Theorem Theorem20 : forall x, x ∪ μ = μ.
 Proof.
@@ -343,7 +344,7 @@ Qed.
 Hint Rewrite Theorem20 Theorem20' : set.
 
 
-(* 定理21  ¬Φ=μ同时¬μ=Φ *) 
+(* 21 Theorem  ¬ Φ = μ and ¬ μ = Φ. *)
 
 Theorem Theorem21 : ¬ Φ = μ.
 Proof.
@@ -364,7 +365,7 @@ Qed.
 Hint Rewrite Theorem21 Theorem21' : set.
 
 
-(* 定义22  ∩x={z:对于每个y，如果y∈x，则z∈y} *) 
+(* 22 Definition  ∩x = { z : for each y, if y∈x, then z∈y }. *)
 
 Definition Element_I x : Class := \{ λ z, forall y, y ∈ x -> z ∈ y \}.
 
@@ -373,7 +374,7 @@ Notation "∩ x" := (Element_I x) (at level 66).
 Hint Unfold Element_I : set.
 
 
-(* 定义23  ∪x={z:对于某个y，z∈y同时y∈x} *)
+(* 23 Definition  ∪x = { z : for some y, z∈y and y∈x }. *)
 
 Definition Element_U x : Class := \{ λ z, exists y, z ∈ y /\ y ∈ x \}.
 
@@ -382,7 +383,7 @@ Notation "∪ x" := (Element_U x) (at level 66).
 Hint Unfold Element_U : set.
 
 
-(* 定理24  ∩Φ=μ同时∪Φ=Φ *)
+(* 24 Theorem  ∩Φ = μ and ∪Φ = Φ. *)
 
 Theorem Theorem24 : ∩ Φ = μ.
 Proof.
@@ -403,7 +404,7 @@ Qed.
 Hint Rewrite Theorem24 Theorem24' : set. 
 
 
-(* 定义25  x⊂y 当且仅当对于每个z，如果z∈x，则z∈y *)
+(* 25 Definition  x ⊂ y iff for each z, if z∈x, then z∈y. *)
 
 Definition Subclass x y : Prop := forall z, z∈x -> z∈y.
 
@@ -412,7 +413,7 @@ Notation "x ⊂ y" := (Subclass x y) (at level 70).
 Hint Unfold Subclass : set.
 
 
-(* 定理26  Φ⊂x同时x⊂μ *)
+(* 26 Theorem  Φ ⊂ x and x ⊂ μ. *)
 
 Theorem Theorem26 : forall x, Φ ⊂ x.
 Proof.
@@ -428,7 +429,7 @@ Qed.
 Hint Resolve Theorem26 Theorem26' : set.
 
 
-(* 定理27  x=y当且仅当x⊂y同时y⊂x *)
+(* 27 Theorem  x=y iff x⊂y and y⊂x. *)
 
 Theorem Theorem27 : forall x y, (x ⊂ y /\ y ⊂ x) <-> x=y.
 Proof.
@@ -440,7 +441,7 @@ Qed.
 Hint Resolve Theorem27 : set.
 
 
-(* 定理28  如果x⊂y且y⊂z，则x⊂z *)
+(* 28 Theorem  If x⊂y and y⊂z, then x⊂z. *)
 
 Theorem Theorem28 : forall x y z, x ⊂ y /\ y ⊂ z -> x ⊂ z.
 Proof.
@@ -450,7 +451,7 @@ Qed.
 Hint Resolve Theorem28 : set.
 
 
-(* 定理29  x⊂y当且仅当x∪y=y *)
+(* 29 Theorem  x⊂y iff x∪y = y. *)
 
 Theorem Theorem29 : forall x y, x ∪ y = y <-> x ⊂ y.
 Proof.
@@ -465,7 +466,7 @@ Qed.
 Hint Resolve Theorem29 : set.
 
 
-(* 定理30  x⊂y当且仅当x∩y=x *)
+(* 30 Theorem  x⊂y iff x∩y = x. *)
 
 Theorem Theorem30 : forall x y, x ∩ y = x <-> x ⊂ y.
 Proof.
@@ -480,7 +481,7 @@ Qed.
 Hint Resolve Theorem30 : set.
 
 
-(* 定理31  如果x⊂y,则∪x⊂∪y同时∩y⊂∩x *)
+(* 31 Theorem  If x ⊂ y, then ∪x ⊂ ∪y and ∩y ⊂ ∩x. *)
 
 Theorem Theorem31 : forall x y, x ⊂ y -> (∪x ⊂ ∪y) /\ (∩y ⊂ ∩x).
 Proof.
@@ -495,7 +496,7 @@ Qed.
 Hint Resolve Theorem31 : set.
 
 
-(* 定理32  如果x∈y,则x⊂∪y同时∩y⊂x *)
+(* 32 Theorem  If x∈y, then x ⊂ ∪y and ∩y ⊂ x. *)
 
 Theorem Theorem32 : forall x y, x ∈ y -> (x ⊂ ∪y) /\ (∩y ⊂ x).
 Proof.

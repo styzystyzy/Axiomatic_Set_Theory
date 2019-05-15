@@ -4,8 +4,8 @@ Require Export Ordered_Pairs.
 
 Module Fun.
 
-(* 定义63 f是一个函数当且仅当f是一个关系同时对每个x，每个y，每个z，如果 [x,y]∈f 且
-   [x，z]∈f，则 y=z。*)
+(* 63 Definition  f is a function if and only if f is a relation and for each x,
+   each y, each z, if [x,y]∈f and [x,z]∈f, then y = z. *)
 
 Definition Function f : Prop :=
   Relation f /\ (forall x y z, [x,y] ∈ f /\ [x,z] ∈ f -> y=z).
@@ -13,7 +13,7 @@ Definition Function f : Prop :=
 Hint Unfold Function : set.
 
 
-(* 定理64 如果f是一个函数同时g是一个函数，则 f∘g 也是一个函数 *)
+(* 64 Theorem  If f is a function and g is a function so is f∘g. *)
 
 Theorem Theorem64 : forall f g,
   Function f /\ Function g -> Function (f ∘ g).
@@ -31,7 +31,7 @@ Qed.
 Hint Resolve Theorem64 : set.
 
 
-(* 定义65 f的定义域={x：对于某个y，[x，y]∈f} *)
+(* 65 Definition  domain f = { x : for some y, [x,y]∈f }. *)
 
 Definition Domain f : Class := \{ λ x, exists y, [x,y] ∈ f \}.
 
@@ -47,7 +47,7 @@ Qed.
 Hint Unfold Domain : set.
 
 
-(* 定义66 f的值域={y：对于某个x，[x，y]∈f} *)
+(* 66 Definition  range f = { y : for some x, [x,y]∈f }. *)
 
 Definition Range f : Class := \{ λ y, exists x, [x,y] ∈ f \}.
 
@@ -64,7 +64,7 @@ Qed.
 Hint Unfold Range : set.
 
 
-(* 定理67 μ的定义域=μ同时μ的值域=μ *)
+(* 67 Theorem  domain μ = μ and range μ = μ. *)
 
 Theorem Theorem67 : dom( μ ) = μ /\ ran( μ ) = μ.
 Proof.
@@ -84,16 +84,11 @@ Qed.
 Hint Rewrite Theorem67 : set.
 
 
-(* 定义68 f(x)=∩{y:[x,y]∈f} *)
+(* 68 Definition  f[x] = ∩{ y : [x,y]∈f }. *)
 
 Definition Value f x : Class := ∩ \{ λ y, [x,y] ∈ f \}.
 
 Notation "f [ x ]" := (Value f x)(at level 5).
-
-Hint Unfold Value : set.
-
-
-(* 值的性质 一 *)
 
 Corollary Property_Value : forall f x,
   Function f -> x ∈ dom( f ) -> [x,f[x]] ∈ f.
@@ -112,10 +107,11 @@ Proof.
   - rewrite <- H2; auto.
 Qed.
 
+Hint Unfold Value : set.
 Hint Resolve Property_Value : set.
 
 
-(* 定理69 如果x∉f的定义域，则f[x]=μ;如果x∈f的定义域，则f[x]∈μ*)
+(* 69 Theorem  If x ∉ domain f, then f[x]=μ; if x ∈ domain f, then f[x]∈μ. *)
 
 Lemma Lemma69 : forall x f,
   Function f -> (x ∉ dom(f) -> \{ λ y, [x,y] ∈ f \} = Φ) /\
@@ -152,11 +148,6 @@ Proof.
     apply Theorem35 in H0; apply Theorem19; auto.
 Qed.
 
-Hint Resolve Theorem69 : set.
-
-
-(* 值的性质 二 *)
-
 Corollary Property_Value' : forall f x,
   Function f -> f[x] ∈ ran(f) -> [x,f[x]] ∈ f.
 Proof.
@@ -167,10 +158,11 @@ Proof.
   rewrite H2 in H0; generalize (Theorem39); intro; contradiction.
 Qed.
 
+Hint Resolve Theorem69 : set.
 Hint Resolve Property_Value' : set.
 
 
-(* 定理70 如果f是一个函数，则f={[x,y]:y=f[x]} *)
+(* 70 Theorem  If f is a function, then f = { [x,y] : y = f[x] }. *)
 
 Theorem Theorem70 : forall f,
   Function f -> f = \{\ λ x y, y = f[x] \}\.
@@ -198,7 +190,7 @@ Qed.
 Hint Resolve Theorem70 : set.
 
 
-(* 定理71 如果f和g都是函数，则f=g的充要条件是对于每个x，f[x]=g[x] *) (** C **)
+(* 71 Theorem  If f and g are functions, then f=g iff f[x]=g[x] for each x. *)
 
 Theorem Theorem71 : forall f g,
   Function f /\ Function g -> (f = g <-> forall x, f[x] = g[x]).
@@ -215,7 +207,8 @@ Qed.
 Hint Resolve Theorem71 : set.
 
 
-(* 代换公理 V 如果f是一个函数同时f的定义域是一个集，则f的值域是一个集 *)
+(* V Axiom of substitution  If f is a function and domain f is a set, then 
+   range f is a set. *)
 
 Axiom Axiom_Substitution : forall f,
   Function f -> Ensemble dom(f) -> Ensemble ran(f).
@@ -223,14 +216,14 @@ Axiom Axiom_Substitution : forall f,
 Hint Resolve Axiom_Substitution : set.
 
 
-(* 合并公理 VI 如果x是一个集，则 ∪x 也是一个集 *)
+(* VI Axiom of amalgamation  If x is a set so is ∪x. *)
 
 Axiom Axiom_Amalgamation : forall x, Ensemble x -> Ensemble (∪ x).
 
 Hint Resolve Axiom_Amalgamation : set.
 
 
-(* 定义72 x × y={[u,v]:u∈x/\v∈y} *)
+(* 72 Definition  x × y = { [u,v] : u∈x /\ v∈y }. *)
 
 Definition Cartesian x y : Class := \{\ λ u v, u∈x /\ v∈y \}\.
 
@@ -239,7 +232,7 @@ Notation "x × y" := (Cartesian x y)(at level 2, right associativity).
 Hint Unfold Cartesian : set.
 
 
-(* 定理73 如果u与y均为集，则[u]×y也是集*)
+(* 73 Theorem  If u and y are sets so is [u] × y. *)
 
 Lemma Ex_Lemma73 : forall u y,
   Ensemble u /\ Ensemble y ->
@@ -285,7 +278,7 @@ Qed.
 Hint Resolve Theorem73 : set.
 
 
-(* 定理74 如果x与y均为集，则 x×y 也是集 *)
+(* 74 Theorem  If x and y are sets so is x × y. *)
 
 Lemma Ex_Lemma74 : forall x y,
   Ensemble x /\ Ensemble y -> exists f, Function f /\ dom( f ) = x /\
@@ -350,7 +343,7 @@ Qed.
 Hint Resolve Theorem74 : set.
 
 
-(* 定理75 如果f是一个函数同时f的定义域是一个集，则f是一个集 *)
+(* 75 Theorem  If f is a function and domain f is a set, then f is a set. *)
 
 Theorem Theorem75 : forall f,
   Function f /\ Ensemble dom( f ) -> Ensemble f.
@@ -370,7 +363,8 @@ Qed.
 Hint Resolve Theorem75 : set.
 
 
-(* 定义76 Exponent y x = {f:f是一个函数，f的定义域=x同时f的值域⊂ y} *)
+(* 76 Definition  Exponent y x = { f : f is a function, domain f = x and
+   range f ⊂ y }. *)
 
 Definition Exponent y x : Class :=
   \{ λ f, Function f /\ dom( f ) = x /\ ran( f ) ⊂ y \}.
@@ -378,7 +372,7 @@ Definition Exponent y x : Class :=
 Hint Unfold Exponent : set.
 
 
-(* 定理77 如果x与y均为集，则 Exponent y x 也是集*)
+(* 77 Theorem  If x and y are sets so is Exponent y x. *)
 
 Theorem Theorem77 : forall x y,
   Ensemble x /\ Ensemble y -> Ensemble (Exponent y x).
@@ -399,21 +393,21 @@ Qed.
 Hint Resolve Theorem77 : set.
 
 
-(* 定义78 f在x上，当且仅当f为一函数同时x=f的定义域 *)
+(* 78 Definition  f is on x if and only if f is a function and x = domain f. *)
 
 Definition On f x : Prop := Function f /\ dom( f ) = x.
 
 Hint Unfold On : set.
 
 
-(* 定义79 f到y，当且仅当f是一个函数同时f的值域⊂y *)
+(* 79 Definition  f is to y if and only if f is a function and rang f ⊂ y. *)
 
 Definition To f y : Prop := Function f /\ ran(f) ⊂ y.
 
 Hint Unfold To : set.
 
 
-(* 定义80 f到y上，当且仅当f是一个函数同时f的值域=y *)
+(* 80 Definition  f is onto y if and only if f is a function and range f = y. *)
 
 Definition Onto f y : Prop := Function f /\ ran(f) = y.
 
