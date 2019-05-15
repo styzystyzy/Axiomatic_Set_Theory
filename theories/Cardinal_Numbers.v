@@ -4,7 +4,8 @@ Require Export Choice_Axiom.
 
 Module Cardinal.
 
-(* 定义144 x≈y当且仅当存在一个1-1函数f，f的定义域=x而f的值域=y *)
+(* 144 Definition  x ≈ y if and only if there is a 1_1 function f with
+   domain f = x and range f = y. *)
 
 Definition Equivalent x y : Prop :=
   exists f, Function1_1 f /\ dom(f) = x /\ ran(f) = y.
@@ -14,7 +15,7 @@ Notation "x ≈ y" := (Equivalent x y) (at level 70).
 Hint Unfold Equivalent : set.
 
 
-(* 定理145 x≈x *)
+(* 145 Theorem  x ≈ x. *)
 
 Theorem Theorem145 : forall x, x ≈ x.
 Proof.
@@ -52,7 +53,7 @@ Qed.
 Hint Resolve Theorem145 : set.
 
 
-(* 定理146 如果x≈y，则y≈x *)
+(* 146 Theorem  If x ≈ y, then y ≈ x. *)
 
 Theorem Theorem146 : forall x y, x ≈ y -> y ≈ x.
 Proof.
@@ -87,7 +88,7 @@ Qed.
 Hint Resolve Theorem146 : set.
 
 
-(* 定理147 如果x≈y同时y≈z，则x≈z *)
+(* 147 Theorem147 : If x ≈ y and y ≈ z, then x ≈ z. *)
 
 Theorem Theorem147 : forall x y z,
   x ≈ y -> y ≈ z -> x ≈ z.
@@ -158,7 +159,8 @@ Qed.
 Hint Resolve Theorem147 : set.
 
 
-(* 定义148 x是一个基数就是说x是一个序数，并且如果y∈R和y≺x，则x≈y不真 *)
+(* 148 Definition148  x is a cardinal number if and onlu if x is a ordinal
+   number and, if y∈R and y≺x, then it is false that x ≈ y. *)
 
 Definition Cardinal_Number x : Prop :=
   Ordinal_Number x /\ (forall y, y∈R -> y ≺ x -> ~ (x ≈ y)).
@@ -166,14 +168,14 @@ Definition Cardinal_Number x : Prop :=
 Hint Unfold Cardinal_Number : set.
 
 
-(* 定义149 C = { x : x 是基数 } *)
+(* 149 Definition  C = {x : x is a cardinal number}. *)
 
 Definition C : Class := \{ λ x, Cardinal_Number x \}.
 
 Hint Unfold C : set.
 
 
-(* 定理150 E良序C *)
+(* 150 Theorem E well-orders C. *)
 
 Theorem Theorem150 : WellOrdered E C.
 Proof.
@@ -200,14 +202,14 @@ Qed.
 Hint Resolve Theorem150 : set.
 
 
-(* 定义151 P = { (x,y) : x ≈ y 且 y ∈ C } *)
+(* 151 Definition  P = { [x,y] : x ≈ y and y∈C }. *)
 
 Definition P : Class := \{\ λ x y, x ≈ y /\ y ∈ C \}\.
 
 Hint Unfold P : set.
 
 
-(* 定理152 P是一个函数，P的定义域的=μ且P的值域=C *)
+(* 152 Theorem  P is a function, domain P = μ and range P = C. *)
 
 Theorem Theorem152 : Function P /\ dom(P) = μ /\ ran(P) = C.
 Proof.
@@ -268,7 +270,7 @@ Qed.
 Hint Resolve Theorem152 : set.
 
 
-(* 定义151的推论 *)
+(* A corollary of definition 151. *)
 
 Corollary Property_PClass : forall x, Ensemble x -> P [x] ∈ C.
 Proof.
@@ -282,7 +284,7 @@ Qed.
 Hint Resolve Property_PClass : set.
 
 
-(* 定理153 如果x是一个集，则P[x]≈x *)
+(* 153 Theorem  If x is a set, then P[x] ≈ x. *)
 
 Theorem Theorem153 : forall x, Ensemble x -> P[x] ≈ x.
 Proof.
