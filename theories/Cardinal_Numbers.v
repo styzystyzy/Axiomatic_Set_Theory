@@ -270,7 +270,7 @@ Qed.
 Hint Resolve Theorem152 : set.
 
 
-(* A corollary of definition 151. *)
+(* A corollary of definition151. *)
 
 Corollary Property_PClass : forall x, Ensemble x -> P [x] ∈ C.
 Proof.
@@ -299,7 +299,7 @@ Qed.
 Hint Resolve Theorem153 : set.
 
 
-(* 定理154 如果x与y均为集，则当且仅当P(x)=P(y)时，x≈y *)
+(* 154 Theorem  If x and y are sets, then x ≈ y if and onlf if P[x] = P[y]. *)
 
 Theorem Theorem154 : forall x y,
   Ensemble x /\ Ensemble y -> (P[x] = P[y] <-> x ≈ y).
@@ -323,7 +323,7 @@ Qed.
 Hint Resolve Theorem154 : set.
 
 
-(* 定理155 P[P[x]] = P[x] *)
+(* 155 Theorem  P[ P[ x ] ] = P[ x ]. *)
 
 Lemma Lemma155 : forall x, x ∈ C -> Ensemble x -> P[x] = x.
 Proof.
@@ -358,7 +358,7 @@ Qed.
 Hint Resolve Lemma155 Theorem155 : set.
 
 
-(* 定理156 当且仅当x是一个集并且P[x]=x时，x∈C成立 *)
+(* 156 Theorem  x∈C if and only if x is a set and P[x] = x. *)
 
 Theorem Theorem156 : forall x,
   (Ensemble x /\ P[x] = x) <-> x∈C.
@@ -372,7 +372,7 @@ Qed.
 Hint Resolve Theorem156 : set.
 
 
-(* 定理157 如果y∈R且x⊂y，则P(x)≼y *)
+(* 157 Theorem  If y∈R and x⊂y, then P(x)≼y. *)
 
 Theorem Theorem157 : forall x y,
   y ∈ R /\ x ⊂ y -> P[x] ≼ y.
@@ -470,7 +470,7 @@ Qed.
 Hint Resolve Theorem157 : set.
 
 
-(* 定理158 如果y∈R且x⊂y，则P[x]≼P[y] *)
+(* 158 Theorem  If y is a set and x⊂y, then P[x]≼P[y]. *)
 
 Theorem Theorem158 : forall x y,
   Ensemble y /\ x ⊂ y -> P[x] ≼ P[y].
@@ -528,7 +528,7 @@ Qed.
 Hint Resolve Theorem158 : set.
 
 
-(* 定理159 如果x与y均为集，u⊂x，v⊂y，x≈v且y≈u，则x≈y *)
+(* 159 Theorem  If x and y are sets, u⊂x, v⊂y, x≈v, and y≈u, then x≈y. *)
 
 Theorem Theorem159 : forall (x y: Class),
   Ensemble x /\ Ensemble y ->
@@ -563,7 +563,7 @@ Hint Resolve Theorem159 : set.
 
 (* Schroeder-Bernstein Theorem (proof without AC) *)
 
-(* 像集 *)
+(* Image Set *)
 
 Definition Imgset f x := \{ λ u, exists v, v ∈ x /\ u = f[v] \}.
 
@@ -789,7 +789,7 @@ Qed.
 Hint Resolve Cantor_Bernstein_Schroeder : set.
 
 
-(* 定理160 如果f是一个函数同时f是一个集，则P(f的值域)≼P(f的定义域) *)
+(* 160 Theorem  If f is a function and f is a set, then P(range f)≼P(domain f). *)
 
 Definition En_g f c : Class :=
   \{\ λ v u, v ∈ ran(f) /\ u = c[\{ λ x, v = f[x] \}] \}\.
@@ -883,7 +883,7 @@ Qed.
 Hint Resolve Theorem160 : set.
 
 
-(* 定理161 如果x是一个集，则P[x] ≺ P[pow(x)] *)
+(* 161 Theorem  If x is a set, then P[x] ≺ P[pow(x)]. *)
 
 Theorem Theorem161 : forall x,
   Ensemble x -> P[x] ≺ P[ pow(x) ].
@@ -946,7 +946,7 @@ Qed.
 Hint Resolve Theorem161 : set.
 
 
-(* 定理162 C不是一个集 *)
+(* 162 Theorem  C is not a set. *)
 
 Theorem Theorem162 : ~ Ensemble C.
 Proof.
@@ -974,11 +974,10 @@ Qed.
 Hint Resolve Theorem162 : set.
 
 
-(* 我们把基数分为两类，有限基数与无限基数 *)
+(* We divide the cardinals into two classes, the finite cardinals and the
+   infinte cardinals. *)
 
-(* 有限基数 *)
-
-(* 定理163 如果x∈w，y∈w且x+1≈y+1，则x≈y *)
+(* 163 Theorem  If x∈W, y∈W and x+1≈y+1, then x≈y. *)
 
 Ltac SplitEns := apply Axiom_Scheme; split; Ens.
 
@@ -1219,7 +1218,7 @@ Qed.
 Hint Resolve Theorem163 : set.
 
 
-(* 定理164 w ⊂ C *)
+(* 164 Theorem  w ⊂ C. *)
 
 Theorem Theorem164 : W ⊂ C.
 Proof.
@@ -1300,7 +1299,7 @@ Qed.
 Hint Resolve Theorem164 : set.
 
 
-(* 定理165 w∈C *)
+(* 165 Theorem  W ∈ C. *)
 
 Theorem Theorem165 : W ∈ C.
 Proof.
@@ -1342,7 +1341,7 @@ Qed.
 Hint Resolve Theorem165 : set.
 
 
-(* 定义166 x是有限的当且仅当P[x]∈w *)
+(* 166 Definition  x is finite if and only if P(x)∈W. *)
 
 Definition Finite (x: Class) : Prop := P [x] ∈ W.
 
@@ -1360,7 +1359,8 @@ Qed.
 Hint Unfold Finite : set.
 
 
-(* 定理167 x是有限的当且仅当存在r使得r良序x，并且r⁻¹也良序x *)
+(* 167 Theorem  x is finite if and only if there is r such that r well-orders x
+   and r⁻¹ well-orders x. *)
 
 Lemma Lemma167 : forall r x f,
   WellOrdered r P[x] -> Function1_1 f -> dom(f) = x ->
@@ -1448,7 +1448,7 @@ Proof.
     apply Theorem99 in H; destruct H as [f H], H, H1.
     unfold Order_PXY in H1; destruct H1, H3, H4, H5; double H6.
     apply Theorem114 in H7; add (Ordinal W) H7; try apply Property_W.
-    apply Theorem110 in H7; destruct H7. (* 分三种情况，后两种情况都是 W ⊂ ran(f) *)
+    apply Theorem110 in H7; destruct H7.
     + destruct H2.
       * assert (P[x] = ran(f)).
         { apply Theorem164 in H7; clear H0; AssE ran(f).
@@ -1608,7 +1608,7 @@ Proof.
 Qed.
 
 
-(* 定理168 如果x与y均有限，则x∪y也有限 *)
+(* 168 Theorem  If x and y are finite so is x∪y. *)
 
 Theorem Theorem168 : forall x y,
   Finite x /\ Finite y -> Finite (x ∪ y).
@@ -1797,7 +1797,8 @@ Qed.
 Hint Resolve Theorem168 : set.
 
 
-(* 定理169 如果x有限且x的每个元有限，则∪x也有限 *)
+(* 169 Theorem  If x is finite and each member of x is finite, then ∪x is
+   finite. *)
 
 Lemma Lemma169 : forall x y, x ∈ y -> y = (y ~ [x] ∪ [x]).
 Proof.
@@ -1962,7 +1963,7 @@ Qed.
 Hint Resolve Theorem169 : set.
 
 
-(* 定理170 如果x与y有限，则x×y也有限 *)
+(* 170 Theorem  If x and y are finite so is x×y. *)
 
 Theorem Theorem170 : forall x y,
   Finite x /\ Finite y -> Finite (x × y).
@@ -2072,7 +2073,7 @@ Qed.
 Hint Resolve Theorem170 : set.
 
 
-(* 定理171 如果x是有限的，则pow(x)也是有限的 *)
+(* 171 Theorem  If x is finite so is pow(x). *)
 
 Lemma Lemma171 : forall x y,
   y∈x -> pow(x) = pow(x~[y]) ∪ (\{λ z, z ⊂ x /\ y ∈ z\}).
@@ -2294,7 +2295,7 @@ Qed.
 Hint Resolve Theorem171 : set.
 
 
-(* 定理172 如果x是有限的，y⊂x且P[y]=P[y]，则x=y *)
+(* 172 Theorem  If x is finite, y ⊂ x and P[y] = P[x], then x = y. *)
 
 Theorem Theorem172 : forall x y,
   Finite x -> y ⊂ x -> P[y] = P[x] -> x = y.
@@ -2471,10 +2472,8 @@ Qed.
 Hint Resolve Theorem172 : set.
 
 
-(* 非有限 *)
-
-
-(* 定理173 如果x是一个集，而非有限，则存在一个x的子集y使得y≠x并且x≈y *)
+(* 173 Theorem  If x is a set and x is not finite, then there is a subset y of
+   x such that y≠x and x≈y. *)
 
 Lemma Lemma173 : forall x0 x,
   x0 ∈ P [x] -> ~ x0 ∈ W -> x0 ∈ (P [x] ~ W).
@@ -2618,7 +2617,7 @@ Qed.
 Hint Resolve Theorem173 : set.
 
 
-(* 定理174 如果x∈(R~w)，则P[x+1]=P[x] *)
+(* 174 Theorem  If x ∈ (R ~ W), then P[x+1] = P[x]. *)
 
 Lemma Lemma174 : forall x y, x ≼ y -> y ≼ x -> x = y.
 Proof.
@@ -2706,7 +2705,7 @@ Qed.
 Hint Resolve Theorem174 : set.
 
 
-(* 定义175 max[x,y]=x∪y *)
+(* 175 Definition  max[x,y] = x ∪ y. *)
 
 Definition Max x y : Class := x ∪ y.
 
@@ -2728,7 +2727,9 @@ Hint Resolve Property_Max : set.
 Hint Rewrite Equal_Max : set.
 
 
-(* 定义176 《 = {z:对于在R×R中的某个[u,v]与在R×R中的某个[x,y],z=[(u,v],[x,y]),且max[u,v]<max[x,y],或者max[u,v]=max[x,y]且u<x,或者max[u,v]=max[x,y]且u=x和v<y} *)
+(* 176 Definition  《 = { z : for some [u,v] in R×R and some [x,y] in R×R,
+   z=[[u,v],[x,y]], and max[u,v] < max[x,y], or max[u,v] = max[x,y] and u<x,
+   or max[u,v] = max[x,y] and u=x and v<y }. *)
 
 Definition LessLess : Class :=
   \{ λ z, exists u v x y, [u,v]∈(R×R) /\ [x,y]∈(R×R) /\ z = [[u,v],[x,y]] /\
@@ -2740,7 +2741,7 @@ Notation "≪" := (LessLess) (at level 0, no associativity).
 Hint Unfold LessLess : set.
 
 
-(* 定理177 《 良序 R×R *)
+(* 177 Theorem  《 well-orders R × R. *)
 
 Definition En_y y : Class := \{ λ z, exists u v, [u,v] ∈ y /\ z = Max u v \}.
 
@@ -3068,7 +3069,7 @@ Qed.
 Hint Resolve Theorem177 : set.
 
 
-(* 定理178 如果[u,v]《[x,y]，则[u,v]∈(max[x,y]+1)×(max[x,y]+1) *)
+(* 178 Theorem  If [u,v] 《 [x,y], then [u,v] ∈ (max[x,y]+1) × (max[x,y]+1). *)
 
 Theorem Theorem178 : forall u v x y,
   Rrelation ([u,v]) ≪ ([x,y]) ->
@@ -3127,7 +3128,7 @@ Qed.
 Hint Resolve Theorem178 : set.
 
 
-(* 定理179 如果x∈(C~w)，则P(x×x)=x *)
+(* 179 Theorem  If x ∈ (C ~ W), then P(x × x) = x. *)
 
 Definition En_Q u v x0 : Class :=
   \{\ λ a b, Rrelation ([a,b]) ≪ ([u,v]) /\ [a,b] ∈ x0 × x0 \}\.
@@ -3623,7 +3624,8 @@ Qed.
 Hint Resolve Theorem179 : set.
 
 
-(* 定理180 如果x和y都是C的元，而其中的不属于w，则P[x×y]=max[P[x],P[y]] *)
+(* 180 Theorem  If x and y are non-empty members of C, one of which fails to
+   belong to W, then P[x×y] = max[P[x],P[y]]. *)
 
 Theorem Theorem180_Not :
   exists x y, x ∈ C /\ y ∈ C /\ x ∉ W /\ P[x × y] <> Max P[x] P[y].
@@ -3783,7 +3785,8 @@ Qed.
 Hint Resolve Theorem180 : set.
 
 
-(* 定理181 存在唯一的≺-≺保序函数以R为定义域，并以C~w为值域  *)
+(* 181 Theorem  There is a unique ≺-≺ order-preserving function with domain R
+   and range C ~ W.  *)
 
 Theorem Theorem181 : exists f, Order_Pr f E E /\ dom(f) = R /\ ran(f) = C ~ W.
 Proof.
