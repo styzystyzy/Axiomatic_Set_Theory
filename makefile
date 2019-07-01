@@ -44,7 +44,7 @@ CAMLFLAGS         := $(COQMF_CAMLFLAGS)
 HASNATDYNLINK     := $(COQMF_HASNATDYNLINK)
 
 makefile.conf: 
-	coq_makefile -o makefile Cardinal_Numbers.v Choice_Axiom.v Classification_Axiom_Scheme.v Elementary_Algebra.v Elementary_Logic.v Functions.v NIntegers.v Ordered_Pairs.v Ordinals.v Sets_Existence.v WellOrdering.v
+	coq_makefile -o makefile Cardinal_Numbers.v Choice_Axiom.v Classification_Axiom_Scheme.v Elementary_Algebra.v Elementary_Logic.v Functions.v Integers.v Ordered_Pairs.v Ordinals.v Sets_Existence.v Well_Ordering.v
 
 # This file can be created by the user to hook into double colon rules or
 # add any other Makefile code he may need
