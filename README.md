@@ -19,11 +19,11 @@ The ``axiomatic set theory'' formal system is free from the more obvious paradox
   Provides the properties of ordered pairs and relations.
 6. Functions.v
   Defines functions and proves some properties of functions.
-7. WellOrdering.v
+7. Well_Ordering.v
   Defines well ordering and proves some properties of well ordering.
 8. Ordinals.v
   Defines the ordinal numbers and establishes the fundamental properties.
-9. NItegers.v
+9. Itegers.v
   Defines the non-negative integers and proves the Peano's postulates.
 10. Choice_Axiom.v
   Presents the axiom of choice and proves the Hausdorff maximal principle.

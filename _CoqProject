@@ -1,0 +1,13 @@
+-R . AxiomaticSetTheory
+
+theoies/Elementary_Logic.v
+theoies/Classification_Axiom_Scheme.v
+theoies/Elementary_Algebra.v
+theoies/Sets_Existence.v
+theoies/Ordered_Pairs.v
+theoies/Functions.v
+theoies/Well_Ordering.v
+theoies/Ordinals.v
+theoies/Itegers.v
+theoies/Choice_Axiom.v
+theoies/Cardinal_Numbers.v
