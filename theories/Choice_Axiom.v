@@ -1,4 +1,4 @@
-Require Export NIntegers.
+Require Export theories.Integers.
 
 (* THE CHOICE AXIOM *)
 

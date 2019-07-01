@@ -1,4 +1,5 @@
-Require Export WellOrdering.
+Require Export theories.Well_Ordering.
+
 
 (* ORDINALS *)
 
