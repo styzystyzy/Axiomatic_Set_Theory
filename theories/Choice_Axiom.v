@@ -221,7 +221,7 @@ Hint Resolve Theorem142 : set.
 Definition En_c x h : Class :=
   \{ λ m, Nest m /\ m ⊂ x /\ (forall p, p ∈ ran(h) -> p ⊂ m /\ p <> m) \}.
 
-Lemma Ex_Lemma143 : forall x c,
+Lemma Ex_Enc : forall x c,
   Ensemble x -> ChoiceFunction c ->
   (exists g, forall h, Ensemble h -> g[h] = c[En_c x h]).
 Proof.
@@ -260,7 +260,7 @@ Theorem Theorem143 : forall x,
 Proof.
   intros.
   generalize Axiom_Choice; intros; destruct H0 as [c H0], H0.
-  double H0; apply (Ex_Lemma143 x _) in H2; auto; destruct H2 as [g H2].
+  double H0; apply (Ex_Enc x _) in H2; auto; destruct H2 as [g H2].
   generalize (Theorem128 g); intros; destruct H3 as [f H3], H3, H4.
   unfold ChoiceFunction in H0; destruct H0.
   (* If u ∈ dom(f), then f[u] is a nest of x. *)
